@@ -1,0 +1,10 @@
+*obj/
+*.o
+*.a
+*.out
+*.vscode/
+*test/
+*.idea
+#*.gitignore
+ircserv
+*build.timestamp
