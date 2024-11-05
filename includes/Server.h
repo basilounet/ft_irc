@@ -1,6 +1,10 @@
 #ifndef SERVER_H
 # define SERVER_H
 
+class Server;
+class Client;
+class Channel;
+
 # include <iostream>
 # include <fcntl.h>
 # include <algorithm>
@@ -24,6 +28,7 @@
 
 class Server {
 public:
+	Server();
 	Server(int port = 8080, const std::string& password = "");
 	~Server();
 	Server(const Server &src);
@@ -32,21 +37,22 @@ public:
 	void createServer();
 	void runServer();
 
+	static void	sendMessage(std::string msg, const Client& sender, const int to, const std::string& type);
+	void		broadcast(const std::string& msg);
+
 private:
-	int						_port;
-	std::string				_password;
-	int						_socket;
-	sockaddr_in				_addr;
-	std::vector<pollfd>		_fds;
-	std::map<int, Client>	_clients;
-	std::map<int, Channel>	_channels;
+	int								_port;
+	std::string						_password;
+	int								_socket;
+	sockaddr_in						_addr;
+	std::vector<pollfd>				_fds;
+	std::map<int, Client>			_clients;
+	std::map<std::string, Channel>	_channels;
 
 	static int				_sig;
 
 	void		acceptClient();
 	void		handleClient(const pollfd &fd, const size_t i);
-	void		sendMessage(std::string msg, const int fd);
-	void		sendMessage(const char *msg, const int fd);
 
 	static void sigHandler(int signal);
 };

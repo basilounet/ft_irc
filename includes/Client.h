@@ -1,7 +1,9 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+class Server;
 class Client;
+class Channel;
 
 # include <Server.h>
 # include <Channel.h>
@@ -9,24 +11,29 @@ class Client;
 class Client {
 public:
 	Client();
-	Client(const int fd, const std::string& name = "default", const std::string& nick = "default nick");
+	Client(const int fd, const std::string& name, const std::string& nick, Server* server);
 	~Client();
 	Client(const Client &src);
 	Client &operator=(const Client &src);
 
+	void		addChannel(Channel& channel);
+	void		removeChannel(const std::string& name);
+
 	pollfd		getfd() const;
 	std::string	getRealName() const;
 	std::string	getNick() const;
-	std::string	getIpAddress() const;
+	std::string	getUser() const;
 	void		setRealName(const std::string& name);
 	void		setNick(const std::string& name);
-	void		setIpAddress(const std::string& ipaddress);
+	void		setUser(const std::string& name);
 
 private:
-	std::string				_nick;
-	std::string				_realName;
-	std::vector<Channel>	_channels;
-	pollfd					_fd;
+	Server*							_server;
+	std::string						_nick;
+	std::string						_user;
+	std::string						_realName;
+	std::map<std::string, Channel*>	_channels;
+	pollfd							_fd;
 };
 
 std::ostream &operator<<(std::ostream &out, const Client &client);
