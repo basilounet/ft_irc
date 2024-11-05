@@ -18,6 +18,7 @@ public:
 
 	void		addChannel(Channel& channel);
 	void		removeChannel(const std::string& name);
+	void		quitAllChannels( void );
 
 	pollfd		getfd() const;
 	std::string	getRealName() const;

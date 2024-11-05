@@ -106,7 +106,7 @@ void Server::acceptClient() {
 }
 
 void Server::handleClient(const pollfd &fd, const size_t i) {
-	char buffer[512] = {0};
+	char buffer[1024] = {0};
 	ssize_t bytes_read = recv(fd.fd, buffer, sizeof(buffer), MSG_DONTWAIT);
 
 	if (bytes_read > 0 && bytes_read < 512) {
@@ -115,9 +115,10 @@ void Server::handleClient(const pollfd &fd, const size_t i) {
 	}
 	else if (bytes_read == 0) {
 		std::cout << "\033[31mClient with fd " << fd.fd << " disconnected\033[0m" << std::endl;
+		close(fd.fd);
+		_clients[fd.fd].quitAllChannels();
 		_fds.erase(_fds.begin() + i);
 		_clients.erase(fd.fd);
-		close(fd.fd);
 	}
 }
 
