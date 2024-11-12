@@ -3,7 +3,7 @@
 
 
 # define SERVER_NAME "irc.cri"
-# define PREFIX " " + SERVER_NAME
+# define PREFIX ":" + SERVER_NAME
 # define CRLF "\r\n"
 
 
