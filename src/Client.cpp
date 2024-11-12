@@ -62,6 +62,10 @@ std::string Client::getUser() const {
 	return (_user);
 }
 
+std::string Client::getBuffer() const {
+	return (_buffer);
+}
+
 
 void Client::setRealName(const std::string& name) {
 	_realName = name;
@@ -73,6 +77,19 @@ void Client::setNick(const std::string& name) {
 
 void Client::setUser(const std::string& name) {
 	_user = name;
+}
+
+void Client::setBuffer(const std::string& buf) {
+	_buffer = buf;
+}
+
+void Client::appendBuffer(const std::string& buf) {
+	_buffer += buf;
+}
+
+void Client::parseBuffer() {
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
 

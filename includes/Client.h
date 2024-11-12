@@ -24,9 +24,15 @@ public:
 	std::string	getRealName() const;
 	std::string	getNick() const;
 	std::string	getUser() const;
+	std::string	getBuffer() const;
+
 	void		setRealName(const std::string& name);
 	void		setNick(const std::string& name);
 	void		setUser(const std::string& name);
+	void		setBuffer(const std::string& buf);
+
+	void		appendBuffer(const std::string& buf);
+	void		parseBuffer(); // split messages
 
 private:
 	Server*							_server;
@@ -35,6 +41,7 @@ private:
 	std::string						_realName;
 	std::map<std::string, Channel*>	_channels;
 	pollfd							_fd;
+	std::string						_buffer;
 };
 
 std::ostream &operator<<(std::ostream &out, const Client &client);

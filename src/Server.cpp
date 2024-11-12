@@ -45,6 +45,7 @@ void Server::createServer() {
 	signal(SIGINT, &sigHandler);
 	signal(SIGQUIT, &sigHandler);
 	_socket = socket(AF_INET, SOCK_STREAM, 0);
+	_fds.push_back((pollfd){_socket, POLLIN, 0});
 	if (_socket < 0)
 		throw (std::runtime_error("\033[31mError: socket creation failed\033[0m"));
 	_addr.sin_family = AF_INET;
@@ -59,7 +60,6 @@ void Server::createServer() {
 		throw (std::runtime_error("\033[31mError: bind failed\033[0m"));
 	if (listen(_socket, 5) == -1)
 		throw (std::runtime_error("\033[31mError: listen failed\033[0m"));
-	_fds.push_back((pollfd){_socket, POLLIN, 0});
 	std::cout << "\033[32mServer is running on port " << _port << "\033[0m" << std::endl;
 }
 
@@ -100,18 +100,25 @@ void Server::acceptClient() {
 		std::cerr << "\033[31mError: accept failed\033[0m" << std::endl;
 		return ;
 	}
-	_clients[fd] = Client(fd, "default", "default nick", this);;
+	_clients[fd] = Client(fd, "default", "default nick", this);
 	_fds.push_back((pollfd){fd, POLL_IN, 0});
 	std::cout << "\033[32mClient connected with fd " << fd << "\033[0m" << std::endl;
 }
 
 void Server::handleClient(const pollfd &fd, const size_t i) {
 	char buffer[1024] = {0};
+	std::string total_buf;
 	ssize_t bytes_read = recv(fd.fd, buffer, sizeof(buffer), MSG_DONTWAIT);
 
-	if (bytes_read > 0 && bytes_read < 512) {
-		std::cout << "Message to server: " << buffer;
-		_channels["#test"].broadcastMessage(buffer, _clients[fd.fd]);
+	if (bytes_read > 0) {
+		_clients[fd.fd].appendBuffer(buffer);
+		total_buf = _clients[fd.fd].getBuffer();
+		if (total_buf.size() > 2 && total_buf[total_buf.size() - 2] == '\r' && total_buf[total_buf.size() - 1] == '\n') {
+			std::cout << "Message to server: " << _clients[fd.fd].getBuffer();
+			_clients[fd.fd].parseBuffer(); //////////////////////////////////////////////////////////////////////////////////////////////////////////
+			// respond to the message
+			_clients[fd.fd].setBuffer("");
+		}
 	}
 	else if (bytes_read == 0) {
 		std::cout << "\033[31mClient with fd " << fd.fd << " disconnected\033[0m" << std::endl;
