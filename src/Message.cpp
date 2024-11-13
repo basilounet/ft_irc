@@ -1,20 +1,15 @@
 #include <Message.h>
 
-#include <cstdlib> //NULL
-
-Message::Message() : _client(NULL), _msg(std::string("")) {
+Message::Message() {
+	Message(NULL, std::string(("")));
 }
 
 Message::Message(Client* client, const std::string &msg) : _client(client), _msg(msg) {
-	try {
-		if (client == NULL)
-			throw std::invalid_argument("client is NULL");
-		if (msg.empty())
-			throw std::invalid_argument("message is empty");
-		parseMsg();
-	} catch (std::exception& e) {
-		std::cerr << "Message error :" << e.what() << std::endl;
-	}
+	if (client == NULL)
+		throw std::invalid_argument("client is NULL");
+	if (msg.empty())
+		throw std::invalid_argument("message is empty");
+	parseMsg();
 }
 
 Message::~Message() {
@@ -49,7 +44,7 @@ void Message::parseMsg() {
 		index1 = _msg.find_first_of(" \r", index0);
 		if (index1 == std::string::npos)
 			throw std::invalid_argument("Invalid parse 1");
-		str = _msg.substr(0, index1 - index0);
+		str = _msg.substr(index0, index1 - index0);
 		if (!str.empty())
 			this->parsePrefix(str);
 		else
@@ -80,13 +75,13 @@ void Message::parseMsg() {
 }
 
 void Message::parsePrefix(const std::string& str) {
-	std::cout << "parsePrefix :" << str << std::endl;
+	std::cout << YELLOW << "\tprefix :" << str << RESET << std::endl;
 }
 void Message::parseCommand(const std::string& str) {
-	std::cout << "parseCommand :" << str << std::endl;
+	std::cout << BLUE << "\tparseCommand :" << str << RESET << std::endl;
 }
 void Message::parseParams(const std::string& str) {
-	std::cout << "parseParams :" << str << std::endl;
+	std::cout << CYAN << "\tparseParams :" << str << RESET << std::endl;
 }
 
 bool Message::isnospcrlfcl(const std::string &str) {

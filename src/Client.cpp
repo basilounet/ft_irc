@@ -9,6 +9,7 @@ Client::Client(const int fd, const std::string& name, const std::string& nick, S
 	_nick(nick),
 	_realName(name),
 	_fd((pollfd){fd, POLLIN, 0}) {
+		_buffer = "";
 }
 
 Client::~Client() {
@@ -26,6 +27,7 @@ Client& Client::operator=(const Client& src) {
 		_realName = src._realName;
 		_channels = src._channels;
 		_fd = src._fd;
+		_buffer = src._buffer;
 	}
 	return (*this);
 }
@@ -44,7 +46,6 @@ void Client::quitAllChannels() {
 		it->second->removeClient(*this);
 
 }
-
 
 pollfd Client::getfd() const {
 	return (_fd);
@@ -65,7 +66,6 @@ std::string Client::getUser() const {
 std::string Client::getBuffer() const {
 	return (_buffer);
 }
-
 
 void Client::setRealName(const std::string& name) {
 	_realName = name;
@@ -88,10 +88,13 @@ void Client::appendBuffer(const std::string& buf) {
 }
 
 void Client::parseBuffer() {
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	try {
+		Message msg(this, _buffer);
+		// Client::execCommand(Message& msg)
+	} catch (std::exception& e) {
+		std::cerr << "Message error :" << e.what() << std::endl;
+	}
 }
-
 
 std::ostream& operator<<(std::ostream& out, const Client& client) {
 	out << "Client " << client.getRealName() << " with fd " << client.getfd().fd << " connected";

@@ -4,9 +4,12 @@
 class Server;
 class Client;
 class Channel;
+class Message;
 
 # include <Server.h>
 # include <Channel.h>
+# include <Message.h>
+# include "IRC_responses.h"
 
 class Client {
 public:

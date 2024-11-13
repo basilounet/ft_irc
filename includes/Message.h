@@ -7,10 +7,11 @@ class Channel;
 class Message;
 
 # include <Server.h>
-# include <Channel.h>
-# include <Client.h>
+// # include <Channel.h>
+// # include <Client.h>
 
 class Message {
+
 	public:
 		Message();
 		Message(Client* client, const std::string &msg);
@@ -39,6 +40,7 @@ class Message {
 		void		parsePrefix(const std::string& str);
 		void		parseCommand(const std::string& str);
 		void		parseParams(const std::string& str);
+
 		bool		isnospcrlfcl(const std::string& str);
 		bool		isCrlfEnding(const std::string& str);
 
