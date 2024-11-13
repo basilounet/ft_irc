@@ -3,7 +3,8 @@
 SRC =	main.cpp \
 		Server.cpp \
 		Channel.cpp \
-		Client.cpp
+		Client.cpp \
+		Message.cpp
 
 ##========== NAMES ==========##
 
