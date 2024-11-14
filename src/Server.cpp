@@ -97,12 +97,12 @@ void Server::acceptClient() {
 	int fd = accept(_socket, __nullptr, __nullptr);
 	if (fd < 0)
 	{
-		std::cerr << "\033[31mError: accept failed\033[0m" << std::endl;
+		std::cerr << C_ROUGE << "Error: accept failed" << C_RESET << std::endl;
 		return ;
 	}
 	_clients[fd] = Client(fd, "default", "default nick", this);
 	_fds.push_back((pollfd){fd, POLL_IN, 0});
-	std::cout << "\033[32mClient connected with fd " << fd << "\033[0m" << std::endl;
+	std::cout << C_VERT << "Client connected with fd " << fd << C_RESET << std::endl;
 }
 
 void Server::handleClient(const pollfd &fd, const size_t i) {
@@ -113,15 +113,16 @@ void Server::handleClient(const pollfd &fd, const size_t i) {
 	if (bytes_read > 0) {
 		_clients[fd.fd].appendBuffer(buffer);
 		total_buf = _clients[fd.fd].getBuffer();
+		//std::cout << "Message to server: " << buffer << "  ";
 		if (total_buf.size() > 2 && total_buf[total_buf.size() - 2] == '\r' && total_buf[total_buf.size() - 1] == '\n') {
-			std::cout << "Message to server: " << _clients[fd.fd].getBuffer();
+			std::cout << "Message to server: " << _clients[fd.fd].getBuffer() ;
 			_clients[fd.fd].parseBuffer(); //////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// respond to the message
 			_clients[fd.fd].setBuffer("");
 		}
 	}
 	else if (bytes_read == 0) {
-		std::cout << "\033[31mClient with fd " << fd.fd << " disconnected\033[0m" << std::endl;
+		std::cout << C_ROUGE << "Client with fd " << fd.fd << " disconnected" << C_RESET << std::endl;
 		close(fd.fd);
 		_clients[fd.fd].quitAllChannels();
 		_fds.erase(_fds.begin() + i);

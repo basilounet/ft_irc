@@ -37,51 +37,79 @@ void Message::parseMsg() {
 	std::string str;
 	size_t index0 = 0;
 	size_t index1 = 0;
-
 	// [ ":" prefix SPACE ]
 	if (_msg.at(0) == ':') {
 		index0 = 1;
 		index1 = _msg.find_first_of(" \r", index0);
 		if (index1 == std::string::npos)
-			throw std::invalid_argument("Invalid parse 1");
+			throw std::invalid_argument("Invalid parse pre prefix (no end)");
 		str = _msg.substr(index0, index1 - index0);
-		if (!str.empty())
-			this->parsePrefix(str);
-		else
-			throw std::invalid_argument("Invalid parse 1");
+		parsePrefix(str);
 		index0 = _msg.find_first_not_of(" \r", index1);
 	}
-
 	// command
 	index1 = _msg.find_first_of(" \r", index0);
 	if (index1 == std::string::npos)
-		throw std::invalid_argument("Invalid parse 2");
+		throw std::invalid_argument("Invalid parse pre command (no end)");
 	str = _msg.substr(index0, index1 - index0);
-	if (!str.empty())
-		this->parseCommand(str);
-	else
-		throw std::invalid_argument("Invalid parse 2");
+	parseCommand(str);
 	if (_msg.at(index1) == '\r')
 		return;
-
 	// [ params ] crlf
 	index0 = index1 + 1;
 	index1 = _msg.find_last_of('\r');
 	if (index1 == std::string::npos)
-		throw std::invalid_argument("Invalid parse 3");
+		throw std::invalid_argument("Invalid parse pre arguments (no end)");
 	str = _msg.substr(index0, index1 - index0);
-	if (!str.empty())
-		this->parseParams(str);
+	parseParams(str);
+	std::cout << std::endl;
 }
 
+// prefix = servername / ( nickname [ [ "!" user ] "@" host ] )
 void Message::parsePrefix(const std::string& str) {
-	std::cout << YELLOW << "\tprefix :" << str << RESET << std::endl;
+	if (str.empty())
+		throw std::invalid_argument("Invalid parse pre prefix (empty)");
+	_server_name = str;
+	std::cout << C_OR << _server_name << C_RESET << " ";
 }
+
+// command    =  1*letter / 3digit
 void Message::parseCommand(const std::string& str) {
-	std::cout << BLUE << "\tparseCommand :" << str << RESET << std::endl;
+	if (str.empty())
+		throw std::invalid_argument("Invalid parse pre command (empty)");
+	_command = str;
+	std::cout << C_LIME << _command << C_RESET << " ";
 }
+
+// params	= *14( SPACE middle ) [ SPACE ":" trailing ]
+// 			=/ 14( SPACE middle ) [ SPACE [ ":" ] trailing ]
 void Message::parseParams(const std::string& str) {
-	std::cout << CYAN << "\tparseParams :" << str << RESET << std::endl;
+	if (str.empty())
+		return ;
+	int nb = 0;
+	size_t index0 = 0;
+	size_t index1 = 0;
+	while (nb < 14) {
+		index0 = str.find_first_not_of(" ", index1);
+		if (index0 == std::string::npos)
+			break ;
+		index1 = str.find_first_of(" ", index0);
+		//std::cout << C_OR << "[" << str << "]" << C_RESET;
+		if (str.at(index0) == ':') {
+			_trailing = str.substr(index0 + 1);
+			std::cout << C_ROSE << ":[" << _trailing << "]:" << C_RESET;
+			break ;
+		}
+		if (index1 == std::string::npos) {
+			_params.push_back(str.substr(index0));
+			std::cout << C_ROSE << _params.back() << C_RESET << " ";
+			break ;
+		}
+		_params.push_back(str.substr(index0, index1 - index0));
+		std::cout << C_ROSE << _params.back() << C_RESET;
+		if (++nb >= 14)
+			throw std::invalid_argument("Invalid parse params (too many arguments)");
+	}
 }
 
 bool Message::isnospcrlfcl(const std::string &str) {

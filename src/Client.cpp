@@ -89,10 +89,11 @@ void Client::appendBuffer(const std::string& buf) {
 
 void Client::parseBuffer() {
 	try {
+		// split /n while
 		Message msg(this, _buffer);
-		// Client::execCommand(Message& msg)
+		// _server->execCommand(Message& msg)
 	} catch (std::exception& e) {
-		std::cerr << "Message error :" << e.what() << std::endl;
+		std::cerr << C_ROUGE << "Message error :" << e.what() << C_RESET << std::endl;
 	}
 }
 

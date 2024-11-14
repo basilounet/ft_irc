@@ -21,6 +21,8 @@ class Channel;
 
 # include <Channel.h>
 # include <Client.h>
+# include <Message.h>
+# include <IRC_responses.h>
 
 # ifndef DEBUG
 #  define DEBUG 0
