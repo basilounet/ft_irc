@@ -1,5 +1,7 @@
 #include "Client.h"
 
+#include <sstream>
+
 Client::Client() {
 	Client(-1, "default", "default nick", __nullptr);
 }
@@ -89,9 +91,12 @@ void Client::appendBuffer(const std::string& buf) {
 
 void Client::parseBuffer() {
 	try {
-		// split /n while
-		Message msg(this, _buffer);
-		// _server->execCommand(Message& msg)
+		std::stringstream	storage(_buffer);
+		std::string			str;
+		while (std::getline(storage, str, '\n') && !str.empty()) {
+			Message msg(this, str);
+			//_server->execCommand(Message& msg);
+		}
 	} catch (std::exception& e) {
 		std::cerr << C_ROUGE << "Message error :" << e.what() << C_RESET << std::endl;
 	}

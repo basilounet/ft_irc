@@ -97,7 +97,7 @@ void Message::parseParams(const std::string& str) {
 		//std::cout << C_OR << "[" << str << "]" << C_RESET;
 		if (str.at(index0) == ':') {
 			_trailing = str.substr(index0 + 1);
-			std::cout << C_ROSE << ":[" << _trailing << "]:" << C_RESET;
+			std::cout << C_ROSE << ":[" << _trailing << "]" << C_RESET;
 			break ;
 		}
 		if (index1 == std::string::npos) {
@@ -106,7 +106,7 @@ void Message::parseParams(const std::string& str) {
 			break ;
 		}
 		_params.push_back(str.substr(index0, index1 - index0));
-		std::cout << C_ROSE << _params.back() << C_RESET;
+		std::cout << C_ROSE << _params.back() << C_RESET << ",";
 		if (++nb >= 14)
 			throw std::invalid_argument("Invalid parse params (too many arguments)");
 	}
