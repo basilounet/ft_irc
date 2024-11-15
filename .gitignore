@@ -2,6 +2,7 @@
 *.o
 *.a
 *.out
+*.swp
 *.vscode/
 *test/
 *.idea
