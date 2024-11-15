@@ -19,6 +19,6 @@ Part& Part::operator=(Part const& other) {
 	return (*this);
 }
 
-void	Part::executeCommand(const Message& msg) {
+void	Part::process(const Message& msg) {
 	(void)msg;
 }

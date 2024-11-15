@@ -14,7 +14,7 @@ public:
 	~Invite( void );
 	Invite &operator=(Invite const &other);
 
-	void	executeCommand(const Message& msg);
+	void	process(const Message& msg);
 };
 
 #endif //INVITE_H

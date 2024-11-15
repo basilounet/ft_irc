@@ -41,6 +41,7 @@ public:
 
 	static void	sendMessage(std::string msg, const Client& sender, const int to, const std::string& type);
 	void		broadcast(const std::string& msg);
+	void		removeClient(const int fd);
 
 private:
 	int								_port;
@@ -54,7 +55,7 @@ private:
 	static int				_sig;
 
 	void		acceptClient();
-	void		handleClient(const pollfd &fd, const size_t i);
+	void		handleClient(const pollfd &pollfd, const size_t i);
 
 	static void sigHandler(int signal);
 };

@@ -14,7 +14,7 @@ public:
 	~Topic( void );
 	Topic &operator=(Topic const &other);
 
-	void	executeCommand(const Message& msg);
+	void	process(const Message& msg);
 
 };
 

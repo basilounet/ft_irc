@@ -14,7 +14,7 @@ public:
 	~Mode( void );
 	Mode &operator=(Mode const &other);
 
-	void	executeCommand(const Message& msg);
+	void	process(const Message& msg);
 };
 
 

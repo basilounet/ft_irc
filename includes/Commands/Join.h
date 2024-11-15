@@ -14,7 +14,7 @@ public:
 	~Join( void );
 	Join &operator=(Join const &other);
 
-	void	executeCommand(const Message& msg);
+	void	process(const Message& msg);
 };
 
 

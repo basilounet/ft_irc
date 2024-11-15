@@ -14,7 +14,7 @@ public:
 	~Part( void );
 	Part &operator=(Part const &other);
 
-	void	executeCommand(const Message& msg);
+	void	process(const Message& msg);
 };
 
 

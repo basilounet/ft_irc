@@ -19,6 +19,6 @@ Mode& Mode::operator=(Mode const& other) {
 	return (*this);
 }
 
-void	Mode::executeCommand(const Message& msg) {
+void	Mode::process(const Message& msg) {
 	(void)msg;
 }

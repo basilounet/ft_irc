@@ -14,7 +14,7 @@ public:
 	~User( void );
 	User &operator=(User const &other);
 
-	void	executeCommand(const Message& msg);
+	void	process(const Message& msg);
 
 };
 

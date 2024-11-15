@@ -19,6 +19,6 @@ Kick& Kick::operator=(Kick const& other) {
 	return (*this);
 }
 
-void	Kick::executeCommand(const Message& msg) {
+void	Kick::process(const Message& msg) {
 	(void)msg;
 }

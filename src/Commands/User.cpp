@@ -19,6 +19,6 @@ User& User::operator=(User const& other) {
 	return (*this);
 }
 
-void	User::executeCommand(const Message& msg) {
+void	User::process(const Message& msg) {
 	(void)msg;
 }

@@ -19,6 +19,6 @@ Topic& Topic::operator=(Topic const& other) {
 	return (*this);
 }
 
-void	Topic::executeCommand(const Message& msg) {
+void	Topic::process(const Message& msg) {
 	(void)msg;
 }

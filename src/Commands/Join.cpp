@@ -19,6 +19,6 @@ Join& Join::operator=(Join const& other) {
 	return (*this);
 }
 
-void	Join::executeCommand(const Message& msg) {
+void	Join::process(const Message& msg) {
 	(void)msg;
 }

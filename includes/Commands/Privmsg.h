@@ -14,7 +14,7 @@ public:
 	~Privmsg( void );
 	Privmsg &operator=(Privmsg const &other);
 
-	void	executeCommand(const Message& msg);
+	void	process(const Message& msg);
 
 };
 

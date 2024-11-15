@@ -14,7 +14,7 @@ public:
 	~Nick( void );
 	Nick &operator=(Nick const &other);
 
-	void	executeCommand(const Message& msg);
+	void	process(const Message& msg);
 
 };
 

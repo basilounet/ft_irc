@@ -96,6 +96,19 @@ void Server::broadcast(const std::string& msg) {
 	}
 }
 
+void Server::removeClient(const int fd)
+{
+	close(fd);
+	_clients[fd].quitAllChannels();
+	for (std::vector<pollfd>::iterator it = _fds.begin(); it != _fds.end(); ++it) {
+		if (it->fd == fd) {
+			_fds.erase(it);
+			break ;
+		}
+	}
+	_clients.erase(fd);
+}
+
 void Server::acceptClient() {
 	int fd = accept(_socket, __nullptr, __nullptr);
 	if (fd < 0)
@@ -108,28 +121,25 @@ void Server::acceptClient() {
 	std::cout << C_VERT << "Client connected with fd " << fd << C_RESET << std::endl;
 }
 
-void Server::handleClient(const pollfd &fd, const size_t i) {
+void Server::handleClient(const pollfd &pollfd, const size_t i) {
 	char buffer[1024] = {0};
 	std::string total_buf;
-	ssize_t bytes_read = recv(fd.fd, buffer, sizeof(buffer), MSG_DONTWAIT);
+	ssize_t bytes_read = recv(pollfd.fd, buffer, sizeof(buffer), MSG_DONTWAIT);
 
 	if (bytes_read > 0) {
-		_clients[fd.fd].appendBuffer(buffer);
-		total_buf = _clients[fd.fd].getBuffer();
+		_clients[pollfd.fd].appendBuffer(buffer);
+		total_buf = _clients[pollfd.fd].getBuffer();
 		//std::cout << "Message to server: " << buffer << "  ";
 		if (total_buf.size() > 2 && total_buf[total_buf.size() - 2] == '\r' && total_buf[total_buf.size() - 1] == '\n') {
-			std::cout << "Message to server: " << _clients[fd.fd].getBuffer() ;
-			_clients[fd.fd].parseBuffer(); //////////////////////////////////////////////////////////////////////////////////////////////////////////
+			std::cout << "Message to server: " << _clients[pollfd.fd].getBuffer() ;
+			_clients[pollfd.fd].parseBuffer(); //////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// respond to the message
-			_clients[fd.fd].setBuffer("");
+			_clients[pollfd.fd].setBuffer("");
 		}
 	}
 	else if (bytes_read == 0) {
-		std::cout << C_ROUGE << "Client with fd " << fd.fd << " disconnected" << C_RESET << std::endl;
-		close(fd.fd);
-		_clients[fd.fd].quitAllChannels();
-		_fds.erase(_fds.begin() + i);
-		_clients.erase(fd.fd);
+		std::cout << C_ROUGE << "Client with fd " << pollfd.fd << " disconnected" << C_RESET << std::endl;
+		removeClient(pollfd.fd);
 	}
 }
 

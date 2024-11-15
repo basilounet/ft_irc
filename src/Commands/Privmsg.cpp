@@ -19,6 +19,6 @@ Privmsg& Privmsg::operator=(Privmsg const& other) {
 	return (*this);
 }
 
-void	Privmsg::executeCommand(const Message& msg) {
+void	Privmsg::process(const Message& msg) {
 	(void)msg;
 }

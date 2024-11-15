@@ -19,6 +19,6 @@ Nick& Nick::operator=(Nick const& other) {
 	return (*this);
 }
 
-void	Nick::executeCommand(const Message& msg) {
+void	Nick::process(const Message& msg) {
 	(void)msg;
 }

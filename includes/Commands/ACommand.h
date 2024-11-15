@@ -12,8 +12,5 @@ class ACommand
 		ACommand	&operator=(const ACommand &right);
 		virtual	~ACommand(void);
 
-		virtual void executeCommand(const Message& msg) = 0;
-
-	protected:
-		std::vector<std::string>	_params;
+		virtual void process(const Message& msg) = 0;
 };

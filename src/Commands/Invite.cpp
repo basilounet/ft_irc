@@ -19,6 +19,6 @@ Invite& Invite::operator=(Invite const& other) {
 	return (*this);
 }
 
-void	Invite::executeCommand(const Message& msg) {
+void	Invite::process(const Message& msg) {
 	(void)msg;
 }

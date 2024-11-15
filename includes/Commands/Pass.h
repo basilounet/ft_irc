@@ -14,7 +14,7 @@ public:
 	~Pass( void );
 	Pass &operator=(Pass const &other);
 
-	void	executeCommand(const Message& msg);
+	void	process(const Message& msg);
 };
 
 

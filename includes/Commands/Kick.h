@@ -14,7 +14,7 @@ public:
 	~Kick( void );
 	Kick &operator=(Kick const &other);
 
-	void	executeCommand(const Message& msg);
+	void	process(const Message& msg);
 };
 
 
