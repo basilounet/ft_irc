@@ -3,3 +3,22 @@
 //
 
 #include "Nick.h"
+
+Nick::Nick() {
+}
+
+Nick::Nick(Nick const& src) {
+	*this = src;
+}
+
+Nick::~Nick() {
+}
+
+Nick& Nick::operator=(Nick const& other) {
+	ACommand::operator=(other);
+	return (*this);
+}
+
+void	Nick::executeCommand(const Message& msg) {
+	(void)msg;
+}

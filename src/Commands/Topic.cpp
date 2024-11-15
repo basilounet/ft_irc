@@ -3,3 +3,22 @@
 //
 
 #include "Topic.h"
+
+Topic::Topic() {
+}
+
+Topic::Topic(Topic const& src) {
+	*this = src;
+}
+
+Topic::~Topic() {
+}
+
+Topic& Topic::operator=(Topic const& other) {
+	ACommand::operator=(other);
+	return (*this);
+}
+
+void	Topic::executeCommand(const Message& msg) {
+	(void)msg;
+}

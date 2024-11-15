@@ -3,3 +3,22 @@
 //
 
 #include "Kick.h"
+
+Kick::Kick() {
+}
+
+Kick::Kick(Kick const& src) {
+	*this = src;
+}
+
+Kick::~Kick() {
+}
+
+Kick& Kick::operator=(Kick const& other) {
+	ACommand::operator=(other);
+	return (*this);
+}
+
+void	Kick::executeCommand(const Message& msg) {
+	(void)msg;
+}

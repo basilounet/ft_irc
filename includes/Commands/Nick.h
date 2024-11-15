@@ -18,6 +18,4 @@ public:
 
 };
 
-
-
 #endif //NICK_H

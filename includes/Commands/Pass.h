@@ -9,10 +9,10 @@
 
 class Pass : public ACommand {
 public:
-	Invite( void );
-	Invite(Invite const &src);
-	~Invite( void );
-	Invite &operator=(Invite const &other);
+	Pass( void );
+	Pass(Pass const &src);
+	~Pass( void );
+	Pass &operator=(Pass const &other);
 
 	void	executeCommand(const Message& msg);
 };
