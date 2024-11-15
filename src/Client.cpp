@@ -11,7 +11,6 @@ Client::Client(const int fd, const std::string& name, const std::string& nick, S
 	_nick(nick),
 	_realName(name),
 	_fd((pollfd){fd, POLLIN, 0}) {
-		_buffer = "";
 }
 
 Client::~Client() {

@@ -4,7 +4,19 @@ SRC =	main.cpp \
 		Server.cpp \
 		Channel.cpp \
 		Client.cpp \
-		Message.cpp
+		Message.cpp \
+		Commands/ACommand.cpp \
+		Commands/Invite.cpp \
+		Commands/Join.cpp \
+		Commands/Kick.cpp \
+		Commands/Mode.cpp \
+		Commands/Nick.cpp \
+		Commands/Part.cpp \
+		Commands/Pass.cpp \
+		Commands/Privmsg.cpp \
+		Commands/Topic.cpp \
+		Commands/User.cpp
+
 
 ##========== NAMES ==========##
 
@@ -46,7 +58,7 @@ CXX = c++
 
 CFLAGS = -Wall -Wextra -Werror -std=c++98
 LDFLAGS = $(LIBS)
-LIBS = -I$(INCLUDE_DIR)
+LIBS = -I$(INCLUDE_DIR) -I$(INCLUDE_DIR)/Commands
 
 ##========== MODES ==========##
 
@@ -116,13 +128,13 @@ endif
 define last_changes
 	@if [ ! -f "$(TIMESTAMP_FILE)" ]; then \
 	echo -n > $(TIMESTAMP_FILE); \
-	for f in ./src/* ./includes/* ./Makefile; do \
+	for f in ./src/* ./includes/*/* ./Makefile; do \
 		cat "$$f" >> $(TIMESTAMP_FILE); \
 		echo "$(ORANGE)\n++|| $$f" >> $(TIMESTAMP_FILE); \
 	done \
 	fi
 	@echo -n > temp_$(TIMESTAMP_FILE)
-	@for f in ./src/* ./includes/* ./Makefile; do \
+	@for f in ./src/* ./includes/*/* ./Makefile; do \
 		cat "$$f" >> temp_$(TIMESTAMP_FILE); \
 		echo "$(ORANGE)\n++|| $$f" >> temp_$(TIMESTAMP_FILE); \
 	done

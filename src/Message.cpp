@@ -25,7 +25,7 @@ Message& Message::operator=(const Message& src) {
 		_client = src._client;
 		_msg = src._msg;
 		_nick = src._nick;
-		_server_name = src._server_name;
+		_serverName = src._serverName;
 		_command = src._command;
 		_params = src._params;
 		_trailing = src._trailing;
@@ -69,8 +69,8 @@ void Message::parseMsg() {
 void Message::parsePrefix(const std::string& str) {
 	if (str.empty())
 		throw std::invalid_argument("Invalid parse pre prefix (empty)");
-	_server_name = str;
-	std::cout << C_OR << _server_name << C_RESET << " ";
+	_serverName = str;
+	std::cout << C_OR << _serverName << C_RESET << " ";
 }
 
 // command    =  1*letter / 3digit
@@ -132,7 +132,7 @@ std::string Message::getNick() const {
 	return _nick;
 }
 std::string Message::getServerName() const {
-	return _server_name;
+	return _serverName;
 }
 std::string Message::getCommand() const {
 	return _command;

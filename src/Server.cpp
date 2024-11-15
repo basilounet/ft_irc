@@ -44,6 +44,7 @@ Server& Server::operator=(const Server& src) {
 void Server::createServer() {
 	signal(SIGINT, &sigHandler);
 	signal(SIGQUIT, &sigHandler);
+	signal(SIGPIPE, SIG_IGN);
 	_socket = socket(AF_INET, SOCK_STREAM, 0);
 	_fds.push_back((pollfd){_socket, POLLIN, 0});
 	if (_socket < 0)
@@ -67,6 +68,8 @@ void Server::runServer() {
 	while (_sig == 0)
 	{
 		int pollCount = poll(_fds.data(), _fds.size(), 0);
+		if (_sig != 0)
+			break ;
 		if (pollCount < 0)
 			throw (std::runtime_error("\033[31mError: poll failed\033[0m"));
 		for (size_t i = 0; i < _fds.size(); ++i)

@@ -14,7 +14,7 @@ class Message {
 
 	public:
 		Message();
-		Message(Client* client, const std::string &msg);
+		Message(Client* client, const std::string &msg );
 		~Message();
 		Message(const Message& src);
 		Message &operator=(const Message& src);
@@ -31,7 +31,7 @@ class Message {
 		Client*						_client;
 		std::string					_msg;
 		std::string					_nick;
-		std::string					_server_name;
+		std::string					_serverName;
 		std::string					_command;
 		std::vector<std::string>	_params;
 		std::string					_trailing;
