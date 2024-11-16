@@ -98,19 +98,19 @@
 
 // 402   ERR_NOSUCHSERVER			"<servername> :No such server"
 # define ERR_NOSUCHSERVER(prefix, nickRes, servername) \
-(std::string(prefix) + " 402 " + std::string(nickRes) + " " + servername + " :No such server" + CRLF)
+(std::string(prefix) + " 402 " + std::string(nickRes) + " " + std::string(servername) + " :No such server" + CRLF)
 
-// 403   ERR_NOSUCHCHANNEL			"<channelname> :No such channel"
-# define ERR_NOSUCHCHANNEL(prefix, nickRes, channelname) \
-(std::string(prefix) + " 403 " + std::string(nickRes) + " " + channelname + " :No such channel" + CRLF)
+// 403   ERR_NOSUCHCHANNEL			"<channel> :No such channel"
+# define ERR_NOSUCHCHANNEL(prefix, nickRes, channel) \
+(std::string(prefix) + " 403 " + std::string(nickRes) + " " + std::string(channel) + " :No such channel" + CRLF)
 
-// 404   ERR_CANNOTSENDTOCHAN		"<channelname> :Cannot send to channel"
-# define ERR_CANNOTSENDTOCHAN(prefix, nickRes, channelname) \
-(std::string(prefix) + " 404 " + std::string(nickRes) + " " + channelname + " :Cannot send to channel" + CRLF)
+// 404   ERR_CANNOTSENDTOCHAN		"<channel> :Cannot send to channel"
+# define ERR_CANNOTSENDTOCHAN(prefix, nickRes, channel) \
+(std::string(prefix) + " 404 " + std::string(nickRes) + " " + std::string(channel) + " :Cannot send to channel" + CRLF)
 
-// 405   ERR_TOOMANYCHANNELS		"<channelname> :You have joined too many channels"
-# define ERR_TOOMANYCHANNELS(prefix, nickRes, channelname) \
-(std::string(prefix) + " 405 " + std::string(nickRes) + " " + channelname + " :You have joined too many channels" + CRLF)
+// 405   ERR_TOOMANYCHANNELS		"<channel> :You have joined too many channels"
+# define ERR_TOOMANYCHANNELS(prefix, nickRes, channel) \
+(std::string(prefix) + " 405 " + std::string(nickRes) + " " + std::string(channel) + " :You have joined too many channels" + CRLF)
 
 // 407   ERR_TOOMANYTARGETS			"<target> :<error> recipients. <message>"
 # define ERR_TOOMANYTARGETS(prefix, nickRes, target, error, message) \
@@ -190,7 +190,7 @@
 
 // 472   ERR_UNKNOWNMODE			"<char> :is unknown mode char to me for <channel>"
 # define ERR_UNKNOWNMODE(prefix, nickRes, chara, channel) \
-(std::string(prefix) + " 472 " + std::string(nickRes) + " " + std::string(nick) + " " + std::string(chara) + " :is unknown mode char to me for" + std::string(channel) + CRLF)
+(std::string(prefix) + " 472 " + std::string(nickRes) + " " + std::string(chara) + " :is unknown mode char to me for" + std::string(channel) + CRLF)
 
 // 473   ERR_INVITEONLYCHAN			"<channel> :Cannot join channel (+i)"
 # define ERR_INVITEONLYCHAN(prefix, nickRes, channel) \

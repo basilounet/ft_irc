@@ -22,11 +22,14 @@ public:
 
 	Client*						getClient()		const ;
 	std::string					getMsg()		const ;
-	std::string					getNick()		const ;
+
+	std::string					getNick() const ;
 	std::string					getServerName() const ;
 	std::string					getCommand()	const ;
 	std::vector<std::string>	getParams()		const ;
 	std::string					getTrailing()	const ;
+
+	int							getFd()			const ;
 
 private:
 	Client*						_client;

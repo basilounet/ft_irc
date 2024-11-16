@@ -7,26 +7,26 @@
 
 # include <ACommand.h>
 
-
 class Mode : public ACommand {
 
 public:
-	Mode( void );
+	Mode();
 	Mode(Mode const &src);
-	~Mode( void );
+	~Mode();
 	Mode &operator=(Mode const &other);
 
 	void	process(const Message& msg);
 
 private:
-	static void	channelMode(const Message& msg);
-	static void	userMode(const Message& msg);
+	static void	channelMode(Channel* chan, const Message& msg);
 
-	static void setChannelInviteOnly(const Message &msg, bool add);
-	static void setChannelSettableTopic(const Message &msg, bool add);
-	static void setChannelKey(const Message &msg, bool add);
-	static void setChannelOperatorPrivilege(const Message &msg, bool add);
-	static void setChannelLimit(const Message &msg, bool add);
+	static void setChannelInviteOnly(Channel* chan, const Message &msg, bool add);
+	static void setChannelSettableTopic(Channel* chan, const Message &msg, bool add);
+	static void setChannelKey(Channel* chan, const Message &msg, bool add);
+	static void setChannelOperatorPrivilege(Channel* chan, const Message &msg, bool add);
+	static void setChannelLimit(Channel* chan, const Message &msg, bool add);
+
+	static void	userMode(const Message& msg);
 
 };
 #endif //MOD_H

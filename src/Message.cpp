@@ -126,6 +126,7 @@ Client* Message::getClient() const {
 std::string Message::getMsg() const {
 	return _msg;
 }
+
 std::string Message::getNick() const {
 	return _nick;
 }
@@ -141,4 +142,6 @@ std::vector<std::string> Message::getParams() const {
 std::string Message::getTrailing() const {
 	return _trailing;
 }
-
+int Message::getFd() const {
+	return _client->getfd().fd;
+}
