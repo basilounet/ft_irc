@@ -56,7 +56,7 @@ void Message::parseMsg() {
 		return;
 	// [ params ] crlf
 	index0 = index1 + 1;
-	index1 = _msg.find_last_of('\r');
+	index1 = _msg.rfind('\r');
 	if (index1 == std::string::npos)
 		throw std::invalid_argument("Invalid parse pre arguments (no end)");
 	str = _msg.substr(index0, index1 - index0);
@@ -89,10 +89,10 @@ void Message::parseParams(const std::string& str) {
 	size_t index0 = 0;
 	size_t index1 = 0;
 	while (nb < 14) {
-		index0 = str.find_first_not_of(" ", index1);
+		index0 = str.find_first_not_of(' ', index1);
 		if (index0 == std::string::npos)
 			break ;
-		index1 = str.find_first_of(" ", index0);
+		index1 = str.find(' ', index0);
 		//std::cout << C_OR << "[" << str << "]" << C_RESET;
 		if (str.at(index0) == ':') {
 			_trailing = str.substr(index0 + 1);
@@ -111,14 +111,13 @@ void Message::parseParams(const std::string& str) {
 	}
 }
 
-bool Message::isnospcrlfcl(const std::string &str) {
-	(void) str;
-	return true;
-}
-
-bool Message::isCrlfEnding(const std::string &str) {
-	(void) str;
-	return true;
+std::string Message::prefix(int type) const {
+	std::string	prefix_str;
+	if (type == 1) // :localhost
+		prefix_str = ":" + SERVER_REAL_NAME + " ";
+	if (type == 2) // :localhost
+		prefix_str = ":" + _client->getNick() + "!" + _client->getUser() + HOST + " ";
+	return prefix_str;
 }
 
 Client* Message::getClient() const {
