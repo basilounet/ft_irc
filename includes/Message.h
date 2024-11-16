@@ -9,41 +9,40 @@ class Message;
 # include <Server.h>
 // # include <Channel.h>
 // # include <Client.h>
-
 class Message {
 
-	public:
-		Message();
-		Message(Client* client, const std::string &msg );
-		~Message();
-		Message(const Message& src);
-		Message &operator=(const Message& src);
+public:
+	Message();
+	Message(Client* client, const std::string &msg );
+	~Message();
+	Message(const Message& src);
+	Message &operator=(const Message& src);
 
-		Client*						getClient()		const ;
-		std::string					getMsg()		const ;
-		std::string					getNick()		const ;
-		std::string					getServerName() const ;
-		std::string					getCommand()	const ;
-		std::vector<std::string>	getParams()		const ;
-		std::string					getTrailing()	const ;
+	std::string					prefix(int type) const ;
 
-	private:
-		Client*						_client;
-		std::string					_msg;
-		std::string					_nick;
-		std::string					_serverName;
-		std::string					_command;
-		std::vector<std::string>	_params;
-		std::string					_trailing;
+	Client*						getClient()		const ;
+	std::string					getMsg()		const ;
+	std::string					getNick()		const ;
+	std::string					getServerName() const ;
+	std::string					getCommand()	const ;
+	std::vector<std::string>	getParams()		const ;
+	std::string					getTrailing()	const ;
 
-		void		parseMsg();
-		void		parsePrefix(const std::string& str);
-		void		parseCommand(const std::string& str);
-		void		parseParams(const std::string& str);
+private:
+	Client*						_client;
+	std::string					_msg;
+	std::string					_nick;
+	std::string					_serverName;
+	std::string					_command;
+	std::vector<std::string>	_params;
+	std::string					_trailing;
 
-		bool		isnospcrlfcl(const std::string& str);
-		bool		isCrlfEnding(const std::string& str);
+	void		parseMsg();
+	void		parsePrefix(const std::string& str);
+	void		parseCommand(const std::string& str);
+	void		parseParams(const std::string& str);
 
 };
+
 
 #endif //MESSAGE_H
