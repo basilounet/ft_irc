@@ -41,6 +41,12 @@ Server& Server::operator=(const Server& src) {
 	return (*this);
 }
 
+
+std::map<int, Client>& Server::getClients() {
+	return (_clients);
+}
+
+
 void Server::createServer() {
 	signal(SIGINT, &sigHandler);
 	signal(SIGQUIT, &sigHandler);
@@ -82,19 +88,20 @@ void Server::runServer() {
 	}
 }
 
-void Server::sendMessage(const std::string& msg, const Client& sender, const int to, const std::string& type) {
-	std::string	message = ":" + sender.getNick() + "!" + sender.getUser() + "@localhost " + type + " " + msg + "\r\n";
+
+void Server::sendMessage(std::string message, const int fd) {
 	if (message.size() > 512)
 		message = message.substr(0, 510) + "\r\n";
-	send(to, msg.c_str(), msg.size(), MSG_DONTWAIT | MSG_NOSIGNAL);
+	send(fd, message.c_str(), message.size(), MSG_DONTWAIT | MSG_NOSIGNAL);
 }
 
 void Server::broadcast(const std::string& msg) {
 	for (std::vector<pollfd>::iterator it = _fds.begin(); it != _fds.end(); ++it) {
 		if (it->fd != _socket)
-			sendMessage(msg, _clients[it->fd], it->fd, "PRIVMSG");
+			sendMessage(msg, it->fd);
 	}
 }
+
 
 void Server::removeClient(const int fd)
 {
@@ -129,7 +136,6 @@ void Server::handleClient(const pollfd &pollfd) {
 	if (bytes_read > 0) {
 		_clients[pollfd.fd].appendBuffer(buffer);
 		total_buf = _clients[pollfd.fd].getBuffer();
-		//std::cout << "Message to server: " << buffer << "  ";
 		if (total_buf.size() > 2 && total_buf[total_buf.size() - 2] == '\r' && total_buf[total_buf.size() - 1] == '\n') {
 			std::cout << "Message to server: " << _clients[pollfd.fd].getBuffer() ;
 			_clients[pollfd.fd].parseBuffer(); //////////////////////////////////////////////////////////////////////////////////////////////////////////

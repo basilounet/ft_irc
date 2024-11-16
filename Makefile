@@ -87,7 +87,7 @@ NUM_SRC = $(words $(SRC))
 INDEX = 0
 NUMBER_OF_ANIMATION = 2
 ifndef ANIMATION_RATE
-	ANIMATION_RATE = 1
+	ANIMATION_RATE = 2
 endif
 
 ##========== COMPILATION ==========##

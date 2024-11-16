@@ -16,6 +16,7 @@ public:
 	Channel(const Channel &src);
 	Channel &operator=(const Channel &src);
 
+	void	broadcastMessage(const std::string& msg);
 	void	broadcastMessage(const std::string& msg, const Client& sender);
 	void    addClient(Client& client);
 	void    removeClient(const Client& client);

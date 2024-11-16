@@ -27,11 +27,15 @@ Channel& Channel::operator=(const Channel& src) {
 }
 
 
+void Channel::broadcastMessage(const std::string& msg) {
+	for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+			Server::sendMessage(msg, it->second->getfd().fd);
+}
+
 void Channel::broadcastMessage(const std::string& msg, const Client& sender) {
-	for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
+	for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
 		if (it->first != sender.getfd().fd)
-			Server::sendMessage(msg, sender, it->second->getfd().fd, "PRIVMSG " + _name + " :");
-	}
+			Server::sendMessage(msg, it->second->getfd().fd);
 }
 
 void Channel::addClient(Client& client) {

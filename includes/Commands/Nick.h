@@ -6,6 +6,7 @@
 #define NICK_H
 
 # include <ACommand.h>
+# include <iostream>
 
 class Nick : public ACommand {
 public:
@@ -15,6 +16,9 @@ public:
 	Nick &operator=(Nick const &other);
 
 	void	process(const Message& msg);
+
+private:
+	static bool	hasInvalidCharacter(const std::string& str);
 
 };
 

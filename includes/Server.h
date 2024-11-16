@@ -36,10 +36,12 @@ public:
 	Server(const Server &src);
 	Server &operator=(const Server &src);
 
+	std::map<int, Client>&	getClients();
+
 	void createServer();
 	void runServer();
 
-	static void	sendMessage(const std::string& msg, const Client& sender, const int to, const std::string& type);
+	static void	sendMessage(std::string message, int fd);
 	void		broadcast(const std::string& msg);
 	void		removeClient(const int fd);
 
@@ -52,7 +54,7 @@ private:
 	std::map<int, Client>			_clients;
 	std::map<std::string, Channel>	_channels;
 
-	static int				_sig;
+	static int						_sig;
 
 	void		acceptClient();
 	void		handleClient(const ::pollfd& pollfd);

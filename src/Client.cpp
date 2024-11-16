@@ -3,14 +3,15 @@
 #include <sstream>
 
 Client::Client() {
-	Client(-1, "default", "default nick", __nullptr);
+	*this = Client(-1, "default", "default nick", __nullptr);
 }
 
 Client::Client(const int fd, const std::string& name, const std::string& nick, Server* server) :
 	_server(server),
 	_nick(nick),
 	_realName(name),
-	_fd((pollfd){fd, POLLIN, 0}) {
+	_fd((pollfd){fd, POLLIN, 0}),
+	_flags(HAS_REGISTERED){
 }
 
 Client::~Client() {
@@ -29,6 +30,7 @@ Client& Client::operator=(const Client& src) {
 		_channels = src._channels;
 		_fd = src._fd;
 		_buffer = src._buffer;
+		_flags = src._flags;
 	}
 	return (*this);
 }
@@ -48,12 +50,20 @@ void Client::quitAllChannels() {
 
 }
 
+Server* Client::getServer() const {
+	return (_server);
+}
+
 pollfd Client::getfd() const {
 	return (_fd);
 }
 
 std::string Client::getRealName() const {
 	return (_realName);
+}
+
+const std::map<std::string, Channel*>& Client::getChannels() const {
+	return (_channels);
 }
 
 std::string Client::getNick() const {
@@ -66,6 +76,10 @@ std::string Client::getUser() const {
 
 std::string Client::getBuffer() const {
 	return (_buffer);
+}
+
+short Client::getFlags() const {
+	return (_flags);
 }
 
 void Client::setRealName(const std::string& name) {
@@ -84,6 +98,10 @@ void Client::setBuffer(const std::string& buf) {
 	_buffer = buf;
 }
 
+void Client::setFlags(short flags) {
+	_flags = flags;
+}
+
 void Client::appendBuffer(const std::string& buf) {
 	_buffer += buf;
 }
@@ -94,7 +112,8 @@ void Client::parseBuffer() {
 		std::string			str;
 		while (std::getline(storage, str, '\n') && !str.empty()) {
 			Message msg(this, str);
-			//_server->execCommand(Message& msg);
+			// msg.parseMsg();
+			// msg.executeCommand();
 		}
 	} catch (std::exception& e) {
 		std::cerr << C_ROUGE << "Message error :" << e.what() << C_RESET << std::endl;
