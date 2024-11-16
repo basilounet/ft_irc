@@ -77,12 +77,12 @@ void Server::runServer() {
 			if (_fds[i].fd == _socket && _fds[i].revents & POLLIN)
 				acceptClient();
 			else if (_fds[i].revents & POLLIN)
-				handleClient(_fds[i], i);
+				handleClient(_fds[i]);
 		}
 	}
 }
 
-void Server::sendMessage(std::string msg, const Client& sender, const int to, const std::string& type) {
+void Server::sendMessage(const std::string& msg, const Client& sender, const int to, const std::string& type) {
 	std::string	message = ":" + sender.getNick() + "!" + sender.getUser() + "@localhost " + type + " " + msg + "\r\n";
 	if (message.size() > 512)
 		message = message.substr(0, 510) + "\r\n";
@@ -121,7 +121,7 @@ void Server::acceptClient() {
 	std::cout << C_VERT << "Client connected with fd " << fd << C_RESET << std::endl;
 }
 
-void Server::handleClient(const pollfd &pollfd, const size_t i) {
+void Server::handleClient(const pollfd &pollfd) {
 	char buffer[1024] = {0};
 	std::string total_buf;
 	ssize_t bytes_read = recv(pollfd.fd, buffer, sizeof(buffer), MSG_DONTWAIT);

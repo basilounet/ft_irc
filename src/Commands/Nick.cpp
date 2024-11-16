@@ -4,6 +4,8 @@
 
 #include "Nick.h"
 
+#include "Server.h"
+
 Nick::Nick() {
 }
 
@@ -20,5 +22,8 @@ Nick& Nick::operator=(Nick const& other) {
 }
 
 void	Nick::process(const Message& msg) {
-	(void)msg;
+	std::vector<std::string> params = msg.getParams();
+
+	// if (params.size() != 1)
+		// Server::sendMessage();
 }
