@@ -7,6 +7,7 @@ class Channel;
 
 # include <Server.h>
 # include <Client.h>
+# include <algorithm>
 
 class Channel {
 public:
@@ -25,7 +26,8 @@ public:
 	void							removeClient(const Client& client);
 
 	std::string						getName()	const;
-	const std::map<int, Client*>&	getClients()	const;
+
+	const std::vector<Client *> &getClients() const;
 
 	bool		isInChannel(const std::string& nick)	const;
 	bool		isChanop(std::string nick)		const;
@@ -38,22 +40,23 @@ public:
 	bool		isInviteOnly()					const;
 	bool		isSettableTopic()				const;
 
-	void 		addChanop(std::string &nick);
-	void 		removeChanop(std::string &nick);
-	void		setKey(std::string &key);
+	bool 		addChanop(std::string &nick);
+	bool 		removeChanop(std::string &nick);
+	void		setKey(std::string key);
 	void		setLimit(int limit);
 	void		setInviteOnly(bool state);
 	void		setSettableTopic(bool state);
 
 private:
-	Server*					_server;
-	std::string				_name;
-	std::map<int, Client*>	_clients;
-	std::map<int, Client*>	_chanops;
-	std::string				_key;
-	int						_limit;
-	bool					_inviteOnly;
-	bool					_settableTopic;
+	Server*						_server;
+	std::string					_name;
+	std::vector<Client*>		_clients;
+	std::vector<Client*>		_chanops;
+	std::vector<std::string>	_invite;
+	std::string					_key;
+	int							_limit;
+	bool						_inviteOnly;
+	bool						_settableTopic;
 
 };
 

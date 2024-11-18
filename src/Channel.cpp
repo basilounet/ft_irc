@@ -1,5 +1,6 @@
 #include "Channel.h"
 
+
 Channel::Channel() :
 		_server(NULL),
 		_name("default"),
@@ -28,6 +29,7 @@ Channel& Channel::operator=(const Channel& src) {
 		_server = src._server;
 		_name = src._name;
 		_clients = src._clients;
+		_invite = src._invite;
 		_chanops = src._chanops;
 		_key = src._key;
 		_limit = src._limit;
@@ -39,14 +41,14 @@ Channel& Channel::operator=(const Channel& src) {
 
 
 void Channel::broadcastMessage(const std::string& msg) {
-	for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-			Server::sendMessage(msg, it->second->getfd().fd);
+	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+			Server::sendMessage(msg, (*it)->getfd().fd);
 }
 
 void Channel::broadcastMessage(const std::string& msg, const Client& sender, const bool shouldSendToSender) {
-	for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-		if (it->first != sender.getfd().fd || shouldSendToSender)
-			Server::sendMessage(msg, it->second->getfd().fd);
+	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+		if ((*it)->getfd().fd != sender.getfd().fd || shouldSendToSender)
+			Server::sendMessage(msg, (*it)->getfd().fd);
 }
 
 void Channel::addClient(std::string &nick) {
@@ -68,8 +70,9 @@ void Channel::removeClient(std::string &nick) {
 	if (client == NULL)
 		// TODO si NULL >> 401   ERR_NOSUCHNICK				"<nickname> :No such nick/channel"
 		return;
-	if (_clients.find(client->getfd().fd) != _clients.end()) {
-		_clients.erase(client->getfd().fd);
+	std::vector<Client*>::iterator it = std::find(_clients.begin(), _clients.end(), client);
+	if (it != _clients.end()) {
+		_clients.erase(it);
 		// TODO MESSAGE OK DE RETRAIT ?
 		return;
 	}
@@ -78,31 +81,33 @@ void Channel::removeClient(std::string &nick) {
 }
 
 void Channel::removeClient(const Client& client) {
-	if (_clients.find(client.getfd().fd) != _clients.end())
-		_clients.erase(client.getfd().fd);
+	std::vector<Client*>::iterator it = std::find(_clients.begin(), _clients.end(), &client);
+	if (it != _clients.end()) {
+		_clients.erase(it);
+		// TODO MESSAGE OK DE RETRAIT ?
+		return;
+	}
 }
 
 std::string Channel::getName() const {
 	return (_name);
 }
 
-const std::map<int, Client*>& Channel::getClients()	const {
+const std::vector<Client *> &Channel::getClients() const {
 	return (_clients);
 }
 
 bool Channel::isInChannel(const std::string& nick) const {
-	(void)nick;
-	for (std::map<int, Client*>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
-		if (it->second->getNick() == nick)
+	for (std::vector<Client*>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
+		if ((*it)->getNick() == nick)
 			return true;
 	return false;
 	return (true);
 }
 
 bool Channel::isChanop(const std::string nick) const {
-	(void)nick;
-	for (std::map<int, Client*>::const_iterator it = _chanops.begin(); it != _chanops.end(); ++it)
-		if (it->second->getNick() == nick)
+	for (std::vector<Client*>::const_iterator it = _chanops.begin(); it != _chanops.end(); ++it)
+		if ((*it)->getNick() == nick)
 			return true;
 	return false;
 	return (true);
@@ -148,17 +153,25 @@ bool Channel::isSettableTopic() const {
 	return (_settableTopic);
 }
 
-void Channel::addChanop(std::string &nick) {
-	// TODO
-	(void) nick;
+bool Channel::addChanop(std::string &nick) {
+	if (!isChanop(nick)) {
+		_chanops.push_back(_server->getClientWithNick(nick));
+		return true;
+	}
+	return false;
 }
 
-void Channel::removeChanop(std::string &nick) {
-	// TODO
-	(void) nick;
+bool Channel::removeChanop(std::string &nick) {
+	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
+		if ((*it)->getNick() == nick) {
+			_chanops.erase(it);
+			return true;
+		}
+	}
+	return false;
 }
 
-void Channel::setKey(std::string &key) {
+void Channel::setKey(std::string key) {
 	_key = key;
 }
 

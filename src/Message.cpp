@@ -9,7 +9,7 @@ Message::Message(Client* client, const std::string &msg) : _client(client), _msg
 		throw std::invalid_argument("client is NULL");
 	if (msg.empty())
 		throw std::invalid_argument("message is empty");
-	parseMsg();
+	//parseMsg();
 }
 
 Message::~Message() {
