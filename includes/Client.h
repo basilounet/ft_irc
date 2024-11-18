@@ -11,7 +11,9 @@ class Message;
 # include <Message.h>
 # include "IRC_responses.h"
 
-# define HAS_REGISTERED 0b1
+# define HAS_SERVER_PASS 0b1
+# define HAS_NICK 0b10
+# define HAS_REGISTERED 0b100
 
 class Client {
 public:

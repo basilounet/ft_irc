@@ -24,6 +24,9 @@ Nick& Nick::operator=(Nick const& other) {
 void	Nick::process(const Message& msg) {
 	std::vector<std::string> params = msg.getParams();
 
+	if ((msg.getClient()->getFlags() & HAS_SERVER_PASS) == 0) {
+
+	}
 	if (params.empty() || params[0].empty()) {
 		Server::sendMessage(ERR_NONICKNAMEGIVEN(msg.prefix(2), msg.getClient()->getNick()), msg.getClient()->getfd().fd);
 		throw (std::invalid_argument("No nickname given")); ;
@@ -46,10 +49,7 @@ void	Nick::process(const Message& msg) {
 		}
 	}
 	msg.getClient()->setNick(params[0]);
-	if ((msg.getClient()->getFlags() & HAS_REGISTERED) == 0) {
-		msg.getClient()->setFlags(msg.getClient()->getFlags() | HAS_REGISTERED);
-	}
-	else
+	if ((msg.getClient()->getFlags() & HAS_REGISTERED) == 1) { ///////////////////////////////////////////////////////////////////////////////////////////
 		Server::sendMessage(msg.prefix(2) + " NICK :" + msg.getClient()->getNick() + "\r\n", msg.getClient()->getfd().fd);
 }
 
