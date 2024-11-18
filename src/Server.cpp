@@ -41,11 +41,13 @@ Server& Server::operator=(const Server& src) {
 	return (*this);
 }
 
-
 std::map<int, Client>& Server::getClients() {
 	return (_clients);
 }
 
+const std::string &Server::getPassword() const {
+	return _password;
+}
 
 void Server::createServer() {
 	signal(SIGINT, &sigHandler);
@@ -87,7 +89,6 @@ void Server::runServer() {
 		}
 	}
 }
-
 
 void Server::sendMessage(std::string message, const int fd) {
 	if (message.size() > 512)
@@ -165,7 +166,7 @@ void Server::handleClient(const pollfd &pollfd) {
 			_clients[pollfd.fd].setBuffer("");
 		}
 	}
-	else if (bytes_read == 0)
+	if (bytes_read == 0 || _clients[pollfd.fd].getFlags() & IS_RM)
 		removeClient(pollfd.fd);
 }
 

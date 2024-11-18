@@ -39,7 +39,6 @@ public:
 	std::string					getTrailing()	const ;
 	int							getFd()			const ;
 
-	void						parseMsg();
 	void						execCommand();
 
 private:
@@ -56,7 +55,7 @@ private:
 	void		parsePrefix(const std::string& str);
 	void		parseCommand(const std::string& str);
 	void		parseParams(const std::string& str);
-
+	void		parseMsg();
 	void		createCommand();
 };
 
