@@ -1,7 +1,9 @@
 #pragma once
 
+class Message;
+
 # include <string>
-# include <Message.h>
+# include <vector>
 
 class ACommand
 {
@@ -14,3 +16,5 @@ class ACommand
 
 		virtual void process(const Message& msg) = 0;
 };
+
+# include <Message.h>

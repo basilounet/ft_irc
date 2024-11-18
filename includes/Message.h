@@ -5,8 +5,19 @@ class Server;
 class Client;
 class Channel;
 class Message;
+class ACommand;
 
 # include <Server.h>
+# include <ACommand.h>
+# include <Invite.h>
+# include <Join.h>
+# include <Kick.h>
+# include <Mode.h>
+# include <Nick.h>
+# include <Part.h>
+# include <Pass.h>
+# include <Privmsg.h>
+# include <User.h>
 // # include <Channel.h>
 // # include <Client.h>
 
@@ -26,8 +37,10 @@ class Message {
 		std::string					getCommand()	const ;
 		std::vector<std::string>	getParams()		const ;
 		std::string					getTrailing()	const ;
+		void						execCommand();
 
 	private:
+		ACommand*					_cmd;
 		Client*						_client;
 		std::string					_msg;
 		std::string					_nick;
@@ -44,6 +57,7 @@ class Message {
 		bool		isnospcrlfcl(const std::string& str);
 		bool		isCrlfEnding(const std::string& str);
 
+		void		createCommand();
 };
 
 #endif //MESSAGE_H

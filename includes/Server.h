@@ -55,7 +55,7 @@ private:
 	static int				_sig;
 
 	void		acceptClient();
-	void		handleClient(const pollfd &pollfd, const size_t i);
+	void		handleClient(const pollfd &pollfd);
 
 	static void sigHandler(int signal);
 };

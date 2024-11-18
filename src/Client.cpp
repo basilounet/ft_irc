@@ -94,7 +94,7 @@ void Client::parseBuffer() {
 		std::string			str;
 		while (std::getline(storage, str, '\n') && !str.empty()) {
 			Message msg(this, str);
-			//_server->execCommand(Message& msg);
+			msg.execCommand();
 		}
 	} catch (std::exception& e) {
 		std::cerr << C_ROUGE << "Message error :" << e.what() << C_RESET << std::endl;
