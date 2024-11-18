@@ -109,6 +109,21 @@ void Server::broadcast(const std::string& msg, const Client& sender, const bool 
 	}
 }
 
+Client* Server::getClientWithNick(std::string& nick) {
+	for (std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
+		if (it->second.getNick() == nick)
+			return (&(it->second));
+	}
+ 	return NULL;
+}
+
+Channel* Server::getChannelWithName(std::string& name) {
+	for (std::map<std::string, Channel>::iterator it = _channels.begin(); it != _channels.end(); ++it) {
+		if (it->first == name)
+			return (&(it->second));
+	}
+	return NULL;
+}
 
 void Server::removeClient(const int fd)
 {
@@ -153,7 +168,6 @@ void Server::handleClient(const pollfd &pollfd) {
 	else if (bytes_read == 0)
 		removeClient(pollfd.fd);
 }
-
 
 void Server::sigHandler(const int signal) {
 	if (signal == SIGINT || signal == SIGQUIT)
