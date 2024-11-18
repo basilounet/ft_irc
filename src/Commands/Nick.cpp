@@ -51,8 +51,8 @@ void	Nick::process(const Message& msg) {
 	msg.getClient()->setNick(params[0]);
 	if ((msg.getClient()->getFlags() & HAS_REGISTERED) == 1) { ///////////////////////////////////////////////////////////////////////////////////////////
 		Server::sendMessage(msg.prefix(2) + " NICK :" + msg.getClient()->getNick() + "\r\n", msg.getClient()->getfd().fd);
+	}
 }
-
 
 bool Nick::hasInvalidCharacter(const std::string& str) {
 	for (std::string::const_iterator it = str.begin(); it != str.end(); ++it) {

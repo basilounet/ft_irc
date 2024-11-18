@@ -66,6 +66,11 @@ void Message::parseMsg() {
 	std::cout << std::endl;
 }
 
+void Message::execCommand() {
+		createCommand();
+		_cmd->process(*this);
+}
+
 // prefix = servername / ( nickname [ [ "!" user ] "@" host ] )
 void Message::parsePrefix(const std::string& str) {
 	if (str.empty())
@@ -147,14 +152,10 @@ std::string Message::getTrailing() const {
 
 int Message::getFd() const {
 	return _client->getfd().fd;
-
-void	Message::execCommand() {
-	createCommand();
-	_cmd->process(*this);
 }
 
 void	Message::createCommand() {
-	const char	*tmp[] = {"INVITE", "JOIN", "KICK", "MODE", "NICK", 
+	const char	*tmp[] = {"INVITE", "JOIN", "KICK", "MODE", "NICK",
 		"PART", "PASS", "PRIVMSG", "TOPIC", "USER", NULL};
 	int i = 0;
 
@@ -163,31 +164,31 @@ void	Message::createCommand() {
 	switch (i) {
 		case 0:
 			_cmd = new Invite();
-			break ;
+		break ;
 		case 1:
 			_cmd = new Join();
-			break ;
+		break ;
 		case 2:
 			_cmd = new Kick();
-			break ;
+		break ;
 		case 3:
 			_cmd = new Mode();
-			break ;
+		break ;
 		case 4:
 			_cmd = new Nick();
-			break ;
+		break ;
 		case 5:
 			_cmd = new Part();
-			break ;
+		break ;
 		case 6:
 			_cmd = new Pass();
-			break ;
+		break ;
 		case 7:
 			_cmd = new Privmsg();
-			break ;
+		break ;
 		case 8:
 			_cmd = new User();
-			break ;
+		break ;
 		default:
 			throw std::invalid_argument("Not known command");
 	}

@@ -1,6 +1,8 @@
 #pragma once
 
 class Message;
+class Client;
+class Channel;
 
 # include <string>
 # include <vector>
@@ -23,3 +25,4 @@ class ACommand
 };
 
 # include <Message.h>
+# include <Server.h>

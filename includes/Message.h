@@ -39,6 +39,9 @@ public:
 	std::string					getTrailing()	const ;
 	int							getFd()			const ;
 
+	void						parseMsg();
+	void						execCommand();
+
 private:
 	ACommand*					_cmd;
 	Client*						_client;
@@ -49,7 +52,7 @@ private:
 	std::vector<std::string>	_params;
 	std::string					_trailing;
 
-	void		parseMsg();
+
 	void		parsePrefix(const std::string& str);
 	void		parseCommand(const std::string& str);
 	void		parseParams(const std::string& str);
