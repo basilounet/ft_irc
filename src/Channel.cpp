@@ -88,19 +88,19 @@ std::string Channel::getName() const {
 
 bool Channel::isInChannel(const std::string& nick) const {
 	(void)nick;
-	// for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-	// 	if (it->second->getNick() == nick)
-	// 		return true;
-	// return false;
+	for (std::map<int, Client*>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
+		if (it->second->getNick() == nick)
+			return true;
+	return false;
 	return (true);
 }
 
-bool Channel::isChanop(std::string nick) const {
+bool Channel::isChanop(const std::string nick) const {
 	(void)nick;
-	// for (std::map<int, Client*>::iterator it = _chanops.begin(); it != _chanops.end(); ++it)
-	// 	if (it->second->getNick() == nick)
-	// 		return true;
-	// return false;
+	for (std::map<int, Client*>::const_iterator it = _chanops.begin(); it != _chanops.end(); ++it)
+		if (it->second->getNick() == nick)
+			return true;
+	return false;
 	return (true);
 }
 
@@ -131,7 +131,7 @@ int Channel::getLimit() const {
 }
 
 bool Channel::isFull() const {
-	if ((int) _clients.size() == _limit)
+	if ((int) _clients.size() >= _limit)
 		return (true);
 	return (false);
 }

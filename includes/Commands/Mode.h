@@ -2,8 +2,8 @@
 // Created by bvasseur on 11/15/24.
 //
 
-#ifndef MOD_H
-#define MOD_H
+#ifndef MODE_H
+#define MODE_H
 
 # include <ACommand.h>
 
@@ -29,4 +29,4 @@ private:
 	static void	userMode(const Message& msg);
 
 };
-#endif //MOD_H
+#endif //MODE_H

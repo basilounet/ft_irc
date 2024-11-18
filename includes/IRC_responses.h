@@ -94,7 +94,7 @@
 
 // 401   ERR_NOSUCHNICK				"<nickname> :No such nick/channel"
 # define ERR_NOSUCHNICK(prefix, nickRes, nickname) \
-(std::string(prefix) + " 401 " + std::string(nickRes) + " " std::string(nickname) + " :No such nick/channel" + CRLF)
+(std::string(prefix) + " 401 " + std::string(nickRes) + " " + std::string(nickname) + " :No such nick/channel" + CRLF)
 
 // 402   ERR_NOSUCHSERVER			"<servername> :No such server"
 # define ERR_NOSUCHSERVER(prefix, nickRes, servername) \

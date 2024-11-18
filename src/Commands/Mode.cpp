@@ -22,20 +22,21 @@ Mode& Mode::operator=(Mode const& other) {
 }
 
 void	Mode::process(const Message& msg) {
-	if (msg.getParams().empty())
-		Server::sendMessage(ERR_NEEDMOREPARAMS(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
-	else if (msg.getParams()[0][0] == '#' || msg.getParams()[0][0] == '&') {
-		Channel* chan = msg.getClient()->getServer()->getChannelWithName(msg.getParams()[0]);
-		if (chan) {
+	isMsgParamEmpty(msg);  // throw if
+	// if (msg.getParams().empty())
+	// 	Server::sendMessage(ERR_NEEDMOREPARAMS(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
+	if (msg.getParams()[0][0] == '#' || msg.getParams()[0][0] == '&') {
+		Channel* chan = getChannelWithName(msg.getParams()[0], msg); // throw if
+		// if (chan) {
 			if (!chan->isInChannel(msg.getNick()))
 				Server::sendMessage(ERR_NOTONCHANNEL(msg.prefix(1), msg.getNick(), chan->getName()), msg.getFd());
 			else if (!chan->isChanop(msg.getNick()))
 				Server::sendMessage(ERR_CHANOPRIVSNEEDED(msg.prefix(1), chan->getName(), chan->getName()), msg.getFd());
 			else
 				channelMode(chan, msg);
-		}
-		else
-			Server::sendMessage(ERR_NOSUCHCHANNEL(msg.prefix(1), msg.getNick(), chan->getName()), msg.getFd());
+		// }
+		// else
+		// 	Server::sendMessage(ERR_NOSUCHCHANNEL(msg.prefix(1), msg.getNick(), chan->getName()), msg.getFd());
 	}
 	else {
 		userMode(msg);
@@ -45,8 +46,10 @@ void	Mode::process(const Message& msg) {
 // CHANNEL MODE
 // MODE <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>][<ban mask>]
 void	Mode::channelMode(Channel* chan, const Message& msg) {
-	if (msg.getParams()[1][0] != '+' && msg.getParams()[1][0] != '-')
+	if (msg.getParams()[1][0] != '+' && msg.getParams()[1][0] != '-') {
 		Server::sendMessage(ERR_NEEDMOREPARAMS(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
+		throw std::invalid_argument(msg.getParams()[1] + ":invalid parameter");
+	}
 	else if (msg.getParams()[1] == "-i")
 		setChannelInviteOnly(chan, msg, false);
 	else if (msg.getParams()[1] == "+i")
@@ -67,8 +70,10 @@ void	Mode::channelMode(Channel* chan, const Message& msg) {
 		setChannelLimit(chan, msg, false);
 	else if (msg.getParams()[1] == "+l")
 		setChannelLimit(chan, msg, true);
-	else
+	else {
 		Server::sendMessage(ERR_UNKNOWNMODE(msg.prefix(1), msg.getNick(), msg.getParams()[1], msg.getParams()[0]), msg.getFd());
+		throw std::invalid_argument(msg.getParams()[1] + "unknown mode");
+	}
 }
 
 // i - toggle the invite-only channel flag
@@ -119,12 +124,12 @@ void	Mode::setChannelLimit(Channel* chan, const Message& msg, bool add) {
 	if (add) {
 		if (msg.getParams().size() < 3){
 			Server::sendMessage(ERR_NEEDMOREPARAMS(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
-			return ;
+			throw std::invalid_argument(msg.getCommand() + ":Not enough parameters");
 		}
 		int limit = atoi(msg.getParams()[2].c_str());
 		if (limit == 0) {
 			Server::sendMessage(ERR_NEEDMOREPARAMS(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
-			return ;
+			throw std::invalid_argument(msg.getCommand() + ":Not enough parameters");
 		}
 		chan->setLimit(limit);
 		RPL_CHANNELMODEIS(msg.prefix(2), msg.getNick(), msg.getParams()[0], msg.getParams()[1], msg.getParams()[2]);

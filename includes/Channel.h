@@ -37,8 +37,6 @@ public:
 	bool		isInviteOnly()					const;
 	bool		isSettableTopic()				const;
 
-
-
 	void 		addChanop(std::string &nick);
 	void 		removeChanop(std::string &nick);
 	void		setKey(std::string &key);

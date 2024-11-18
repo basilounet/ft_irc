@@ -107,8 +107,7 @@ Client* Server::getClientWithNick(std::string& nick) {
 		if (it->second.getNick() == nick)
 			return (&(it->second));
 	}
-	// si NULL >> 401   ERR_NOSUCHNICK				"<nickname> :No such nick/channel"
-	return NULL;
+ 	return NULL;
 }
 
 Channel* Server::getChannelWithName(std::string& name) {
@@ -116,7 +115,6 @@ Channel* Server::getChannelWithName(std::string& name) {
 		if (it->first == name)
 			return (&(it->second));
 	}
-	// si NULL >> 401   ERR_NOSUCHNICK				"<nickname> :No such nick/channel"
 	return NULL;
 }
 
@@ -165,7 +163,6 @@ void Server::handleClient(const pollfd &pollfd) {
 		removeClient(pollfd.fd);
 	}
 }
-
 
 void Server::sigHandler(const int signal) {
 	if (signal == SIGINT || signal == SIGQUIT)
