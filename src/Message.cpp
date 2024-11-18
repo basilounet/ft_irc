@@ -13,6 +13,7 @@ Message::Message(Client* client, const std::string &msg) : _client(client), _msg
 }
 
 Message::~Message() {
+	delete _cmd;
 }
 
 
@@ -143,6 +144,51 @@ std::vector<std::string> Message::getParams() const {
 std::string Message::getTrailing() const {
 	return _trailing;
 }
+
 int Message::getFd() const {
 	return _client->getfd().fd;
+
+void	Message::execCommand() {
+	createCommand();
+	_cmd->process(*this);
+}
+
+void	Message::createCommand() {
+	const char	*tmp[] = {"INVITE", "JOIN", "KICK", "MODE", "NICK", 
+		"PART", "PASS", "PRIVMSG", "TOPIC", "USER", NULL};
+	int i = 0;
+
+	while (tmp[i] && _command != tmp[i])
+		i++;
+	switch (i) {
+		case 0:
+			_cmd = new Invite();
+			break ;
+		case 1:
+			_cmd = new Join();
+			break ;
+		case 2:
+			_cmd = new Kick();
+			break ;
+		case 3:
+			_cmd = new Mode();
+			break ;
+		case 4:
+			_cmd = new Nick();
+			break ;
+		case 5:
+			_cmd = new Part();
+			break ;
+		case 6:
+			_cmd = new Pass();
+			break ;
+		case 7:
+			_cmd = new Privmsg();
+			break ;
+		case 8:
+			_cmd = new User();
+			break ;
+		default:
+			throw std::invalid_argument("Not known command");
+	}
 }

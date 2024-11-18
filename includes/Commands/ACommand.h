@@ -1,7 +1,9 @@
 #pragma once
 
+class Message;
+
 # include <string>
-# include <Message.h>
+# include <vector>
 
 class ACommand
 {
@@ -19,3 +21,5 @@ class ACommand
 		static Channel*		getChannelWithName(std::string &name, const Message& msg);
 
 };
+
+# include <Message.h>

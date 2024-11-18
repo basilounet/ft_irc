@@ -5,8 +5,19 @@ class Server;
 class Client;
 class Channel;
 class Message;
+class ACommand;
 
 # include <Server.h>
+# include <ACommand.h>
+# include <Invite.h>
+# include <Join.h>
+# include <Kick.h>
+# include <Mode.h>
+# include <Nick.h>
+# include <Part.h>
+# include <Pass.h>
+# include <Privmsg.h>
+# include <User.h>
 // # include <Channel.h>
 // # include <Client.h>
 class Message {
@@ -18,20 +29,18 @@ public:
 	Message(const Message& src);
 	Message &operator=(const Message& src);
 
-	std::string					prefix(int type) const ;
-
 	Client*						getClient()		const ;
 	std::string					getMsg()		const ;
-
+	std::string					prefix(int type) const ;
 	std::string					getNick() const ;
 	std::string					getServerName() const ;
 	std::string					getCommand()	const ;
 	std::vector<std::string>	getParams()		const ;
 	std::string					getTrailing()	const ;
-
 	int							getFd()			const ;
 
 private:
+	ACommand*					_cmd;
 	Client*						_client;
 	std::string					_msg;
 	std::string					_nick;
@@ -45,6 +54,7 @@ private:
 	void		parseCommand(const std::string& str);
 	void		parseParams(const std::string& str);
 
+	void		createCommand();
 };
 
 
