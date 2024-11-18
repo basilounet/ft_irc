@@ -50,6 +50,21 @@ void Client::quitAllChannels() {
 
 }
 
+void Client::broadcastToAllKnownUsers(const std::string& msg, const bool shouldSendToSender) {
+	std::vector<int>	_alreadyBroadcasted;
+
+	for (std::map<std::string, Channel*>::iterator itChannel = _channels.begin(); itChannel != _channels.end(); ++itChannel) {
+		for (std::map<int, Client*>::const_iterator itClient = itChannel->second->getClients().begin(); itClient !=
+		     itChannel->second->getClients().end(); ++itClient) {
+			if ((itClient->first != _fd.fd || shouldSendToSender) && std::find(
+				_alreadyBroadcasted.begin(), _alreadyBroadcasted.end(), itClient->first) == _alreadyBroadcasted.end()) {
+				Server::sendMessage(msg, itClient->first);
+				_alreadyBroadcasted.push_back(itClient->first);
+			}
+		}
+	}
+}
+
 Server* Client::getServer() const {
 	return (_server);
 }

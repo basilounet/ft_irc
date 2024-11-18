@@ -149,8 +149,8 @@
 (std::string(prefix) + " 433 " + std::string(nickRes) + " " + std::string(nick) + " :Nickname is already in use" + CRLF)
 
 // 436   ERR_NICKCOLLISION			"<nick> :Nickname collision KILL from <user>@<host>"
-# define ERR_NICKCOLLISION(prefix, nickRes, nick, user, host) \
-(std::string(prefix) + " 436 " + std::string(nickRes) + " " + std::string(nick) + " :Nickname collision KILL from " + std::string(user) + "@" + std::string(host) + CRLF)
+# define ERR_NICKCOLLISION(prefix, nickRes, nick, user) \
+(std::string(prefix) + " 436 " + std::string(nickRes) + " " + std::string(nick) + " :Nickname collision KILL from " + std::string(user) + "@" + HOST + CRLF)
 
 // 437   ERR_UNAVAILRESOURCE		"<nick_channel> :Nick/channel is temporarily unavailable"
 # define ERR_UNAVAILRESOURCE(prefix, nickRes, nick_channel) \

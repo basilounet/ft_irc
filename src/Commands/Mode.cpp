@@ -112,6 +112,7 @@ void	Mode::setChannelLimit(const Message& msg, bool add) {
 // USER MODE
 // MODE <nickname> {[+|-]|i|w|o|O|r}
 void	Mode::userMode(const Message& msg) {
+	(void) msg;
 
 }
 

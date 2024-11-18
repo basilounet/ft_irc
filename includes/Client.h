@@ -24,6 +24,7 @@ public:
 	void									addChannel(Channel& channel);
 	void									removeChannel(const std::string& name);
 	void									quitAllChannels( void );
+	void									broadcastToAllKnownUsers(const std::string& msg, bool shouldSendToSender = false);
 
 	Server*									getServer()		const;
 	pollfd									getfd()			const;

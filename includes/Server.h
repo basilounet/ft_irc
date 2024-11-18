@@ -42,7 +42,9 @@ public:
 	void runServer();
 
 	static void	sendMessage(std::string message, int fd);
-	void		broadcast(const std::string& msg);
+	static void	broadcast(const std::vector<Client*>& clients, const std::string& msg, const Client& sender,
+	                      const bool shouldSendToSender = false);
+	void		broadcast(const std::string& msg, const Client& sender, const bool shouldSendToSender = false);
 	void		removeClient(const int fd);
 
 private:

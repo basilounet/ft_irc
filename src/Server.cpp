@@ -95,9 +95,16 @@ void Server::sendMessage(std::string message, const int fd) {
 	send(fd, message.c_str(), message.size(), MSG_DONTWAIT | MSG_NOSIGNAL);
 }
 
-void Server::broadcast(const std::string& msg) {
+void Server::broadcast(const std::vector<Client*>& clients, const std::string& msg, const Client& sender,
+	const bool shouldSendToSender) {
+	for (std::vector<Client*>::const_iterator it = clients.begin(); it != clients.end(); ++it)
+		if ((*it)->getfd().fd != sender.getfd().fd || shouldSendToSender)
+			sendMessage(msg, (*it)->getfd().fd);
+}
+
+void Server::broadcast(const std::string& msg, const Client& sender, const bool shouldSendToSender) {
 	for (std::vector<pollfd>::iterator it = _fds.begin(); it != _fds.end(); ++it) {
-		if (it->fd != _socket)
+		if (it->fd != _socket && (it->fd != sender.getfd().fd || shouldSendToSender))
 			sendMessage(msg, it->fd);
 	}
 }
@@ -105,6 +112,7 @@ void Server::broadcast(const std::string& msg) {
 
 void Server::removeClient(const int fd)
 {
+	std::cout << C_ROUGE << "Client with fd " << fd << " disconnected" << C_RESET << std::endl;
 	close(fd);
 	_clients[fd].quitAllChannels();
 	for (std::vector<pollfd>::iterator it = _fds.begin(); it != _fds.end(); ++it) {
@@ -139,14 +147,11 @@ void Server::handleClient(const pollfd &pollfd) {
 		if (total_buf.size() > 2 && total_buf[total_buf.size() - 2] == '\r' && total_buf[total_buf.size() - 1] == '\n') {
 			std::cout << "Message to server: " << _clients[pollfd.fd].getBuffer() ;
 			_clients[pollfd.fd].parseBuffer(); //////////////////////////////////////////////////////////////////////////////////////////////////////////
-			// respond to the message
 			_clients[pollfd.fd].setBuffer("");
 		}
 	}
-	else if (bytes_read == 0) {
-		std::cout << C_ROUGE << "Client with fd " << pollfd.fd << " disconnected" << C_RESET << std::endl;
+	else if (bytes_read == 0)
 		removeClient(pollfd.fd);
-	}
 }
 
 

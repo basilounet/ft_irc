@@ -1,6 +1,7 @@
 #include <Message.h>
 
-Message::Message() : _client(NULL) {
+Message::Message() {
+	*this = Message(NULL, "");
 }
 
 Message::Message(Client* client, const std::string &msg) : _client(client), _msg(msg) {

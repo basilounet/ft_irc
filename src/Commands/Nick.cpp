@@ -25,25 +25,32 @@ void	Nick::process(const Message& msg) {
 	std::vector<std::string> params = msg.getParams();
 
 	if (params.empty() || params[0].empty()) {
-		Server::sendMessage(ERR_NONICKNAMEGIVEN(msg.getClient()->getNick()), msg.getClient()->getfd().fd);
-		return ;
+		Server::sendMessage(ERR_NONICKNAMEGIVEN(msg.prefix(2), msg.getClient()->getNick()), msg.getClient()->getfd().fd);
+		throw (std::invalid_argument("No nickname given")); ;
 	}
 	if (params[0].size() > 9)
 		params[0] = params[0].substr(0, 9);
 	if (params[0].size() == 1 || Nick::hasInvalidCharacter(params[0])) {
-		Server::sendMessage(ERR_ERRONEUSNICKNAME(msg.getClient()->getNick(), params[0]), msg.getClient()->getfd().fd);
-		return ;
+		Server::sendMessage(ERR_ERRONEUSNICKNAME(msg.prefix(2),msg.getClient()->getNick(), params[0]), msg.getClient()->getfd().fd);
+		throw (std::invalid_argument("Invalid character in Nick"));
 	}
 	for (std::map<int, Client>::iterator it = msg.getClient()->getServer()->getClients().begin(); it != msg.getClient()->getServer()->getClients().end(); ++it) {
 		if (it->second.getNick() == params[0]) {
-			Server::sendMessage(ERR_NICKNAMEINUSE(msg.getClient()->getNick(), params[0]), msg.getClient()->getfd().fd);
-			return ;
+			if ((msg.getClient()->getFlags() & HAS_REGISTERED) == 0) {
+				Server::sendMessage(ERR_NICKCOLLISION(msg.prefix(2),msg.getClient()->getNick(), params[0], msg.getClient()->getRealName()), msg.getClient()->getfd().fd);
+				msg.getClient()->getServer()->removeClient(msg.getClient()->getfd().fd);
+				throw (std::invalid_argument("Nick already in use"));
+			}
+			Server::sendMessage(ERR_NICKNAMEINUSE(msg.prefix(2),msg.getClient()->getNick(), params[0]), msg.getClient()->getfd().fd);
+			throw (std::invalid_argument("Nick already in use"));
 		}
 	}
 	msg.getClient()->setNick(params[0]);
 	if ((msg.getClient()->getFlags() & HAS_REGISTERED) == 0) {
 		msg.getClient()->setFlags(msg.getClient()->getFlags() | HAS_REGISTERED);
 	}
+	else
+		Server::sendMessage(msg.prefix(2) + " NICK :" + msg.getClient()->getNick() + "\r\n", msg.getClient()->getfd().fd);
 }
 
 

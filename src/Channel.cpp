@@ -32,9 +32,9 @@ void Channel::broadcastMessage(const std::string& msg) {
 			Server::sendMessage(msg, it->second->getfd().fd);
 }
 
-void Channel::broadcastMessage(const std::string& msg, const Client& sender) {
+void Channel::broadcastMessage(const std::string& msg, const Client& sender, const bool shouldSendToSender) {
 	for (std::map<int, Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-		if (it->first != sender.getfd().fd)
+		if (it->first != sender.getfd().fd || shouldSendToSender)
 			Server::sendMessage(msg, it->second->getfd().fd);
 }
 
@@ -49,4 +49,8 @@ void Channel::removeClient(const Client& client) {
 
 std::string Channel::getName() const {
 	return (_name);
+}
+
+const std::map<int, Client*>& Channel::getClients()	const {
+	return (_clients);
 }

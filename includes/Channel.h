@@ -16,17 +16,18 @@ public:
 	Channel(const Channel &src);
 	Channel &operator=(const Channel &src);
 
-	void	broadcastMessage(const std::string& msg);
-	void	broadcastMessage(const std::string& msg, const Client& sender);
-	void    addClient(Client& client);
-	void    removeClient(const Client& client);
+	void							broadcastMessage(const std::string& msg);
+	void							broadcastMessage(const std::string& msg, const Client& sender, bool shouldSendToSender = false);
+	void							addClient(Client& client);
+	void						    removeClient(const Client& client);
 
-	std::string	getName() const;
+	std::string						getName()	const;
+	const std::map<int, Client*>&	getClients()	const;
 
 private:
-	Server*					_server;
-	std::string				_name;
-	std::map<int, Client*>	_clients;
+	Server*							_server;
+	std::string						_name;
+	std::map<int, Client*>			_clients;
 };
 
 #endif //CHANNEL_H
