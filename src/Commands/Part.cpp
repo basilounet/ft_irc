@@ -22,3 +22,7 @@ Part& Part::operator=(Part const& other) {
 void	Part::process(const Message& msg) {
 	(void)msg;
 }
+
+ACommand	*Part::clone(void) const {
+	return new Part();
+}

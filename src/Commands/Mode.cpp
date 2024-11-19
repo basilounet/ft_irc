@@ -143,11 +143,6 @@ void	Mode::userMode(const Message& msg) {
 	(void) msg;
 }
 
-
-
-
-
-
-
-
-
+ACommand	*Mode::clone(void) const {
+	return new Mode();
+}

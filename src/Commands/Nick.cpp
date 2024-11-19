@@ -62,3 +62,7 @@ bool Nick::hasInvalidCharacter(const std::string& str) {
 	}
 	return (false);
 }
+
+ACommand	*Nick::clone(void) const {
+	return new Nick();
+}

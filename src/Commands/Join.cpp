@@ -22,3 +22,7 @@ Join& Join::operator=(Join const& other) {
 void	Join::process(const Message& msg) {
 	(void)msg;
 }
+
+ACommand	*Join::clone(void) const {
+	return new Join();
+}

@@ -22,3 +22,7 @@ Topic& Topic::operator=(Topic const& other) {
 void	Topic::process(const Message& msg) {
 	(void)msg;
 }
+
+ACommand	*Topic::clone(void) const {
+	return new Topic();
+}

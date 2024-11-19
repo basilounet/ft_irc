@@ -24,3 +24,7 @@ Pass& Pass::operator=(Pass const& other) {
 void	Pass::process(const Message& msg) {
 	(void) msg;
 }
+
+ACommand	*Pass::clone(void) const {
+	return new Pass();
+}

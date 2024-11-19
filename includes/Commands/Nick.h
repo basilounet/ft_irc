@@ -15,7 +15,8 @@ public:
 	~Nick( void );
 	Nick &operator=(Nick const &other);
 
-	void	process(const Message& msg);
+	void		process(const Message& msg);
+	ACommand	*clone(void) const;
 
 private:
 	static bool	hasInvalidCharacter(const std::string& str);

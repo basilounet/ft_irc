@@ -14,7 +14,8 @@ public:
 	~Kick( void );
 	Kick &operator=(Kick const &other);
 
-	void	process(const Message& msg);
+	void		process(const Message& msg);
+	ACommand	*clone(void) const;
 };
 
 

@@ -15,7 +15,8 @@ public:
 	~Mode();
 	Mode &operator=(Mode const &other);
 
-	void	process(const Message& msg);
+	void		process(const Message& msg);
+	ACommand	*clone(void) const;
 
 private:
 	static void	channelMode(Channel* chan, const Message& msg);

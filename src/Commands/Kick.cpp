@@ -22,3 +22,7 @@ Kick& Kick::operator=(Kick const& other) {
 void	Kick::process(const Message& msg) {
 	(void)msg;
 }
+
+ACommand	*Kick::clone(void) const {
+	return new Kick();
+}

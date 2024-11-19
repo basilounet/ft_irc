@@ -14,7 +14,8 @@ public:
 	~Part( void );
 	Part &operator=(Part const &other);
 
-	void	process(const Message& msg);
+	void		process(const Message& msg);
+	ACommand	*clone(void) const;
 };
 
 

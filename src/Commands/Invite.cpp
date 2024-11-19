@@ -22,3 +22,7 @@ Invite& Invite::operator=(Invite const& other) {
 void	Invite::process(const Message& msg) {
 	(void)msg;
 }
+
+ACommand	*Invite::clone(void) const {
+	return new Invite();
+}

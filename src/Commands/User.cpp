@@ -22,3 +22,7 @@ User& User::operator=(User const& other) {
 void	User::process(const Message& msg) {
 	(void)msg;
 }
+
+ACommand	*User::clone(void) const {
+	return new User();
+}
