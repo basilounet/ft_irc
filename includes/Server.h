@@ -47,8 +47,9 @@ public:
 	void		broadcast(const std::string& msg, const Client& sender, const bool shouldSendToSender = false);
 	void		removeClient(const int fd);
 
-	Client*		getClientWithNick(std::string& nick);
-	Channel*	getChannelWithName(std::string& name);
+	const std::string	&getPassword() 	const;
+	Client*				getClientWithNick(std::string& nick);
+	Channel*			getChannelWithName(std::string& name);
 
 private:
 	int								_port;

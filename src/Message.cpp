@@ -4,7 +4,8 @@ Message::Message() {
 	*this = Message(NULL, "");
 }
 
-Message::Message(Client* client, const std::string &msg) : _client(client), _msg(msg) {
+Message::Message(Client* client, const std::string &msg) 
+	: _cmd(NULL), _client(client), _msg(msg) {
 	if (client == NULL)
 		throw std::invalid_argument("client is NULL");
 	if (msg.empty())
@@ -30,6 +31,8 @@ Message& Message::operator=(const Message& src) {
 		_command = src._command;
 		_params = src._params;
 		_trailing = src._trailing;
+		delete _cmd;
+		_cmd = src.cmd->clone();
 	}
 	return (*this);
 }

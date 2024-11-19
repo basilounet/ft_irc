@@ -11,7 +11,7 @@ Client::Client(const int fd, const std::string& name, const std::string& nick, S
 	_nick(nick),
 	_realName(name),
 	_fd((pollfd){fd, POLLIN, 0}),
-	_flags(HAS_REGISTERED){
+	_flags(0) {
 }
 
 Client::~Client() {
@@ -127,7 +127,6 @@ void Client::parseBuffer() {
 		std::string			str;
 		while (std::getline(storage, str, '\n') && !str.empty()) {
 			Message msg(this, str);
-			msg.parseMsg();
 			msg.execCommand();
 		}
 	} catch (std::exception& e) {

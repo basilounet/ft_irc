@@ -7,17 +7,16 @@
 
 # include <ACommand.h>
 
-class Pass : public ACommand {
-public:
-	Pass( void );
-	Pass(Pass const &src);
-	~Pass( void );
-	Pass &operator=(Pass const &other);
+class Pass : public ACommand 
+{
+	public:
+		Pass(void);
+		Pass(Pass const &src);
+		~Pass(void);
+		Pass		&operator=(Pass const &other);
 
-	void		process(const Message& msg);
-	ACommand	*clone(void) const;
+		void		process(const Message& msg);
+		ACommand	*clone(void) const;
 };
-
-
 
 #endif //PASS_H
