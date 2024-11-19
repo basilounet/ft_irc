@@ -32,7 +32,9 @@ Message& Message::operator=(const Message& src) {
 		_params = src._params;
 		_trailing = src._trailing;
 		delete _cmd;
-		_cmd = src.cmd->clone();
+		_cmd = NULL;
+		if (src._cmd)
+			_cmd = src._cmd->clone();
 	}
 	return (*this);
 }
