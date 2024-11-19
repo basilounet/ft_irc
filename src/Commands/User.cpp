@@ -21,13 +21,13 @@ User& User::operator=(User const& other) {
 
 void	User::process(const Message& msg)
 {
-	const int	clientFlags = msg.getFlags();
+	const int	clientFlags = msg.getClient()->getFlags();
 	const int	nbParams = msg.getParams().size();
 	std::string	realName = msg.getTrailing();
 
 	if (clientFlags & HAS_REGISTERED)
 	{
-		msg.getClient()->setFlags(clientFlags)
+		msg.getClient()->setFlags(clientFlags);
 		Server::sendMessage(ERR_ALREADYREGISTRED(msg.prefix(1), msg.getNick()), msg.getFd());
 		throw std::logic_error("USER: Unauthorized command (already registered)");
 	}

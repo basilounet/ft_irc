@@ -15,6 +15,7 @@ public:
 	User &operator=(User const &other);
 
 	void		process(const Message& msg);
+	void 		needMoreParams(const Message& msg) const;
 	ACommand	*clone(void) const;
 
 };
