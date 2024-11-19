@@ -17,45 +17,45 @@ class Message;
 # define IS_RM 0b1000
 
 class Client {
-public:
-	Client();
-	Client(const int fd, const std::string& name, const std::string& nick, Server* server);
-	~Client();
-	Client(const Client &src);
-	Client &operator=(const Client &src);
+	public:
+		Client();
+		Client(const int fd, const std::string& name, const std::string& nick, Server* server);
+		~Client();
+		Client(const Client &src);
+		Client &operator=(const Client &src);
 
-	void									addChannel(Channel& channel);
-	void									removeChannel(const std::string& name);
-	void									quitAllChannels( void );
-	void									broadcastToAllKnownUsers(const std::string& msg, bool shouldSendToSender = false);
+		void									addChannel(Channel& channel);
+		void									removeChannel(const std::string& name);
+		void									quitAllChannels( void );
+		void									broadcastToAllKnownUsers(const std::string& msg, bool shouldSendToSender = false);
 
-	Server*									getServer()		const;
-	pollfd									getfd()			const;
-	std::string								getRealName()	const;
-	const std::map<std::string, Channel*>&	getChannels()	const;
-	std::string								getNick()		const;
-	std::string								getUser()		const;
-	std::string								getBuffer()		const;
-	short									getFlags() const;
+		Server*									getServer()		const;
+		pollfd									getfd()			const;
+		std::string								getRealName()	const;
+		const std::map<std::string, Channel*>&	getChannels()	const;
+		std::string								getNick()		const;
+		std::string								getUser()		const;
+		std::string								getBuffer()		const;
+		short									getFlags()		const;
 
-	void									setRealName(const std::string& name);
-	void									setNick(const std::string& name);
-	void									setUser(const std::string& name);
-	void									setBuffer(const std::string& buf);
-	void									setFlags(short flags);
+		void									setRealName(const std::string& name);
+		void									setNick(const std::string& name);
+		void									setUser(const std::string& name);
+		void									setBuffer(const std::string& buf);
+		void									setFlags(short flags);
 
-	void									appendBuffer(const std::string& buf);
-	void									parseBuffer(); // split messages
+		void									appendBuffer(const std::string& buf);
+		void									parseBuffer(); // split messages
 
-private:
-	Server*									_server;
-	std::string								_nick;
-	std::string								_user;
-	std::string								_realName;
-	std::map<std::string, Channel*>			_channels;
-	pollfd									_fd;
-	std::string								_buffer;
-	short									_flags;
+	private:
+		Server*									_server;
+		std::string								_nick;
+		std::string								_user;
+		std::string								_realName;
+		std::map<std::string, Channel*>			_channels;
+		pollfd									_fd;
+		std::string								_buffer;
+		short									_flags;
 };
 
 std::ostream &operator<<(std::ostream &out, const Client &client);

@@ -72,8 +72,8 @@ void Message::parseMsg() {
 }
 
 void Message::execCommand() {
-		createCommand();
-		_cmd->process(*this);
+	createCommand();
+	_cmd->process(*this);
 }
 
 // prefix = servername / ( nickname [ [ "!" user ] "@" host ] )
@@ -135,6 +135,7 @@ std::string Message::prefix(int type) const {
 Client* Message::getClient() const {
 	return _client;
 }
+
 std::string Message::getMsg() const {
 	return _msg;
 }
@@ -142,15 +143,19 @@ std::string Message::getMsg() const {
 std::string Message::getNick() const {
 	return _nick;
 }
+
 std::string Message::getServerName() const {
 	return _serverName;
 }
+
 std::string Message::getCommand() const {
 	return _command;
 }
+
 std::vector<std::string> Message::getParams() const {
 	return _params;
 }
+
 std::string Message::getTrailing() const {
 	return _trailing;
 }
@@ -161,7 +166,7 @@ int Message::getFd() const {
 
 void	Message::createCommand() {
 	const char	*tmp[] = {"INVITE", "JOIN", "KICK", "MODE", "NICK",
-		"PART", "PASS", "PRIVMSG", "TOPIC", "USER", NULL};
+		"PART", "PASS", "MSG", "PRIVMSG", "TOPIC", "USER", NULL};
 	int i = 0;
 
 	while (tmp[i] && _command != tmp[i])
@@ -188,10 +193,14 @@ void	Message::createCommand() {
 		case 6:
 			_cmd = new Pass();
 		break ;
-		case 7:
+		case 7: ;
+		case 8:
 			_cmd = new Privmsg();
 		break ;
-		case 8:
+		case 9:
+			_cmd = new Topic();
+		break ;
+		case 10:
 			_cmd = new User();
 		break ;
 		default:
