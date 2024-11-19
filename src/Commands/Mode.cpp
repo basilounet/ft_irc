@@ -22,31 +22,21 @@ Mode& Mode::operator=(Mode const& other) {
 }
 
 void	Mode::process(const Message& msg) {
-	isMsgParamEmpty(msg);  // throw if
-	// if (msg.getParams().empty())
-	// 	Server::sendMessage(ERR_NEEDMOREPARAMS(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
+	isMsgParamEmpty(msg); // throw if
 	if (msg.getParams()[0][0] == '#' || msg.getParams()[0][0] == '&') {
 		Channel* chan = getChannelWithName(msg.getParams()[0], msg); // throw if
-		// if (chan) {
-			if (!chan->isInChannel(msg.getNick()))
-				Server::sendMessage(ERR_NOTONCHANNEL(msg.prefix(1), msg.getNick(), chan->getName()), msg.getFd());
-			else if (!chan->isChanop(msg.getNick()))
-				Server::sendMessage(ERR_CHANOPRIVSNEEDED(msg.prefix(1), chan->getName(), chan->getName()), msg.getFd());
-			else
-				channelMode(chan, msg);
-		// }
-		// else
-		// 	Server::sendMessage(ERR_NOSUCHCHANNEL(msg.prefix(1), msg.getNick(), chan->getName()), msg.getFd());
+		getChanopInChannel(msg.getClient()->getNick(), chan, msg); // throw if
+		channelMode(chan, msg); // throw if
 	}
-	else {
-		userMode(msg);
-	}
+	else
+		commandUnknown(msg); // throw if
 }
 
 // CHANNEL MODE
 // MODE <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>][<ban mask>]
 void	Mode::channelMode(Channel* chan, const Message& msg) {
 	if (msg.getParams()[1][0] != '+' && msg.getParams()[1][0] != '-') {
+		//461   ERR_NEEDMOREPARAMS			"<command> :Not enough parameters"
 		Server::sendMessage(ERR_NEEDMOREPARAMS(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
 		throw std::invalid_argument(msg.getParams()[1] + ":invalid parameter");
 	}
@@ -71,8 +61,9 @@ void	Mode::channelMode(Channel* chan, const Message& msg) {
 	else if (msg.getParams()[1] == "+l")
 		setChannelLimit(chan, msg, true);
 	else {
-		Server::sendMessage(ERR_UNKNOWNMODE(msg.prefix(1), msg.getNick(), msg.getParams()[1], msg.getParams()[0]), msg.getFd());
-		throw std::invalid_argument(msg.getParams()[1] + "unknown mode");
+		//472	ERR_UNKNOWNMODE			"<char> :is unknown mode char to me for <channel>"
+		Server::sendMessage(ERR_UNKNOWNMODE(msg.prefix(1), msg.getNick(), msg.getParams()[1], chan->getName()), msg.getFd());
+		throw std::invalid_argument(msg.getParams()[1] + " :is unknown mode char to me for " + chan->getName());
 	}
 }
 
@@ -101,18 +92,30 @@ void	Mode::setChannelSettableTopic(Channel* chan, const Message& msg, bool add) 
 // The channel key MUST only be made visible to the channel members in
 // the reply sent by the server to a MODE query.
 void	Mode::setChannelKey(Channel* chan, const Message& msg, bool add) {
-	// TODO
-	(void) chan;
-	(void) msg;
-	(void) add;
+	if (add) {
+		if (msg.getParams()[2].empty()) {
+			Server::sendMessage(ERR_NEEDMOREPARAMS(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
+			throw std::invalid_argument(msg.getCommand() + ":Not enough parameters");
+		}
+		chan->setKey(msg.getParams()[2]);
+	} else {
+		chan->setKey("");
+	}
 }
 
 // o - give/take channel operator privilege
 void	Mode::setChannelOperatorPrivilege(Channel* chan, const Message& msg, bool add) {
-	// TODO
-	(void) chan;
-	(void) msg;
-	(void) add;
+	if (msg.getParams()[2].empty()) {
+		Server::sendMessage(ERR_NEEDMOREPARAMS(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
+		throw std::invalid_argument(msg.getCommand() + ":Not enough parameters");
+	}
+	Client* client = getClientInChannel(msg.getParams()[2], chan, msg); // throw if
+	if (add)
+		chan->addChanop(client);
+	else
+		chan->removeChanop(client);
+	// MODE	RPL_MODE					"MODE <channel> <arg> <nick>"
+	RPL_MODE(msg.prefix(2), msg.getNick(), chan->getName(), msg.getParams()[2], client->getNick());
 }
 
 // l - set/remove the user limit to channel
@@ -136,13 +139,14 @@ void	Mode::setChannelLimit(Channel* chan, const Message& msg, bool add) {
 	}
 }
 
-// USER MODE
-// MODE <nickname> {[+|-]|i|w|o|O|r}
-void	Mode::userMode(const Message& msg) {
-	// TODO
-	(void) msg;
-}
-
 ACommand	*Mode::clone(void) const {
 	return new Mode();
 }
+
+
+
+
+
+
+
+

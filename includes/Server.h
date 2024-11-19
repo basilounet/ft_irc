@@ -48,8 +48,10 @@ public:
 	void		removeClient(const int fd);
 
 	const std::string	&getPassword() 	const;
-	Client*				getClientWithNick(std::string& nick);
-	Channel*			getChannelWithName(std::string& name);
+	//Client*			getClientWithNick(std::string& nick);
+	//Channel*			getChannelWithName(std::string& name);
+	Client*		getClientWithNick(const std::string& nick);
+	Channel*	getChannelWithName(const std::string& name);
 
 private:
 	int								_port;

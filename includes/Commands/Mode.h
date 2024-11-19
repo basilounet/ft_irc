@@ -27,7 +27,5 @@ private:
 	static void setChannelOperatorPrivilege(Channel* chan, const Message &msg, bool add);
 	static void setChannelLimit(Channel* chan, const Message &msg, bool add);
 
-	static void	userMode(const Message& msg);
-
 };
 #endif //MODE_H
