@@ -22,7 +22,7 @@ Pass& Pass::operator=(Pass const& other) {
 }
 
 void	Pass::process(const Message& msg) {
-	int clientFlags = msg.getClient()->getFlags();
+	const int clientFlags = msg.getClient()->getFlags();
 
 	if (clientFlags & HAS_REGISTERED)
 	{
