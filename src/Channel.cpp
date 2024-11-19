@@ -151,7 +151,7 @@ bool Channel::setInviteOnly(bool state) {
 std::string	Channel::getTopic() const {
 	return _topic;
 }
-void Channel::setTopic(std::string& str) {
+void Channel::setTopic(const std::string& str) {
 	_topic = str;
 }
 bool Channel::isSettableTopic() const {

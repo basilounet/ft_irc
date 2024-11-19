@@ -9,16 +9,17 @@
 
 class Topic : public ACommand {
 public:
-	Topic( void );
+	Topic();
 	Topic(Topic const &src);
-	~Topic( void );
+	~Topic();
 	Topic &operator=(Topic const &other);
 
 	void		process(const Message& msg);
-	ACommand	*clone(void) const;
+
+	void		topic(const Message &msg);
+
+	ACommand	*clone() const;
 
 };
-
-
 
 #endif //TOPIC_H

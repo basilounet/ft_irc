@@ -43,7 +43,7 @@ public:
 	bool		setInviteOnly(bool state);
 
 	std::string	getTopic()						const;
-	void		setTopic(std::string& str);
+	void		setTopic(const std::string& str);
 	bool		isSettableTopic()				const;
 	bool		setSettableTopic(bool state);
 

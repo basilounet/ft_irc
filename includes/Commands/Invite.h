@@ -9,13 +9,17 @@
 
 class Invite : public ACommand {
 public:
-	Invite( void );
+	Invite();
 	Invite(Invite const &src);
-	~Invite( void );
+	~Invite();
 	Invite &operator=(Invite const &other);
 
 	void		process(const Message& msg);
-	ACommand	*clone(void) const;
+
+	void		invite(const Message &msg);
+
+	ACommand	*clone() const;
+
 };
 
 #endif //INVITE_H

@@ -18,7 +18,6 @@
 # define RPL_MODE(prefix, nickRes, channel, nick, arg) \
 (std::string(prefix) + "MODE " + std::string(nickRes) + " " + std::string(channel) + " " + std::string(arg) + " " + std::string(nick) + CRLF)
 
-
 // 001   RPL_WELCOME				"Welcome to the Internet Relay Network <nick>!<user>@<host>"
 # define RPL_WELCOME(prefix, nickRes, nick, user, host) \
 (std::string(prefix) + "001 " + std::string(nickRes) + " " + std::string(nick) + " :Welcome to the Internet Relay Network " + std::string(nick) + "!" + std::string(user) + "@" + std::string(host) + CRLF)
