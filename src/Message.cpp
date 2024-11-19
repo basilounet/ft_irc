@@ -121,9 +121,9 @@ void Message::parseParams(const std::string& str) {
 std::string Message::prefix(int type) const {
 	std::string	prefix_str;
 	if (type == 1) // :localhost
-		prefix_str = ":" + SERVER_REAL_NAME + " ";
+		prefix_str = " :" + SERVER_REAL_NAME + " ";
 	if (type == 2) // :localhost
-		prefix_str = ":" + _client->getNick() + "!" + _client->getUser() + HOST + " ";
+		prefix_str = " :" + _client->getNick() + "!" + _client->getUser() + HOST + " ";
 	return prefix_str;
 }
 
@@ -135,7 +135,8 @@ std::string Message::getMsg() const {
 }
 
 std::string Message::getNick() const {
-	return _nick;
+	return _client->getNick();
+	//return _nick;
 }
 std::string Message::getServerName() const {
 	return _serverName;

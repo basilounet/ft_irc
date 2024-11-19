@@ -110,19 +110,12 @@ void	Mode::setChannelOperatorPrivilege(Channel* chan, const Message& msg, bool a
 		throw std::invalid_argument(msg.getCommand() + ":Not enough parameters");
 	}
 	Client* client = getClientInChannel(msg.getParams()[2], chan, msg); // throw if
-	if (add) {
-		if (chan->addChanop(client)) {
-			// ADD OK
-		}
-		else {
-			// ALREADY ADD
-		}
-	} else {
-		if (chan->removeChanop(client))
-			// REMOVE OK
-		else
-			// NOTHING TO REMOVE
-	}
+	if (add)
+		chan->addChanop(client);
+	else
+		chan->removeChanop(client);
+	// MODE	RPL_MODE					"MODE <channel> <arg> <nick>"
+	RPL_MODE(msg.prefix(2), msg.getNick(), chan->getName(), msg.getParams()[2], client->getNick());
 }
 
 // l - set/remove the user limit to channel
