@@ -17,47 +17,57 @@ public:
 	Channel(const Channel &src);
 	Channel &operator=(const Channel &src);
 
-	void							broadcastMessage(const std::string& msg);
-	void							broadcastMessage(const std::string& msg, const Client& sender, bool shouldSendToSender = false);
+	void		broadcastMessage(const std::string& msg);
+	void		broadcastMessage(const std::string& msg, const Client& sender, bool shouldSendToSender = false);
 
-	void 							addClient(std::string &nick);
-	void							addClient(Client& client);
-	void 							removeClient(std::string &nick);
-	void							removeClient(const Client& client);
+	Server*		getServer()	const;
+	std::string	getName()	const;
 
-	std::string						getName()	const;
+	const std::vector<Client *> &getClients()	const;
+	const std::vector<Client *> &getChanops()	const;
+	const std::vector<Client *> &getInvites()	const;
 
-	const std::vector<Client *> &getClients() const;
+	bool		addClient(Client* client);
+	bool		addChanop(Client* client);
+	bool		addInvite(Client* client);
 
-	bool		isInChannel(const std::string& nick)	const;
-	bool		isChanop(std::string nick)		const;
-	bool		isKey()							const;
-	std::string	getKey()						const;
-	bool		access(const std::string &pwd)	const;
-	bool		isLimit()						const;
-	int			getLimit()						const;
-	bool		isFull()						const;
-	bool		isInviteOnly()					const;
+	bool		removeClient(Client* client);
+	bool		removeChanop(Client* client);
+	bool		removeInvite(Client* client);
+
+	bool		isClient(Client* client)	const;
+	bool		isChanop(Client* client)	const;
+	bool		isInvite(Client* client)	const;
+
+	bool		isInviteOnly()	const;
+	bool		setInviteOnly(bool state);
+
+	std::string	getTopic()						const;
+	void		setTopic(std::string& str);
 	bool		isSettableTopic()				const;
+	bool		setSettableTopic(bool state);
 
-	bool 		addChanop(std::string &nick);
-	bool 		removeChanop(std::string &nick);
+	std::string	getKey()							const;
+	bool		isKey()								const;
 	void		setKey(std::string key);
+	bool		access(const std::string &pwd)		const;
+
+	int			getLimit()				const;
 	void		setLimit(int limit);
-	void		setInviteOnly(bool state);
-	void		setSettableTopic(bool state);
+	bool		isLimit()				const;
+	bool		isFull()				const;
 
 private:
 	Server*						_server;
 	std::string					_name;
 	std::vector<Client*>		_clients;
 	std::vector<Client*>		_chanops;
-	std::vector<std::string>	_invite;
+	std::vector<Client*>		_invites;
+	bool						_inviteOnly;
+	std::string					_topic;
+	bool						_settableTopic;
 	std::string					_key;
 	int							_limit;
-	bool						_inviteOnly;
-	bool						_settableTopic;
-
 };
 
 #endif //CHANNEL_H

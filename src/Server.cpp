@@ -109,7 +109,7 @@ void Server::broadcast(const std::string& msg, const Client& sender, const bool 
 	}
 }
 
-Client* Server::getClientWithNick(std::string& nick) {
+Client* Server::getClientWithNick(const std::string& nick) {
 	for (std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
 		if (it->second.getNick() == nick)
 			return (&(it->second));
@@ -117,7 +117,7 @@ Client* Server::getClientWithNick(std::string& nick) {
  	return NULL;
 }
 
-Channel* Server::getChannelWithName(std::string& name) {
+Channel* Server::getChannelWithName(const std::string& name) {
 	for (std::map<std::string, Channel>::iterator it = _channels.begin(); it != _channels.end(); ++it) {
 		if (it->first == name)
 			return (&(it->second));

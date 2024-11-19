@@ -22,21 +22,21 @@ Mode& Mode::operator=(Mode const& other) {
 }
 
 void	Mode::process(const Message& msg) {
-	isMsgParamEmpty(msg);													// throw if
+	isMsgParamEmpty(msg); // throw if
 	if (msg.getParams()[0][0] == '#' || msg.getParams()[0][0] == '&') {
-		Channel* chan = getChannelWithName(msg.getParams()[0], msg);		// throw if
-		isInChannel(msg.getNick(), chan, msg);								// throw if
-		isChanop(msg.getNick(), chan, msg);									// throw if
-		channelMode(chan, msg);												// throw if
+		Channel* chan = getChannelWithName(msg.getParams()[0], msg); // throw if
+		getChanopInChannel(msg.getClient()->getNick(), chan, msg); // throw if
+		channelMode(chan, msg); // throw if
 	}
 	else
-		commandUnknown(msg);												// throw if
+		commandUnknown(msg); // throw if
 }
 
 // CHANNEL MODE
 // MODE <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>][<ban mask>]
 void	Mode::channelMode(Channel* chan, const Message& msg) {
 	if (msg.getParams()[1][0] != '+' && msg.getParams()[1][0] != '-') {
+		//461   ERR_NEEDMOREPARAMS			"<command> :Not enough parameters"
 		Server::sendMessage(ERR_NEEDMOREPARAMS(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
 		throw std::invalid_argument(msg.getParams()[1] + ":invalid parameter");
 	}
@@ -60,8 +60,11 @@ void	Mode::channelMode(Channel* chan, const Message& msg) {
 		setChannelLimit(chan, msg, false);
 	else if (msg.getParams()[1] == "+l")
 		setChannelLimit(chan, msg, true);
-	else
-		commandUnknown(msg);												// throw if
+	else {
+		//472	ERR_UNKNOWNMODE			"<char> :is unknown mode char to me for <channel>"
+		Server::sendMessage(ERR_UNKNOWNMODE(msg.prefix(1), msg.getNick(), msg.getParams()[1], chan->getName()), msg.getFd());
+		throw std::invalid_argument(msg.getParams()[1] + " :is unknown mode char to me for " + chan->getName());
+	}
 }
 
 // i - toggle the invite-only channel flag
@@ -106,16 +109,19 @@ void	Mode::setChannelOperatorPrivilege(Channel* chan, const Message& msg, bool a
 		Server::sendMessage(ERR_NEEDMOREPARAMS(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
 		throw std::invalid_argument(msg.getCommand() + ":Not enough parameters");
 	}
+	Client* client = getClientInChannel(msg.getParams()[2], chan, msg); // throw if
 	if (add) {
-		if (chan->addChanop(msg.getParams()[2]))
-			return;
-		else
-			throw std::invalid_argument("addChannel Problem");
+		if (chan->addChanop(client)) {
+			// ADD OK
+		}
+		else {
+			// ALREADY ADD
+		}
 	} else {
-		if (chan->removeChanop(msg.getParams()[2]))
-			return;
+		if (chan->removeChanop(client))
+			// REMOVE OK
 		else
-			throw std::invalid_argument("removeChannel Problem");
+			// NOTHING TO REMOVE
 	}
 }
 

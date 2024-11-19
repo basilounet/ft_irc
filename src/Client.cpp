@@ -46,7 +46,7 @@ void Client::removeChannel(const std::string& name) {
 
 void Client::quitAllChannels() {
 	for(std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
-		it->second->removeClient(*this);
+		it->second->removeClient(this);
 
 }
 
