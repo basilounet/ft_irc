@@ -11,7 +11,7 @@ class Message;
 # include <Message.h>
 # include "IRC_responses.h"
 
-# define HAS_SERVER_PASS 0b1
+# define HAS_TRY_PASS 0b1
 # define HAS_NICK 0b10
 # define HAS_REGISTERED 0b100
 # define IS_RM 0b1000
@@ -37,12 +37,14 @@ class Client {
 		std::string								getUser()		const;
 		std::string								getBuffer()		const;
 		short									getFlags()		const;
+		std::string								getPassword()	const;
 
 		void									setRealName(const std::string& name);
 		void									setNick(const std::string& name);
 		void									setUser(const std::string& name);
 		void									setBuffer(const std::string& buf);
 		void									setFlags(short flags);
+		void									setPassword(const std::string& pass);
 
 		void									appendBuffer(const std::string& buf);
 		void									parseBuffer(); // split messages
@@ -52,6 +54,7 @@ class Client {
 		std::string								_nick;
 		std::string								_user;
 		std::string								_realName;
+		std::string								_password;
 		std::map<std::string, Channel*>			_channels;
 		pollfd									_fd;
 		std::string								_buffer;
