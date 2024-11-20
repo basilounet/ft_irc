@@ -31,6 +31,8 @@ void	User::process(const Message& msg)
 		Server::sendMessage(ERR_ALREADYREGISTRED(msg.prefix(1), msg.getNick()), msg.getFd());
 		throw std::logic_error("USER: Unauthorized command (already registered)");
 	}
+	if ((clientFlags & HAS_NICK) == 0)
+		throw (std::domain_error("The registration must be done in that order: PASS, NICK, USER"));
 	if (nbParams < 3)
 		needMoreParams(msg);
 	if (realName.empty())

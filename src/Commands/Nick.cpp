@@ -24,6 +24,8 @@ Nick& Nick::operator=(Nick const& other) {
 void	Nick::process(const Message& msg) {
 	std::vector<std::string> params = msg.getParams();
 
+	if ((msg.getClient()->getFlags() & HAS_SERVER_PASS) == 0)
+		throw (std::domain_error("The registration must be done in that order: PASS, NICK, USER"));
 	if (params.empty() || params[0].empty()) {
 		Server::sendMessage(ERR_NONICKNAMEGIVEN(msg.prefix(1), msg.getClient()->getNick()), msg.getClient()->getfd().fd);
 		throw (std::invalid_argument("No nickname given")); ;
