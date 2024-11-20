@@ -8,6 +8,8 @@
 # include <ACommand.h>
 # include <iostream>
 
+#include "Message.h"
+
 class Nick : public ACommand {
 public:
 	Nick( void );
@@ -16,6 +18,7 @@ public:
 	Nick &operator=(Nick const &other);
 
 	void		process(const Message& msg);
+	static bool	isNickInServer(const std::string& nick, const Message& msg);
 	ACommand	*clone(void) const;
 
 private:

@@ -3,6 +3,7 @@
 //
 
 #include "Nick.h"
+#include "Commands/Nick.h"
 
 #include "Server.h"
 
@@ -21,7 +22,8 @@ Nick& Nick::operator=(Nick const& other) {
 	return (*this);
 }
 
-void	Nick::process(const Message& msg) {
+void	Nick::process(const Message& msg)
+{
 	std::vector<std::string> params = msg.getParams();
 
 	if (params.empty() || params[0].empty()) {
@@ -36,16 +38,11 @@ void	Nick::process(const Message& msg) {
 		Server::sendMessage(ERR_ERRONEUSNICKNAME(msg.prefix(1),msg.getNick(), params[0]), msg.getClient()->getfd().fd);
 		throw (std::invalid_argument("Invalid character in Nick"));
 	}
-	for (std::map<int, Client>::iterator it = msg.getClient()->getServer()->getClients().begin(); it != msg.getClient()->getServer()->getClients().end(); ++it) {
-		if (it->second.getfd().fd != msg.getClient()->getfd().fd && it->second.getNick() == params[0] && (it->second.getFlags() & HAS_REGISTERED)) {
-			if ((msg.getClient()->getFlags() & HAS_REGISTERED) == 0) {
-				Server::sendMessage(ERR_NICKCOLLISION(msg.prefix(2),msg.getNick(), params[0], msg.getClient()->getRealName()), msg.getClient()->getfd().fd);
-				msg.getClient()->setFlags(msg.getClient()->getFlags() | IS_RM);
-				throw (std::invalid_argument("Nick already in use, leaving Server"));
-			}
-			Server::sendMessage(ERR_NICKNAMEINUSE(msg.prefix(1),msg.getNick(), params[0]), msg.getClient()->getfd().fd);
-			throw (std::invalid_argument("Nick already in use"));
-		}
+	if (isNickInServer(params[0], msg))
+	{
+		if (msg.getClient()->getFlags() | IS_RM)
+			throw std::invalid_argument("Nick already in use, leaving Server");
+		throw std::invalid_argument("Nick already in use");
 	}
 	msg.getClient()->setNick(params[0]);
 	if ((msg.getClient()->getFlags() & HAS_NICK) == 0)
@@ -53,6 +50,23 @@ void	Nick::process(const Message& msg) {
 	if (msg.getClient()->getFlags() & HAS_REGISTERED)
 		msg.getClient()->broadcastToAllKnownUsers(msg.prefix(2) + " NICK :" + msg.getClient()->getNick() + "\r\n", true);
 }
+
+bool	Nick::isNickInServer(const std::string& nick, const Message& msg) {
+	for (std::map<int, Client>::iterator it = msg.getClient()->getServer()->getClients().begin(); it != msg.getClient()->getServer()->getClients().end(); ++it) {
+		if (it->second.getfd().fd != msg.getClient()->getfd().fd && it->second.getNick() == nick && (it->second.getFlags() & HAS_REGISTERED)) {
+			if ((msg.getClient()->getFlags() & HAS_REGISTERED) == 0) {
+				Server::sendMessage(ERR_NICKCOLLISION(msg.prefix(2),msg.getNick(), nick, msg.getClient()->getRealName()), msg.getClient()->getfd().fd);
+				msg.getClient()->setFlags(msg.getClient()->getFlags() | IS_RM);
+				return (true);
+			}
+			Server::sendMessage(ERR_NICKNAMEINUSE(msg.prefix(1),msg.getNick(), nick), msg.getClient()->getfd().fd);
+			return (true);
+		}
+	}
+	return (false);
+}
+
+
 
 bool Nick::hasInvalidCharacter(const std::string& str) {
 	for (std::string::const_iterator it = str.begin(); it != str.end(); ++it) {
