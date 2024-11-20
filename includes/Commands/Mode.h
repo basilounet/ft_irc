@@ -22,7 +22,7 @@ private:
 	static void	channelMode(Channel* chan, const Message& msg);
 
 	static void setChannelInviteOnly(Channel* chan, const Message &msg, bool add);
-	static void setChannelSettableTopic(Channel* chan, const Message &msg, bool add);
+	static void setChannelTopicProtected(Channel* chan, const Message &msg, bool add);
 	static void setChannelKey(Channel* chan, const Message &msg, bool add);
 	static void setChannelOperatorPrivilege(Channel* chan, const Message &msg, bool add);
 	static void setChannelLimit(Channel* chan, const Message &msg, bool add);

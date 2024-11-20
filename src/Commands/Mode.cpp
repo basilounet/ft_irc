@@ -45,9 +45,9 @@ void	Mode::channelMode(Channel* chan, const Message& msg) {
 	else if (msg.getParams()[1] == "+i")
 		setChannelInviteOnly(chan, msg, true);
 	else if (msg.getParams()[1] == "-t")
-		setChannelSettableTopic(chan, msg, false);
+		setChannelTopicProtected(chan, msg, false);
 	else if (msg.getParams()[1] == "+t")
-		setChannelSettableTopic(chan, msg, true);
+		setChannelTopicProtected(chan, msg, true);
 	else if (msg.getParams()[1] == "-k")
 		setChannelKey(chan, msg, false);
 	else if (msg.getParams()[1] == "+k")
@@ -80,8 +80,8 @@ void	Mode::setChannelInviteOnly(Channel* chan, const Message& msg, bool add) {
 
 // t - toggle the topic settable by channel operator only flag
 // used to restrict the usage of the TOPIC command to channel operators.
-void	Mode::setChannelSettableTopic(Channel* chan, const Message& msg, bool add) {
-	chan->setSettableTopic(add);
+void	Mode::setChannelTopicProtected(Channel* chan, const Message& msg, bool add) {
+	chan->setTopicProtected(add);
 	RPL_CHANNELMODEIS(msg.prefix(2), msg.getNick(), msg.getParams()[0], msg.getParams()[1], "");
 }
 
