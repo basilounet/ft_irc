@@ -14,7 +14,6 @@ class Message;
 # define HAS_TRY_PASS 0b1
 # define HAS_NICK 0b10
 # define HAS_REGISTERED 0b100
-# define IS_RM 0b1000
 
 class Client {
 	public:

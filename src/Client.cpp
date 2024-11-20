@@ -31,7 +31,7 @@ Client& Client::operator=(const Client& src) {
 		_fd = src._fd;
 		_buffer = src._buffer;
 		_flags = src._flags;
-		_password = src.password;
+		_password = src._password;
 	}
 	return (*this);
 }
@@ -126,7 +126,7 @@ void Client::appendBuffer(const std::string& buf) {
 	_buffer += buf;
 }
 
-void	setPassword(const std::string& pass)
+void	Client::setPassword(const std::string& pass)
 {
 	_password = pass;
 }

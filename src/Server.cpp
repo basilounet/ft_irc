@@ -166,7 +166,7 @@ void Server::handleClient(const pollfd &pollfd) {
 			_clients[pollfd.fd].setBuffer("");
 		}
 	}
-	if (bytes_read == 0 || _clients[pollfd.fd].getFlags() & IS_RM)
+	if (bytes_read == 0)
 		removeClient(pollfd.fd);
 }
 

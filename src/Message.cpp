@@ -26,7 +26,6 @@ Message& Message::operator=(const Message& src) {
 	if (this != &src) {
 		_client = src._client;
 		_msg = src._msg;
-		_nick = src._nick;
 		_serverName = src._serverName;
 		_command = src._command;
 		_params = src._params;
@@ -73,7 +72,7 @@ void Message::parseMsg() {
 
 void Message::execCommand() {
 	createCommand();
-	if ((_client.getFlags() & HAS_REGISTERED) == 0)
+	if ((_client->getFlags() & HAS_REGISTERED) == 0)
 		if (_command != "PASS" && _command != "NICK" && _command != "USER")
 			throw std::invalid_argument("User registration not complete");
 	_cmd->process(*this);

@@ -35,13 +35,13 @@ void	User::process(const Message& msg)
 	if ((clientFlags & HAS_NICK) == 0)
 		throw (std::domain_error
 				("The registration must be done in that order: PASS, NICK, USER"));
-	if (nbParams < 3 || (realName.empty() && nbParams < 4))
+	if (nbParams < 2 || (realName.empty() && nbParams < 3))
 		needMoreParams(msg);
 	if (realName.empty())
-		realName = msg.getParams()[3];
+		realName = msg.getParams()[2];
 	msg.getClient()->setUser(msg.getParams()[0]);
 	msg.getClient()->setRealName(realName);
-	msg.getClient()->tryRegistration();
+	tryRegistration(*msg.getClient(), msg);
 }
 
 void 	User::needMoreParams(const Message& msg) const
@@ -51,6 +51,25 @@ void 	User::needMoreParams(const Message& msg) const
 		, msg.getFd());
 	throw std::invalid_argument
 		(msg.getCommand() + ":Not enough parameters");
+}
+
+void	User::tryRegistration(Client &client, const Message &msg)
+{
+	const std::string &server_passwd = client.getServer()->getPassword();
+
+	if (!server_passwd.empty() && server_passwd != client.getPassword())
+	{
+		client.setFlags(0);
+		throw std::logic_error("Bad password, retry registration process");
+	}
+	if (Nick::isNickInServer(client.getNick(), msg))
+	{
+		client.setFlags(0);
+		throw std::invalid_argument
+			("Nick already in use, retry registration process");
+	}
+	client.setFlags(client.getFlags() | HAS_REGISTERED);
+	//send RPL_WELCOME
 }
 
 ACommand	*User::clone(void) const {
