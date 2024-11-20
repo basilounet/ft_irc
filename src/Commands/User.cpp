@@ -41,7 +41,7 @@ void	User::process(const Message& msg)
 	}
 	msg.getClient()->setUser(msg.getParams()[0]);
 	msg.getClient()->setRealName(realName);
-	msg.getClient()->tryRegistration();
+	//msg.getClient()->tryRegistration();
 }
 
 void 	User::needMoreParams(const Message& msg) const
