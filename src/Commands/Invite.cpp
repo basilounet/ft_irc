@@ -20,13 +20,8 @@ Invite& Invite::operator=(Invite const& other) {
 }
 
 void	Invite::process(const Message& msg) {
-	//isMsgParamEmpty(msg); // throw if
-	if (msg.getParams().size() < 2 || msg.getParams()[0].empty() || msg.getParams()[1].empty()) {
-		// 461   ERR_NEEDMOREPARAMS			"<command> :Not enough parameters"
-		Server::sendMessage(ERR_NEEDMOREPARAMS(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
-		throw std::invalid_argument(msg.getCommand() + ":Not enough parameters");
-	}
-	// getVectorInviteMessage
+	isMsgParamEmpty(msg); // throw if >= 2
+	// getVectorInviteMessage TODO
 	invite(msg);
 }
 

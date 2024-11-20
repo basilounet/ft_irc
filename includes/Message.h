@@ -17,6 +17,7 @@ class ACommand;
 # include <Part.h>
 # include <Pass.h>
 # include <Privmsg.h>
+# include <Topic.h>
 # include <User.h>
 // # include <Channel.h>
 // # include <Client.h>

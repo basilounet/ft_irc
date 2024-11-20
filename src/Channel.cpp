@@ -5,7 +5,7 @@ Channel::Channel() :
 		_server(NULL),
 		_name("default"),
 		_inviteOnly(false),
-		_settableTopic(true),
+		_topicProtected(false),
 		_limit(0) {
 }
 
@@ -13,7 +13,7 @@ Channel::Channel(const std::string& name, Server* server) :
 		_server(server),
 		_name(name),
 		_inviteOnly(false),
-		_settableTopic(true),
+		_topicProtected(false),
 		_limit(0) {
 }
 
@@ -33,7 +33,7 @@ Channel& Channel::operator=(const Channel& src) {
 		_invites = src._invites;
 		_inviteOnly = src._inviteOnly;
 		_topic = src._topic;
-		_settableTopic = src._settableTopic;
+		_topicProtected = src._topicProtected;
 		_key = src._key;
 		_limit = src._limit;
 
@@ -154,12 +154,12 @@ std::string	Channel::getTopic() const {
 void Channel::setTopic(const std::string& str) {
 	_topic = str;
 }
-bool Channel::isSettableTopic() const {
-	return (_settableTopic);
+bool Channel::isTopicProtected() const {
+	return (_topicProtected);
 }
-bool Channel::setSettableTopic(bool state) {
-	if (state != _settableTopic) {
-		_settableTopic = state;
+bool Channel::setTopicProtected(bool state) {
+	if (state != _topicProtected) {
+		_topicProtected = state;
 		return true;
 	}
 	return false;
@@ -198,29 +198,3 @@ bool Channel::isFull() const {
 		return (true);
 	return (false);
 }
-
-// bool Channel::addChanop(std::string &nick) {
-// 	if (!isChanop(nick)) {
-// 		_chanops.push_back(_server->getClientWithNick(nick));
-// 		return true;
-// 	}
-// 	return false;
-// }
-//
-// bool Channel::removeChanop(std::string &nick) {
-// 	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
-// 		if ((*it)->getNick() == nick) {
-// 			_chanops.erase(it);
-// 			return true;
-// 		}
-// 	}
-// 	return false;
-// }
-
-
-
-
-
-
-
-

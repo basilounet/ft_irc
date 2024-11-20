@@ -126,9 +126,9 @@ void Message::parseParams(const std::string& str) {
 std::string Message::prefix(int type) const {
 	std::string	prefix_str;
 	if (type == 1) // :localhost
-		prefix_str = " :" + SERVER_REAL_NAME + " ";
+		prefix_str = ":" + SERVER_REAL_NAME + " ";
 	if (type == 2) // :localhost
-		prefix_str = " :" + _client->getNick() + "!" + _client->getUser() + HOST + " ";
+		prefix_str = ":" + _client->getNick() + "!" + _client->getUser() + HOST + " ";
 	return prefix_str;
 }
 
@@ -193,6 +193,9 @@ void	Message::createCommand() {
 			_cmd = new Privmsg();
 		break ;
 		case 8:
+			_cmd = new Topic();
+		break ;
+		case 9:
 			_cmd = new User();
 		break ;
 		default:

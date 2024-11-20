@@ -19,30 +19,33 @@ Topic& Topic::operator=(Topic const& other) {
 	return (*this);
 }
 
-void	Topic::process(const Message& msg) {
-	// TODO
-	// isMsgParamEmpty(msg); // throw if
-	// if(!msg.getTrailing().empty())
-	// 	msg.getParams().push_back(msg.getTrailing());
-	//
-	// if (msg.getParams().size() == 1 || msg.getParams()[0].empty()) {
-	// 	// 461   ERR_NEEDMOREPARAMS			"<command> :Not enough parameters"
-	// 	Server::sendMessage(ERR_NEEDMOREPARAMS(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
-	// 	throw std::invalid_argument(msg.getCommand() + ":Not enough parameters");
-	// }
-	// getVectorTopicMessage
+void Topic::process(const Message& msg) {
+	isMsgParamEmpty(msg); // throw if (nb >= 1) TODO
+	// getVectorTopicMessage TODO
 	topic(msg);
 }
 
 // TOPIC #channel :subject
 void Topic::topic(const Message &msg) {
-	// TODO
-	Channel* chan = getChannelWithName(msg.getParams()[1], msg);	// throw if
-	// getChanopInChannel(msg.getNick(), chan, msg);					// throw if
-	chan->setTopic(msg.getTrailing());
-	// 341   RPL_INVITING				"<channel> <nick>"
-	// Server::sendMessage(RPL_INVITING(msg.prefix(2), msg.getNick(), chan->getName(), client->getNick()), msg.getFd());
-	// throw std::invalid_argument(msg.getCommand() + " " + msg.getNick() + " " + msg.getNick());
+	Channel* chan = getChannelWithName(msg.getParams()[0], msg); // throw if
+	// -t ALL ou +t chanops
+	if (!chan->isTopicProtected())
+		getChanopInChannel(msg.getNick(), chan, msg); // throw if
+
+	if ((msg.getMsg().size() == 1) && msg.getTrailing().empty()) {
+		chan->setTopic("");
+		// 331   RPL_NOTOPIC				"<channel> :No topic is set"
+		Server::sendMessage(RPL_NOTOPIC(msg.prefix(2), msg.getNick(), chan->getName()), msg.getFd());
+		throw std::invalid_argument(chan->getName() + " :No topic is set");
+	}
+
+	std::string topicStr;
+	topicStr = msg.getMsg().substr(msg.getMsg().find(' ', msg.getMsg().find('#')) + 1);
+	chan->setTopic(topicStr);
+	// 332   RPL_TOPIC					"<channel> :<topic>"
+	// define RPL_TOPIC(prefix, nickRes, channel, topic)
+	Server::sendMessage(RPL_TOPIC(msg.prefix(2), msg.getNick(), chan->getName(), topicStr), msg.getFd());
+	throw std::invalid_argument(chan->getName() + " :" + topicStr);
 }
 
 ACommand	*Topic::clone(void) const {

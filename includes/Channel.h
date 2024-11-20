@@ -44,8 +44,8 @@ public:
 
 	std::string	getTopic()						const;
 	void		setTopic(const std::string& str);
-	bool		isSettableTopic()				const;
-	bool		setSettableTopic(bool state);
+	bool		isTopicProtected()				const;
+	bool		setTopicProtected(bool state);
 
 	std::string	getKey()							const;
 	bool		isKey()								const;
@@ -65,7 +65,7 @@ private:
 	std::vector<Client*>		_invites;
 	bool						_inviteOnly;
 	std::string					_topic;
-	bool						_settableTopic;
+	bool						_topicProtected;
 	std::string					_key;
 	int							_limit;
 };
