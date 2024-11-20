@@ -28,19 +28,17 @@ void	User::process(const Message& msg)
 	if (clientFlags & HAS_REGISTERED)
 	{
 		msg.getClient()->setFlags(clientFlags);
-		Server::sendMessage(ERR_ALREADYREGISTRED(msg.prefix(1), msg.getNick()), msg.getFd());
+		Server::sendMessage(ERR_ALREADYREGISTRED
+				(msg.prefix(1), msg.getNick()), msg.getFd());
 		throw std::logic_error("USER: Unauthorized command (already registered)");
 	}
 	if ((clientFlags & HAS_NICK) == 0)
-		throw (std::domain_error("The registration must be done in that order: PASS, NICK, USER"));
-	if (nbParams < 3)
+		throw (std::domain_error
+				("The registration must be done in that order: PASS, NICK, USER"));
+	if (nbParams < 3 || (realName.empty() && nbParams < 4))
 		needMoreParams(msg);
 	if (realName.empty())
-	{
-		if (nbParams < 4)
-			needMoreParams(msg);
 		realName = msg.getParams()[3];
-	}
 	msg.getClient()->setUser(msg.getParams()[0]);
 	msg.getClient()->setRealName(realName);
 	msg.getClient()->tryRegistration();

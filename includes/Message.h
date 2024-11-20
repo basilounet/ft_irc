@@ -46,7 +46,6 @@ private:
 	ACommand*					_cmd;
 	Client*						_client;
 	std::string					_msg;
-	std::string					_nick;
 	std::string					_serverName;
 	std::string					_command;
 	std::vector<std::string>	_params;
