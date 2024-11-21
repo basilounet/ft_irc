@@ -19,17 +19,17 @@ class ACommand
 		virtual void process(const Message& msg) = 0;
 		virtual ACommand *clone(void) const = 0;
 
-		static bool			isMsgParamEmpty(const Message& msg);
+		static bool						isMsgParamEmpty(const Message& msg);
 
-		static Client*		getClientWithNick(const std::string &nick, const Message& msg);
-		static Client*		getClientInChannel(const std::string &nick, Channel* chan, const Message& msg);
-		static Client*		getChanopInChannel(const std::string &nick, Channel* chan, const Message& msg);
-		static Client*		getInviteInChannel(const std::string &nick, Channel* chan, const Message& msg);
+		static Client*					getClientWithNick(const std::string &nick, const Message& msg);
+		static Client*					getClientInChannel(const std::string &nick, Channel* chan, const Message& msg);
+		static Client*					getChanopInChannel(const std::string &nick, Channel* chan, const Message& msg);
+		static Client*					getInviteInChannel(const std::string &nick, Channel* chan, const Message& msg);
 
-		static Channel*		getChannelWithName(std::string &name, const Message& msg);
+		static Channel*					getChannelWithName(std::string &name, const Message& msg);
 
-		static void			commandUnknown(const Message& msg);
-
+		static void						commandUnknown(const Message& msg);
+		static std::vector<std::string>	ACommand::split(const std::string& str, const char separator);
 };
 
 # include <Message.h>

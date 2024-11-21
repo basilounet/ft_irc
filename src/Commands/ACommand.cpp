@@ -80,3 +80,22 @@ void ACommand::commandUnknown(const Message& msg) {
 	Server::sendMessage(ERR_UNKNOWNCOMMAND(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
 	throw std::invalid_argument(msg.getCommand() + ":Unknown command");
 }
+
+std::vector<std::string>	ACommand::split(const std::string& str, const char separator) {
+    std::vector<std::string>	result;
+    std::string					line;
+    size_t						pos0 = 0;
+    size_t						pos1 = 0;
+
+	pos0 = str.find(separator, 0);
+	line = str.substr(0, pos0);
+	result.push_back(line);
+	while (pos0 != std::string::npos)
+	{
+		pos1 = str.find(separator, pos0 + 1);
+		line = str.substr(pos0 + 1, pos1 - pos0);
+		pos0 = pos1;
+		result.push_back(line);
+	}
+	return (result);
+}
