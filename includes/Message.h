@@ -19,6 +19,7 @@ class ACommand;
 # include <Privmsg.h>
 # include <User.h>
 # include <Topic.h>
+# include <Quit.h>
 // # include <Channel.h>
 // # include <Client.h>
 class Message {

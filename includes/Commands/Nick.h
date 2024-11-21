@@ -16,12 +16,12 @@ class Nick : public ACommand {
 		Nick &operator=(Nick const &other);
 
 		void		process(const Message& msg);
-		ACommand	*clone(void) const;
+		ACommand	*clone(void)							const;
 		static bool	isNickInServer(const std::string& nick, const Message &msg);
 
 	private:
-		static bool	hasInvalidCharacter(const std::string& str);
-
+		bool	hasInvalidCharacter(const std::string& str);
+		bool	isSpecialChar(const int ch);
 };
 
 #endif //NICK_H

@@ -156,18 +156,19 @@ void Server::handleClient(const pollfd &pollfd) {
 	char buffer[1024] = {0};
 	std::string total_buf;
 	ssize_t bytes_read = recv(pollfd.fd, buffer, sizeof(buffer), MSG_DONTWAIT);
+	Client &client = _clients[pollfd.fd];
 
+	if (bytes_read == 0 || client.getFlags() == IS_RM)
+		removeClient(pollfd.fd);
 	if (bytes_read > 0) {
-		_clients[pollfd.fd].appendBuffer(buffer);
-		total_buf = _clients[pollfd.fd].getBuffer();
+		client.appendBuffer(buffer);
+		total_buf = client.getBuffer();
 		if (total_buf.size() > 2 && total_buf[total_buf.size() - 2] == '\r' && total_buf[total_buf.size() - 1] == '\n') {
-			std::cout << "Message to server: " << _clients[pollfd.fd].getBuffer() ;
-			_clients[pollfd.fd].parseBuffer(); //////////////////////////////////////////////////////////////////////////////////////////////////////////
-			_clients[pollfd.fd].setBuffer("");
+			std::cout << "Message to server: " << client.getBuffer() ;
+			client.parseBuffer(); //////////////////////////////////////////////////////////////////////////////////////////////////////////
+			client.setBuffer("");
 		}
 	}
-	if (bytes_read == 0)
-		removeClient(pollfd.fd);
 }
 
 void Server::sigHandler(const int signal) {

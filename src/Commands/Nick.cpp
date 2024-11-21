@@ -65,14 +65,21 @@ bool	Nick::isNickInServer(const std::string& nick, const Message& msg) {
 
 bool Nick::hasInvalidCharacter(const std::string& str) {
 	for (std::string::const_iterator it = str.begin(); it != str.end(); ++it) {
-		if (!std::isalnum(*it) && !(*it == ';' || *it == '[' || *it == ']' || *it == '\\' || *it == '`' || *it == '_' || *
-			it == '^' || *it == '{' || *it == '}' || *it == '|'))
+		if (it == str.begin() && !std::isalpha(*it) && !isSpecialChar(*it))
+			return true;
+		if (!std::isalnum(*it) && !isSpecialChar(*it) && *it != '-')
 			return (true);
 	}
 	return (false);
 }
 
+bool	Nick::isSpecialChar(const int ch) {
+	if (ch == ';' || ch == '[' || ch == ']' || ch == '\\' || ch == '`' 
+			|| ch == '_' || ch == '^' || ch == '{' || ch == '}' || ch == '|')
+		return true;
+	return false;
+}
+
 ACommand	*Nick::clone(void) const {
 	return new Nick();
 }
-

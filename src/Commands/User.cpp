@@ -35,10 +35,12 @@ void	User::process(const Message& msg)
 	if ((clientFlags & HAS_NICK) == 0)
 		throw (std::domain_error
 				("The registration must be done in that order: PASS, NICK, USER"));
-	if (nbParams < 2 || (realName.empty() && nbParams < 3))
+	if (nbParams < 2 || (nbParams < 3 && realName.empty()))
 		needMoreParams(msg);
 	if (realName.empty())
-		realName = msg.getParams()[2];
+		for (std::vector<std::string>::iterator it = msg.getParams().begin() + 2;
+				it != msg.getParams().end() ; it++)
+			realName += *it;
 	msg.getClient()->setUser(msg.getParams()[0]);
 	msg.getClient()->setRealName(realName);
 	tryRegistration(*msg.getClient(), msg);
@@ -69,7 +71,7 @@ void	User::tryRegistration(Client &client, const Message &msg)
 			("Nick already in use, retry registration process");
 	}
 	client.setFlags(client.getFlags() | HAS_REGISTERED);
-	//send RPL_WELCOME
+	Server::sendMessage(RPL_WELCOME(msg.prefix(1), client.getNick()), msg.getFd());
 }
 
 ACommand	*User::clone(void) const {
