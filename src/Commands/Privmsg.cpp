@@ -20,7 +20,13 @@ Privmsg& Privmsg::operator=(Privmsg const& other) {
 }
 
 void	Privmsg::process(const Message& msg) {
+	if (msg.getParams().empty())
+		//ERR_NORECIPIENT
+	if (msg.getParams.size() == 1 && msg.getTrailing().empty())
+		//ERR_NOTEXTTOSEND
 }
+
+void	Pr
 
 ACommand	*Privmsg::clone(void) const {
 	return new Privmsg();
