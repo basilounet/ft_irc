@@ -14,8 +14,9 @@ public:
 	~User( void );
 	User &operator=(User const &other);
 
-	void		process(const Message& msg);
-	void 		needMoreParams(const Message& msg) const;
+	void	process(const Message& msg);
+	void 	needMoreParams(const Message& msg) const;
+	void	tryRegistration(Client &client, const Message &msg);
 	ACommand	*clone(void) const;
 
 };

@@ -26,7 +26,6 @@ Message& Message::operator=(const Message& src) {
 	if (this != &src) {
 		_client = src._client;
 		_msg = src._msg;
-		_nick = src._nick;
 		_serverName = src._serverName;
 		_command = src._command;
 		_params = src._params;
@@ -73,7 +72,11 @@ void Message::parseMsg() {
 
 void Message::execCommand() {
 	createCommand();
-	_cmd->process(*this);
+	if ((_client->getFlags() & HAS_REGISTERED) == 0)
+		if (_command != "PASS" && _command != "NICK" && _command != "USER")
+			throw std::invalid_argument("User registration not complete");
+	if (_cmd)
+		_cmd->process(*this);
 }
 
 // prefix = servername / ( nickname [ [ "!" user ] "@" host ] )
@@ -142,7 +145,6 @@ std::string Message::getMsg() const {
 
 std::string Message::getNick() const {
 	return _client->getNick();
-	//return _nick;
 }
 
 std::string Message::getServerName() const {
@@ -167,7 +169,7 @@ int Message::getFd() const {
 
 void	Message::createCommand() {
 	const char	*tmp[] = {"INVITE", "JOIN", "KICK", "MODE", "NICK",
-		"PART", "PASS", "MSG", "PRIVMSG", "TOPIC", "USER", NULL};
+		"PART", "PASS", "MSG", "PRIVMSG", "TOPIC", "USER", "QUIT", "CAP", NULL};
 	int i = 0;
 
 	while (tmp[i] && _command != tmp[i])
@@ -203,6 +205,12 @@ void	Message::createCommand() {
 		break ;
 		case 10:
 			_cmd = new User();
+		break ;
+		case 11:
+			_cmd = new Quit();
+		break ;
+		case 12:
+			_cmd = NULL;
 		break ;
 		default:
 			throw std::invalid_argument("Not known command");

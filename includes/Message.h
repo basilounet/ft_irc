@@ -20,6 +20,7 @@ class ACommand;
 # include <Topic.h>
 # include <User.h>
 # include <Topic.h>
+# include <Quit.h>
 // # include <Channel.h>
 // # include <Client.h>
 class Message {
@@ -47,7 +48,6 @@ private:
 	ACommand*					_cmd;
 	Client*						_client;
 	std::string					_msg;
-	std::string					_nick;
 	std::string					_serverName;
 	std::string					_command;
 	std::vector<std::string>	_params;

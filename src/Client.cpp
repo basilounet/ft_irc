@@ -31,6 +31,7 @@ Client& Client::operator=(const Client& src) {
 		_fd = src._fd;
 		_buffer = src._buffer;
 		_flags = src._flags;
+		_password = src._password;
 	}
 	return (*this);
 }
@@ -97,6 +98,10 @@ short Client::getFlags() const {
 	return (_flags);
 }
 
+std::string Client::getPassword() const {
+	return _password;
+}
+
 void Client::setRealName(const std::string& name) {
 	_realName = name;
 }
@@ -119,6 +124,11 @@ void Client::setFlags(short flags) {
 
 void Client::appendBuffer(const std::string& buf) {
 	_buffer += buf;
+}
+
+void	Client::setPassword(const std::string& pass)
+{
+	_password = pass;
 }
 
 void Client::parseBuffer() {
