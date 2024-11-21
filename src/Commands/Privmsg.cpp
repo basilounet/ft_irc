@@ -20,6 +20,7 @@ Privmsg& Privmsg::operator=(Privmsg const& other) {
 }
 
 void	Privmsg::process(const Message& msg) {
+	(void)msg;
 }
 
 ACommand	*Privmsg::clone(void) const {
