@@ -44,6 +44,7 @@ Client* ACommand::getClientInChannel(const std::string& nick, Channel* chan, con
 	}
 	return (client);
 }
+
 Client* ACommand::getChanopInChannel(const std::string& nick, Channel* chan, const Message& msg) {
 	Client* client =getClientInChannel(nick, chan, msg);				// throw if
 	if (!chan->isChanop(client)) {
@@ -53,6 +54,7 @@ Client* ACommand::getChanopInChannel(const std::string& nick, Channel* chan, con
 	}
 	return (client);
 }
+
 Client* ACommand::getInviteInChannel(const std::string& nick, Channel* chan, const Message& msg) {
 	Client* client =getClientInChannel(nick, chan, msg);				// throw if
 	if (!chan->isInvite(client)) {
@@ -72,7 +74,6 @@ Channel* ACommand::getChannelWithName(std::string &name, const Message& msg) {
 	}
 	return (chan);
 }
-
 
 void ACommand::commandUnknown(const Message& msg) {
 	// 421	  ERR_UNKNOWNCOMMAND		"<command> :Unknown command"
