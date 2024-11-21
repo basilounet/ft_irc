@@ -72,11 +72,12 @@ void Message::parseMsg() {
 
 void Message::execCommand() {
 	createCommand();
+	if (!_cmd)
+		return ;
 	if ((_client->getFlags() & HAS_REGISTERED) == 0)
 		if (_command != "PASS" && _command != "NICK" && _command != "USER")
 			throw std::invalid_argument("User registration not complete");
-	if (_cmd)
-		_cmd->process(*this);
+	_cmd->process(*this);
 }
 
 // prefix = servername / ( nickname [ [ "!" user ] "@" host ] )

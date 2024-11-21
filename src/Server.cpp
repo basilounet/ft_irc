@@ -158,7 +158,7 @@ void Server::handleClient(const pollfd &pollfd) {
 	ssize_t bytes_read = recv(pollfd.fd, buffer, sizeof(buffer), MSG_DONTWAIT);
 	Client &client = _clients[pollfd.fd];
 
-	if (bytes_read == 0 || client.getFlags() == IS_RM)
+	if (client.getFlags() == IS_RM || bytes_read == -1)
 		removeClient(pollfd.fd);
 	if (bytes_read > 0) {
 		client.appendBuffer(buffer);

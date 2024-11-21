@@ -71,6 +71,7 @@ void	User::tryRegistration(Client &client, const Message &msg)
 			("Nick already in use, retry registration process");
 	}
 	client.setFlags(client.getFlags() | HAS_REGISTERED);
+	std::cout << C_VERT << "Client fd " << msg.getFd() << " successfully registered" << C_RESET << std::endl;
 	Server::sendMessage(RPL_WELCOME(msg.prefix(1), client.getNick()), msg.getFd());
 }
 
