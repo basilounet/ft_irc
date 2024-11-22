@@ -45,6 +45,10 @@ std::map<int, Client>& Server::getClients() {
 	return (_clients);
 }
 
+std::map<std::string, Channel>& Server::getChannels() {
+	return (_channels);
+}
+
 const std::string &Server::getPassword() const {
 	return _password;
 }
@@ -91,6 +95,8 @@ void Server::runServer() {
 }
 
 void Server::sendMessage(std::string message, const int fd) {
+	if (message.size() >= 2 &&  message[message.size() - 1] != '\n' && message[message.size() - 2] != '\r')
+		message += "\r\n";
 	if (message.size() > 512)
 		message = message.substr(0, 510) + "\r\n";
 	send(fd, message.c_str(), message.size(), MSG_DONTWAIT | MSG_NOSIGNAL);
@@ -99,15 +105,19 @@ void Server::sendMessage(std::string message, const int fd) {
 void Server::broadcast(const std::vector<Client*>& clients, const std::string& msg, const Client& sender,
 	const bool shouldSendToSender) {
 	for (std::vector<Client*>::const_iterator it = clients.begin(); it != clients.end(); ++it)
-		if ((*it)->getfd().fd != sender.getfd().fd || shouldSendToSender)
+		if ((*it)->getfd().fd != sender.getfd().fd)
 			sendMessage(msg, (*it)->getfd().fd);
+	if (shouldSendToSender)
+		sendMessage(msg, sender.getfd().fd);
 }
 
 void Server::broadcast(const std::string& msg, const Client& sender, const bool shouldSendToSender) {
 	for (std::vector<pollfd>::iterator it = _fds.begin(); it != _fds.end(); ++it) {
-		if (it->fd != _socket && (it->fd != sender.getfd().fd || shouldSendToSender))
+		if (it->fd != _socket && (it->fd != sender.getfd().fd))
 			sendMessage(msg, it->fd);
 	}
+	if (shouldSendToSender)
+		sendMessage(msg, sender.getfd().fd);
 }
 
 Client* Server::getClientWithNick(const std::string& nick) {

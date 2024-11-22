@@ -49,8 +49,10 @@ void Channel::broadcastMessage(const std::string& msg) {
 
 void Channel::broadcastMessage(const std::string& msg, const Client& sender, const bool shouldSendToSender) {
 	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-		if ((*it)->getfd().fd != sender.getfd().fd || shouldSendToSender)
+		if ((*it)->getfd().fd != sender.getfd().fd)
 			Server::sendMessage(msg, (*it)->getfd().fd);
+	if (shouldSendToSender)
+		Server::sendMessage(msg, sender.getfd().fd);
 }
 
 Server* Channel::getServer() const {
@@ -168,18 +170,16 @@ bool Channel::setTopicProtected(bool state) {
 std::string Channel::getKey() const {
 	return _key;
 }
-bool Channel::isKey() const {
-	if (_key.empty())
-		return false;
-	return true;
-}
+
 void Channel::setKey(std::string key) {
 	_key = key;
 }
 bool Channel::access(const std::string &pwd) const {
-	// TODO
-	(void) pwd;
-	return (true);
+	if (_key.empty())
+		return (true);
+	if (_key == pwd)
+		return (true);
+	return (false);
 }
 
 int Channel::getLimit() const {
@@ -194,7 +194,7 @@ void Channel::setLimit(int limit) {
 	_limit = limit;
 }
 bool Channel::isFull() const {
-	if ((int) _clients.size() >= _limit)
+	if (static_cast<int>(_clients.size()) >= _limit)
 		return (true);
 	return (false);
 }

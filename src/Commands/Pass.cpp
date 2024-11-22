@@ -29,7 +29,7 @@ void	Pass::process(const Message& msg) {
 		Server::sendMessage(ERR_ALREADYREGISTRED(msg.prefix(1), msg.getNick()), msg.getFd());
 		throw std::logic_error("PASS: Unauthorized command (already registered)");
 	}
-	isMsgParamEmpty(msg);
+	checkNbParam(msg, 0);
 	if (msg.getParams()[0] == msg.getClient()->getServer()->getPassword())
 		msg.getClient()->setFlags(clientFlags | HAS_SERVER_PASS);
 }

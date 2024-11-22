@@ -36,8 +36,6 @@ public:
 	Server(const Server &src);
 	Server &operator=(const Server &src);
 
-	std::map<int, Client>&	getClients();
-
 	void createServer();
 	void runServer();
 
@@ -48,6 +46,8 @@ public:
 	void		removeClient(const int fd);
 
 	const std::string	&getPassword() 	const;
+	std::map<int, Client>&	getClients();
+	std::map<std::string, Channel>&	getChannels();
 	//Client*			getClientWithNick(std::string& nick);
 	//Channel*			getChannelWithName(std::string& name);
 	Client*		getClientWithNick(const std::string& nick);
