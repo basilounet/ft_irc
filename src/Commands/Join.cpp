@@ -113,6 +113,8 @@ void Join::tryJoinExistingChannel(const Message& msg, size_t i) {
 	}
 	msg.getClient()->addChannel(*chan);
 	chan->addClient(msg.getClient());
+	// if (chan->isInviteOnly())
+		// chan->getInvites().erase(std::find(chan->getInvites().begin(), chan->getInvites().end(), msg.getClient()));
 	chan->broadcastMessage(msg.prefix(2) + "JOIN " + chan->getName());
 	if (!chan->getTopic().empty())
 		Server::sendMessage(RPL_TOPIC(msg.prefix(2), msg.getNick(), chan->getName(), chan->getTopic()), msg.getFd());
@@ -133,6 +135,7 @@ void Join::CreateChannel(const Message& msg, size_t i) {
 	Channel* chan = getChannelWithName(_channels[i], msg);
 	msg.getClient()->addChannel(*chan);
 	chan->addClient(msg.getClient());
+	chan->addChanop(msg.getClient());
 	chan->broadcastMessage(msg.prefix(2) + "JOIN " + chan->getName());
 	Server::sendMessage(msg.prefix(2) + "MODE " + chan->getName() + " +nt", msg.getFd());
 	std::string names;

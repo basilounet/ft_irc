@@ -30,8 +30,11 @@ void	Pass::process(const Message& msg) {
 		throw std::logic_error("PASS: Unauthorized command (already registered)");
 	}
 	checkNbParam(msg, 1);
-	if (msg.getParams()[0] == msg.getClient()->getServer()->getPassword())
-		msg.getClient()->setFlags(clientFlags | HAS_SERVER_PASS);
+	msg.getClient()->setPassword(msg.getParams()[0]);
+	msg.getClient()->setFlags(clientFlags | HAS_TRY_PASS);
+//	checkNbParam(msg, 1);
+//	if (msg.getParams()[0] == msg.getClient()->getServer()->getPassword())
+//		msg.getClient()->setFlags(clientFlags | HAS_SERVER_PASS);
 }
 
 ACommand	*Pass::clone(void) const {

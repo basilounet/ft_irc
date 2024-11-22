@@ -22,7 +22,11 @@ Mode& Mode::operator=(Mode const& other) {
 }
 
 void	Mode::process(const Message& msg) {
-	checkNbParam(msg, 0); // throw if
+	checkNbParam(msg, 1); // throw if
+	if (msg.getParams().size() == 1) {
+		return ;
+		throw std::invalid_argument(msg.getParams()[1] + ":1 argument");
+	}
 	if (msg.getParams()[0][0] == '#' || msg.getParams()[0][0] == '&') {
 		Channel* chan = getChannelWithName(msg.getParams()[0], msg); // throw if
 		getChanopInChannel(msg.getClient()->getNick(), chan, msg); // throw if
@@ -35,6 +39,7 @@ void	Mode::process(const Message& msg) {
 // CHANNEL MODE
 // MODE <channel> {[+|-]|o|p|s|i|t|n|b|v} [<limit>] [<user>][<ban mask>]
 void	Mode::channelMode(Channel* chan, const Message& msg) {
+
 	if (msg.getParams()[1][0] != '+' && msg.getParams()[1][0] != '-') {
 		//461   ERR_NEEDMOREPARAMS			"<command> :Not enough parameters"
 		Server::sendMessage(ERR_NEEDMOREPARAMS(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
