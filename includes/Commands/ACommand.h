@@ -26,9 +26,11 @@ class ACommand
 		static Client*		getChanopInChannel(const std::string &nick, Channel* chan, const Message& msg);
 		static Client*		getInviteInChannel(const std::string &nick, Channel* chan, const Message& msg);
 
-		static Channel*		getChannelWithName(std::string &name, const Message& msg);
+		static Channel*		getChannelWithName(const std::string &name, const Message& msg);
 
-		static void			commandUnknown(const Message& msg);
+		static void						commandUnknown(const Message& msg);
+		static std::vector<std::string>	split(const std::string& str,
+										const char separator);
 
 };
 
