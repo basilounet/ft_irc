@@ -142,11 +142,3 @@ void	Mode::setChannelLimit(Channel* chan, const Message& msg, bool add) {
 ACommand	*Mode::clone(void) const {
 	return new Mode();
 }
-
-
-
-
-
-
-
-

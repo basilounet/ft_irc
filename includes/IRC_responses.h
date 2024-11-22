@@ -20,7 +20,7 @@
 
 // 001   RPL_WELCOME				"Welcome to the Internet Relay Network <nick>!<user>@<host>"
 # define RPL_WELCOME(prefix, nick) \
-(std::string(prefix) + "001 " + std::string(nick) + " :Welcome to the Internet Relay Network " + std::string(nick))
+(std::string(prefix) + "001 " + std::string(nick) + " :Welcome to the Internet Relay Network " + std::string(nick) + CRLF)
 //(std::string(prefix) + "001 " + std::string(nick) + " :Welcome to the Internet Relay Network " + std::string(nick) + "!" + std::string(user) + "@" + HOST + CRLF)
 
 // 221   RPL_UMODEIS				"<user mode string>"

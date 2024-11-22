@@ -27,7 +27,7 @@ void	User::process(const Message& msg)
 
 	if (clientFlags & HAS_REGISTERED)
 	{
-		msg.getClient()->setFlags(clientFlags);
+		//msg.getClient()->setFlags(clientFlags);
 		Server::sendMessage(ERR_ALREADYREGISTRED
 				(msg.prefix(1), msg.getNick()), msg.getFd());
 		throw std::logic_error("USER: Unauthorized command (already registered)");
@@ -72,6 +72,7 @@ void	User::tryRegistration(Client &client, const Message &msg)
 	}
 	client.setFlags(client.getFlags() | HAS_REGISTERED);
 	std::cout << C_VERT << "Client fd " << msg.getFd() << " successfully registered" << C_RESET << std::endl;
+	// 001   RPL_WELCOME				"Welcome to the Internet Relay Network <nick>!<user>@<host>"
 	Server::sendMessage(RPL_WELCOME(msg.prefix(1), client.getNick()), msg.getFd());
 }
 
