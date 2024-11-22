@@ -20,7 +20,7 @@ Topic& Topic::operator=(Topic const& other) {
 }
 
 void Topic::process(const Message& msg) {
-	isMsgParamEmpty(msg); // throw if (nb >= 1) TODO
+	checkNbParam(msg, 1); // throw if (nb >= 1) TODO
 	// getVectorTopicMessage TODO
 	topic(msg);
 }

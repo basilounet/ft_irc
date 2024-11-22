@@ -22,16 +22,16 @@ Pass& Pass::operator=(Pass const& other) {
 }
 
 void	Pass::process(const Message& msg) {
-	const int	clientFlags = msg.getClient()->getFlags();
+	const int clientFlags = msg.getClient()->getFlags();
 
 	if (clientFlags & HAS_REGISTERED)
 	{
 		Server::sendMessage(ERR_ALREADYREGISTRED(msg.prefix(1), msg.getNick()), msg.getFd());
 		throw std::logic_error("PASS: Unauthorized command (already registered)");
 	}
-	isMsgParamEmpty(msg);
-	msg.getClient()->setPassword(msg.getParams()[0]);
-	msg.getClient()->setFlags(clientFlags | HAS_TRY_PASS);
+	checkNbParam(msg, 1);
+	if (msg.getParams()[0] == msg.getClient()->getServer()->getPassword())
+		msg.getClient()->setFlags(clientFlags | HAS_SERVER_PASS);
 }
 
 ACommand	*Pass::clone(void) const {

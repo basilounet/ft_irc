@@ -1,4 +1,5 @@
 #include <ACommand.h>
+#include "Message.h"
 
 ACommand::ACommand() {
 }
@@ -16,8 +17,8 @@ ACommand& ACommand::operator=(const ACommand& right) {
 ACommand::~ACommand() {
 }
 
-bool ACommand::isMsgParamEmpty(const Message& msg) {
-	if (msg.getParams().empty()) {
+bool ACommand::checkNbParam(const Message& msg, unsigned int nbminParam, bool checkTrailing) {
+	if (msg.getParams().size() < nbminParam || (checkTrailing && msg.getTrailing().empty())) {
 		// 461   ERR_NEEDMOREPARAMS			"<command> :Not enough parameters"
 		Server::sendMessage(ERR_NEEDMOREPARAMS(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
 		throw std::invalid_argument(msg.getCommand() + ":Not enough parameters");

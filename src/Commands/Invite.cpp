@@ -20,7 +20,7 @@ Invite& Invite::operator=(Invite const& other) {
 }
 
 void	Invite::process(const Message& msg) {
-	isMsgParamEmpty(msg); // throw if >= 2
+	checkNbParam(msg, 1); // throw if >= 2
 	// getVectorInviteMessage TODO
 	invite(msg);
 }

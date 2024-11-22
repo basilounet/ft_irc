@@ -129,13 +129,13 @@ endif
 define last_changes
 	@if [ ! -f "$(TIMESTAMP_FILE)" ]; then \
 	echo -n > $(TIMESTAMP_FILE); \
-	for f in ./src/* ./includes/*/* ./Makefile; do \
+	for f in ./src/*/* ./includes/*/* ./Makefile; do \
 		cat "$$f" >> $(TIMESTAMP_FILE); \
 		echo "$(ORANGE)\n++|| $$f" >> $(TIMESTAMP_FILE); \
 	done \
 	fi
 	@echo -n > temp_$(TIMESTAMP_FILE)
-	@for f in ./src/* ./includes/*/* ./Makefile; do \
+	@for f in ./src/*/* ./includes/*/* ./Makefile; do \
 		cat "$$f" >> temp_$(TIMESTAMP_FILE); \
 		echo "$(ORANGE)\n++|| $$f" >> temp_$(TIMESTAMP_FILE); \
 	done

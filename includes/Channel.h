@@ -10,6 +10,7 @@ class Channel;
 # include <algorithm>
 
 class Channel {
+
 public:
 	Channel();
 	Channel(const std::string& name, Server* server);
@@ -48,7 +49,6 @@ public:
 	bool		setTopicProtected(bool state);
 
 	std::string	getKey()							const;
-	bool		isKey()								const;
 	void		setKey(std::string key);
 	bool		access(const std::string &pwd)		const;
 

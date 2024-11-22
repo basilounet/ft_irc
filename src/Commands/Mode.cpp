@@ -22,7 +22,7 @@ Mode& Mode::operator=(Mode const& other) {
 }
 
 void	Mode::process(const Message& msg) {
-	isMsgParamEmpty(msg); // throw if
+	checkNbParam(msg, 0); // throw if
 	if (msg.getParams()[0][0] == '#' || msg.getParams()[0][0] == '&') {
 		Channel* chan = getChannelWithName(msg.getParams()[0], msg); // throw if
 		getChanopInChannel(msg.getClient()->getNick(), chan, msg); // throw if

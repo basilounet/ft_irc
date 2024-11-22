@@ -4,7 +4,7 @@ class Message;
 class Client;
 class Channel;
 
-# include <string>
+# include <iostream>
 # include <vector>
 
 class ACommand
@@ -19,7 +19,8 @@ class ACommand
 		virtual void process(const Message& msg) = 0;
 		virtual ACommand *clone(void) const = 0;
 
-		static bool			isMsgParamEmpty(const Message& msg);
+protected:
+		static bool			checkNbParam(const Message& msg, unsigned int nbminParam, bool checkTrailing = false);
 
 		static Client*		getClientWithNick(const std::string &nick, const Message& msg);
 		static Client*		getClientInChannel(const std::string &nick, Channel* chan, const Message& msg);
