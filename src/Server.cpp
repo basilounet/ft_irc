@@ -150,6 +150,11 @@ void Server::removeClient(const int fd)
 	_clients.erase(fd);
 }
 
+void Server::removeChannel(const std::string& name) {
+	if (_channels.find(name) != _channels.end() && _channels.find(name)->second.getClients().empty())
+		_channels.erase(name);
+}
+
 void Server::acceptClient() {
 	int fd = accept(_socket, __nullptr, __nullptr);
 	if (fd < 0)
@@ -175,7 +180,7 @@ void Server::handleClient(const pollfd &pollfd) {
 		total_buf = client.getBuffer();
 		if (total_buf.size() > 2 && total_buf[total_buf.size() - 2] == '\r' && total_buf[total_buf.size() - 1] == '\n') {
 			std::cout << "Message to server: " << client.getBuffer() ;
-			client.parseBuffer(); //////////////////////////////////////////////////////////////////////////////////////////////////////////
+			client.parseBuffer();
 			client.setBuffer("");
 		}
 	}

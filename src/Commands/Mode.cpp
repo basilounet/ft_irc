@@ -99,7 +99,7 @@ void	Mode::setChannelTopicProtected(Channel* chan, const Message& msg, bool add)
 void	Mode::setChannelKey(Channel* chan, const Message& msg, bool add) {
 	if (add) {
 		if (msg.getParams()[2].empty()) {
-			Server::sendMessage(ERR_NEEDMOREPARAMS(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
+			// Server::sendMessage(ERR_NEEDMOREPARAMS(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
 			throw std::invalid_argument(msg.getCommand() + ":Not enough parameters");
 		}
 		chan->setKey(msg.getParams()[2]);

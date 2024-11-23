@@ -132,7 +132,7 @@ std::string Message::prefix(int type) const {
 	if (type == 1) // :localhost
 		prefix_str = ":" + SERVER_REAL_NAME + " ";
 	if (type == 2) // :localhost
-		prefix_str = ":" + _client->getNick() + "!" + _client->getUser() + HOST + " ";
+		prefix_str = ":" + _client->getNick() + "!" + _client->getUser()  + "@" + HOST + " ";
 	return prefix_str;
 }
 

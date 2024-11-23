@@ -47,8 +47,16 @@ void Client::removeChannel(const std::string& name) {
 
 void Client::quitAllChannels() {
 	for(std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+	{
+		try {
+			Message msg(this, "JOIN 0" + CRLF);
+			msg.execCommand();
+		}
+		catch (std::exception &e) {
+			std::cout << C_ROSE << "Error join 0: " << e.what() << C_RESET << std::endl;
+		}
 		it->second->removeClient(this);
-
+	}
 }
 
 void Client::broadcastToAllKnownUsers(const std::string& msg, const bool shouldSendToSender) {

@@ -26,7 +26,7 @@ public:
 
 	const std::vector<Client *> &getClients()	const;
 	const std::vector<Client *> &getChanops()	const;
-	const std::vector<Client *> &getInvites()	const;
+	const std::vector<Client*>	&getInvites()	const;
 
 	bool		addClient(Client* client);
 	bool		addChanop(Client* client);

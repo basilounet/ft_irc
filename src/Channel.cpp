@@ -69,7 +69,9 @@ const std::vector<Client *> &Channel::getClients() const {
 const std::vector<Client *> &Channel::getChanops() const {
 	return (_chanops);
 }
-const std::vector<Client *> &Channel::getInvites() const {
+
+const std::vector<Client*> &Channel::getInvites() const
+{
 	return (_invites);
 }
 
@@ -99,6 +101,8 @@ bool Channel::removeClient(Client* client) {
 	std::vector<Client*>::iterator it = std::find(_clients.begin(), _clients.end(), client);
 	if (it != _clients.end()) {
 		_clients.erase(it);
+		if (_clients.empty())
+			_server->removeChannel(_name);
 		return true;
 	}
 	return false;

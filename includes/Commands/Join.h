@@ -21,8 +21,8 @@ private:
 	std::vector<std::string>	_channels;
 	std::vector<std::string>	_pswds;
 
-	std::vector<std::string>	split(const std::string& str, const char separator);
 	bool						isNameValid(const std::string& name) const;
+	void						quitAllChannels(const Message& msg);
 	void						tryJoinExistingChannel(const Message& msg, size_t i);
 	void						CreateChannel(const Message& msg, size_t i);
 };

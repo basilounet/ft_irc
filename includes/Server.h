@@ -44,6 +44,7 @@ public:
 	                      const bool shouldSendToSender = false);
 	void		broadcast(const std::string& msg, const Client& sender, const bool shouldSendToSender = false);
 	void		removeClient(const int fd);
+	void		removeChannel(const std::string& name);
 
 	const std::string	&getPassword() 	const;
 	std::map<int, Client>&	getClients();

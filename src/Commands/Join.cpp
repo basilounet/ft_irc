@@ -31,7 +31,7 @@ void	Join::process(const Message& msg) {
 	checkNbParam(msg, 1);
 	if (msg.getParams()[0] == "0")
 	{
-		std::cout << "Leaving all channels" << std::endl; /////////////////////////////////////////////////////////
+		quitAllChannels(msg);
 		return ;
 	}
 	_channels = split(msg.getParams()[0], ',');
@@ -56,28 +56,6 @@ ACommand	*Join::clone(void) const {
 	return new Join();
 }
 
-
-std::vector<std::string> Join::split(const std::string& str, const char separator) {
-	std::vector<std::string> result;
-	std::string line;
-	size_t	pos0 = 0;
-	size_t	pos1 = 0;
-
-	pos0 = str.find(separator, 0);
-	line = str.substr(0, pos0);
-	result.push_back(line);
-	while (pos0 != std::string::npos)
-	{
-		pos1 = str.find(separator, pos0 + 1);
-		line = str.substr(pos0 + 1, pos1 - pos0);
-		pos0 = pos1;
-		if (line.empty())
-			continue ;
-		result.push_back(line);
-	}
-	return (result);
-}
-
 // chanstring =  %x01-07 / %x08-09 / %x0B-0C / %x0E-1F / %x21-2B
 // chanstring =/ %x2D-39 / %x3B-FF
 bool Join::isNameValid(const std::string& name) const {
@@ -89,6 +67,20 @@ bool Join::isNameValid(const std::string& name) const {
 			return (false);
 	}
 	return (true);
+}
+
+void Join::quitAllChannels(const Message& msg) {
+	std::map<std::string, Channel*> channels = msg.getClient()->getChannels();
+
+	for (std::map<std::string, Channel*>::iterator it = channels.begin(); it != channels.end(); ++it) {
+		try {
+			Message msg_part(msg.getClient(), "PART " + it->first + CRLF);
+			msg_part.execCommand();
+		}
+		catch (std::exception &e) {
+			std::cout << C_ROSE << "Error part: " + it->first << e.what() << C_RESET << std::endl;
+		}
+	}
 }
 
 void Join::tryJoinExistingChannel(const Message& msg, size_t i) {
@@ -113,20 +105,20 @@ void Join::tryJoinExistingChannel(const Message& msg, size_t i) {
 	}
 	msg.getClient()->addChannel(*chan);
 	chan->addClient(msg.getClient());
-	// if (chan->isInviteOnly())
-		// chan->getInvites().erase(std::find(chan->getInvites().begin(), chan->getInvites().end(), msg.getClient()));
+	if (chan->isInviteOnly())
+		chan->removeInvite(msg.getClient());
 	chan->broadcastMessage(msg.prefix(2) + "JOIN " + chan->getName());
 	if (!chan->getTopic().empty())
-		Server::sendMessage(RPL_TOPIC(msg.prefix(2), msg.getNick(), chan->getName(), chan->getTopic()), msg.getFd());
+		Server::sendMessage(RPL_TOPIC(msg.prefix(1), msg.getNick(), chan->getName(), chan->getTopic()), msg.getFd());
 	std::string names;
 	for (std::vector<Client*>::const_iterator it = chan->getClients().begin(); it != chan->getClients().end(); ++it)
 		names += (*it)->getNick() + " ";
-	Server::sendMessage(RPL_NAMREPLY(msg.prefix(2), msg.getNick(), chan->getName(), names), msg.getFd());
-	Server::sendMessage(RPL_ENDOFNAMES(msg.prefix(2), msg.getNick(), chan->getName()), msg.getFd());
+	Server::sendMessage(RPL_NAMREPLY(msg.prefix(1), msg.getNick(), chan->getName(), names), msg.getFd());
+	Server::sendMessage(RPL_ENDOFNAMES(msg.prefix(1), msg.getNick(), chan->getName()), msg.getFd());
 }
 
 void Join::CreateChannel(const Message& msg, size_t i) {
-	std::cout << "Channel does not exit, creating it" << std::endl;
+	std::cout << "Channel does not exit, creating it (" << _channels[i] << ")" << std::endl;
 	if (!isNameValid(_channels[i])) {
 		Server::sendMessage(ERR_NOSUCHCHANNEL(msg.prefix(2), msg.getNick(), _channels[i]), msg.getFd());
 		throw std::runtime_error("No such channel");
@@ -137,10 +129,10 @@ void Join::CreateChannel(const Message& msg, size_t i) {
 	chan->addClient(msg.getClient());
 	chan->addChanop(msg.getClient());
 	chan->broadcastMessage(msg.prefix(2) + "JOIN " + chan->getName());
-	Server::sendMessage(msg.prefix(2) + "MODE " + chan->getName() + " +nt", msg.getFd());
+	Server::sendMessage(msg.prefix(1) + "MODE " + chan->getName() + " +nt", msg.getFd());
 	std::string names;
 	for (std::vector<Client*>::const_iterator it = chan->getClients().begin(); it != chan->getClients().end(); ++it)
 		names += (*it)->getNick() + " ";
-	Server::sendMessage(RPL_NAMREPLY(msg.prefix(2), msg.getNick(), chan->getName(), names), msg.getFd());
-	Server::sendMessage(RPL_ENDOFNAMES(msg.prefix(2), msg.getNick(), chan->getName()), msg.getFd());
+	Server::sendMessage(RPL_NAMREPLY(msg.prefix(1), msg.getNick(), chan->getName(), names), msg.getFd());
+	Server::sendMessage(RPL_ENDOFNAMES(msg.prefix(1), msg.getNick(), chan->getName()), msg.getFd());
 }

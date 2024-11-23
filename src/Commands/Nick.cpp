@@ -40,21 +40,21 @@ void	Nick::process(const Message& msg)
 		Server::sendMessage(ERR_ERRONEUSNICKNAME(msg.prefix(1),msg.getNick(), params[0]), msg.getClient()->getfd().fd);
 		throw (std::invalid_argument("Invalid character in Nick"));
 	}
-	if (isNickInServer(params[0], msg))
-	{
+	if (isNickInServer(params[0], msg)) {
 		if (msg.getClient()->getFlags() | IS_RM)
 			throw std::invalid_argument("Nick already in use, leaving Server");
 		throw std::invalid_argument("Nick already in use");
 	}
-	msg.getClient()->setNick(params[0]);
 	if ((msg.getClient()->getFlags() & HAS_NICK) == 0)
 		msg.getClient()->setFlags(msg.getClient()->getFlags() | HAS_NICK);
 	if (msg.getClient()->getFlags() & HAS_REGISTERED)
-		msg.getClient()->broadcastToAllKnownUsers(msg.prefix(2) + " NICK :" + msg.getClient()->getNick() + "\r\n", true);
+		msg.getClient()->broadcastToAllKnownUsers(msg.prefix(2) + "NICK :" + params[0] + "\r\n", true);
+	msg.getClient()->setNick(params[0]);
 }
 
 bool	Nick::isNickInServer(const std::string& nick, const Message& msg) {
-	for (std::map<int, Client>::iterator it = msg.getClient()->getServer()->getClients().begin(); it != msg.getClient()->getServer()->getClients().end(); ++it) {
+	std::map<int, Client> clients = msg.getClient()->getServer()->getClients();
+	for (std::map<int, Client>::iterator it = clients.begin(); it != clients.end(); ++it) {
 		if (it->second.getfd().fd != msg.getClient()->getfd().fd && it->second.getNick() == nick && (it->second.getFlags() & HAS_REGISTERED)) {
 			if ((msg.getClient()->getFlags() & HAS_REGISTERED) == 0) {
 				Server::sendMessage(ERR_NICKCOLLISION(msg.prefix(2),msg.getNick(), nick, msg.getClient()->getRealName()), msg.getClient()->getfd().fd);
