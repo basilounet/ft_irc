@@ -11,12 +11,26 @@
 # define C_ROSE "\e[38;5;217m"
 # define C_RESET "\033[0m"
 
+#include <sstream>
+
+template <typename T>
+std::string to_string(T n) {
+	std::ostringstream stream;
+	stream << n;
+
+	return stream.str();
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // COMMAMD REPONSES
 
 // MODE	RPL_MODE					"MODE <channel> <arg> <nick>"
 # define RPL_MODE(prefix, nickRes, channel, nick, arg) \
 (std::string(prefix) + "MODE " + std::string(nickRes) + " " + std::string(channel) + " " + std::string(arg) + " " + std::string(nick) + CRLF)
+
+// MODE RPL_CLIENT_MODE					"MODE <channel> <arg>"
+# define RPL_CLIENT_MODE(prefix, channel, arg) \
+(std::string(prefix) + "MODE " + std::string(channel) + " " + std::string(arg) + CRLF)
 
 // 001   RPL_WELCOME				"Welcome to the Internet Relay Network <nick>!<user>@<host>"
 # define RPL_WELCOME(prefix, nick) \
@@ -55,7 +69,7 @@
 
 // 332   RPL_TOPIC					"<channel> :<topic>"
 # define RPL_TOPIC(prefix, nickRes, channel, topic) \
-(std::string(prefix) + "332 " + std::string(nickRes) + " " + std::string(channel) + " :" + std::string(topic) + CRLF)
+(std::string(prefix) + "332 " + std::string(nickRes) + " " + std::string(channel) + " " + std::string(topic) + CRLF)
 
 // 341   RPL_INVITING				"<channel> <nick>"
 # define RPL_INVITING(prefix, nickRes, channel, nick) \

@@ -21,6 +21,7 @@ public:
 private:
 	static void	channelMode(Channel* chan, const Message& msg);
 
+	static void sendChannelMode(Channel* chan, const Message& msg);
 	static void setChannelInviteOnly(Channel* chan, const Message &msg, bool add);
 	static void setChannelTopicProtected(Channel* chan, const Message &msg, bool add);
 	static void setChannelKey(Channel* chan, const Message &msg, bool add);

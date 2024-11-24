@@ -50,6 +50,7 @@ public:
 
 	std::string	getKey()							const;
 	void		setKey(std::string key);
+	bool		isKeyProtected()					const;
 	bool		access(const std::string &pwd)		const;
 
 	int			getLimit()				const;

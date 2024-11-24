@@ -41,7 +41,6 @@ Channel& Channel::operator=(const Channel& src) {
 	return (*this);
 }
 
-
 void Channel::broadcastMessage(const std::string& msg) {
 	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
 			Server::sendMessage(msg, (*it)->getfd().fd);
@@ -178,8 +177,15 @@ std::string Channel::getKey() const {
 void Channel::setKey(std::string key) {
 	_key = key;
 }
-bool Channel::access(const std::string &pwd) const {
+
+bool Channel::isKeyProtected() const {
 	if (_key.empty())
+		return (false);
+	return (true);
+}
+
+bool Channel::access(const std::string &pwd) const {
+	if (!isKeyProtected())
 		return (true);
 	if (_key == pwd)
 		return (true);

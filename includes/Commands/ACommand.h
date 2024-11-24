@@ -24,6 +24,7 @@ class ACommand
 
 		static Client*				getClientWithNick(const std::string &nick, const Message& msg);
 		static Client*				getClientInChannel(const std::string &nick, Channel* chan, const Message& msg);
+		static Client*				getClientInChannel441(const std::string& nick, Channel* chan, const Message& msg);
 		static Client*				getChanopInChannel(const std::string &nick, Channel* chan, const Message& msg);
 		static Client*				getInviteInChannel(const std::string &nick, Channel* chan, const Message& msg);
 

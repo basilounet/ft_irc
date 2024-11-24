@@ -46,6 +46,16 @@ Client* ACommand::getClientInChannel(const std::string& nick, Channel* chan, con
 	return (client);
 }
 
+Client* ACommand::getClientInChannel441(const std::string& nick, Channel* chan, const Message& msg) {
+	Client* client = getClientWithNick(nick, msg); // throw if
+	if (!chan->isClient(client)) {
+		// 441   ERR_USERNOTINCHANNEL		"<nick> <channel> :They aren't on that channel"
+		Server::sendMessage(ERR_USERNOTINCHANNEL(msg.prefix(1), msg.getNick(), nick, chan->getName()), msg.getFd());
+		throw std::invalid_argument( nick + " " + chan->getName() + ":They aren't on that channel");
+	}
+	return (client);
+}
+
 Client* ACommand::getChanopInChannel(const std::string& nick, Channel* chan, const Message& msg) {
 	Client* client =getClientInChannel(nick, chan, msg);				// throw if
 	if (!chan->isChanop(client)) {
