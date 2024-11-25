@@ -29,46 +29,46 @@ class Channel;
 # endif
 
 class Server {
-public:
-	Server();
-	Server(int port = 8080, const std::string& password = "");
-	~Server();
-	Server(const Server &src);
-	Server &operator=(const Server &src);
+	public:
+		Server();
+		Server(int port = 8080, const std::string& password = "");
+		~Server();
+		Server(const Server &src);
+		Server &operator=(const Server &src);
 
-	void createServer();
-	void runServer();
+		void createServer();
+		void runServer();
 
-	static void	sendMessage(std::string message, int fd);
-	static void	broadcast(const std::vector<Client*>& clients, const std::string& msg, const Client& sender,
-	                      const bool shouldSendToSender = false);
-	void		broadcast(const std::string& msg, const Client& sender, const bool shouldSendToSender = false);
-	void		removeClient(const int fd);
-	void		removeChannel(const std::string& name);
+		static void	sendMessage(std::string message, int fd);
+		static void	broadcast(const std::vector<Client*>& clients, 
+					const std::string& msg, const Client& sender, 
+					const bool shouldSendToSender = false);
+		void		broadcast(const std::string& msg, const Client& sender,
+					const bool shouldSendToSender = false);
+		void		removeClient(const int fd);
+		void		removeChannel(const std::string& name);
 
-	const std::string	&getPassword() 	const;
-	std::map<int, Client>&	getClients();
-	std::map<std::string, Channel>&	getChannels();
-	//Client*			getClientWithNick(std::string& nick);
-	//Channel*			getChannelWithName(std::string& name);
-	Client*		getClientWithNick(const std::string& nick);
-	Channel*	getChannelWithName(const std::string& name);
+		const std::string				&getPassword() 	const;
+		std::map<int, Client>&			getClients();
+		std::map<std::string, Channel>&	getChannels();
+		Client*							getClientWithNick(const std::string& nick);
+		Channel*						getChannelWithName(const std::string& name);
 
-private:
-	int								_port;
-	std::string						_password;
-	int								_socket;
-	sockaddr_in						_addr;
-	std::vector<pollfd>				_fds;
-	std::map<int, Client>			_clients;
-	std::map<std::string, Channel>	_channels;
+	private:
+		int								_port;
+		std::string						_password;
+		int								_socket;
+		sockaddr_in						_addr;
+		std::vector<pollfd>				_fds;
+		std::map<int, Client>			_clients;
+		std::map<std::string, Channel>	_channels;
 
-	static int						_sig;
+		static int						_sig;
 
-	void		acceptClient();
-	void		handleClient(const ::pollfd& pollfd);
+		void		acceptClient();
+		void		handleClient(const ::pollfd& pollfd);
 
-	static void sigHandler(int signal);
+		static void sigHandler(int signal);
 };
 
 #endif //SERVER_H

@@ -49,7 +49,6 @@ void	Join::process(const Message& msg) {
 			std::cout << C_ROSE << "Error join: " << e.what() << C_RESET << std::endl;
 		}
 	}
-
 }
 
 ACommand	*Join::clone(void) const {

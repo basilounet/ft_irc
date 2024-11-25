@@ -145,7 +145,8 @@ void Client::parseBuffer() {
 	std::stringstream	storage(_buffer);
 	std::string			str;
 
-	while (std::getline(storage, str, '\n') && !str.empty() && (_flags & IS_RM) == 0) {
+	while (std::getline(storage, str, '\n') && !str.empty() && (_flags & IS_RM) == 0)
+	{
 		try {
 			Message msg(this, str);
 			msg.execCommand();

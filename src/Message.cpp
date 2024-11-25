@@ -76,7 +76,8 @@ void Message::execCommand() {
 		return ;
 	if ((_client->getFlags() & HAS_REGISTERED) == 0)
 		if (_command != "PASS" && _command != "NICK" && _command != "USER")
-			throw std::invalid_argument("User registration not complete");
+			if (_command != "QUIT")
+				throw std::invalid_argument("User registration not complete");
 	_cmd->process(*this);
 }
 
