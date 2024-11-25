@@ -28,7 +28,7 @@ std::string to_string(T n) {
 # define MODE(prefix, channel, arg) \
 (std::string(prefix) + "MODE " + std::string(channel) + " " + std::string(arg) + CRLF)
 
-// TOPIC							"TOPIC <channel> :<topic>"
+// TOPIC			"TOPIC <channel> :<topic>"
 # define TOPIC(prefix, channel, topic) \
 (std::string(prefix) + "TOPIC " + std::string(channel) + " :" + std::string(topic) + CRLF)
 
@@ -69,7 +69,7 @@ std::string to_string(T n) {
 
 // 332   RPL_TOPIC					"<channel> :<topic>"
 # define RPL_TOPIC(prefix, nickRes, channel, topic) \
-(std::string(prefix) + "332 " + std::string(nickRes) + " " + std::string(channel) + " " + std::string(topic) + CRLF)
+(std::string(prefix) + "332 " + std::string(nickRes) + " " + std::string(channel) + " :" + std::string(topic) + CRLF)
 
 // 341   RPL_INVITING				"<channel> <nick>"
 # define RPL_INVITING(prefix, nickRes, channel, nick) \

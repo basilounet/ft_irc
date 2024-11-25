@@ -111,9 +111,6 @@ void	Mode::channelModeO(Channel* chan, const Message& msg, bool add) {
 		chan->removeChanop(client);
 	// MODE MODE "MODE <channel> <arg>"
 	chan->broadcastMessage(MODE(msg.prefix(2), msg.getParams()[0], msg.getParams()[1] + " " + msg.getParams()[2]));
-
-	// // MODE	RPL_MODE	"MODE <channel> <arg> <nick>"
-	// chan->broadcastMessage(RPL_MODE(msg.prefix(2), msg.getNick(), chan->getName(), msg.getParams()[2], client->getNick()));
 }
 
 // l - set/remove the user limit to channel

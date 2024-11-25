@@ -44,10 +44,10 @@ void Topic::topic(Channel *chan, const Message &msg) {
 		return;
 	}
 	getClientInChannel(msg.getNick(), chan, msg);					// throw if
-	if (!chan->isTopicProtected())
+	if (chan->isTopicProtected())
 		getChanopInChannel(msg.getNick(), chan, msg);				// throw if
-	//topicStr = msg.getMsg().substr(msg.getMsg().find(':') + 1);
 	chan->setTopic( msg.getTrailing());
+	// TOPIC "TOPIC <channel> :<topic>"
 	chan->broadcastMessage(TOPIC(msg.prefix(2), chan->getName(), msg.getTrailing()));
 }
 
