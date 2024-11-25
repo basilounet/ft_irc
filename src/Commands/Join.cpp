@@ -34,9 +34,9 @@ void	Join::process(const Message& msg) {
 		quitAllChannels(msg);
 		return ;
 	}
-	_channels = split(msg.getParams()[0], ',');
+	_channels = split(msg.getParams()[0], ',', msg);
 	if (msg.getParams().size() > 1)
-		_pswds = split(msg.getParams()[1], ',');
+		_pswds = split(msg.getParams()[1], ',', msg);
 	for (size_t i = 0 ; i < _channels.size(); ++i) {
 		try {
 			std::cout << "Looking to join channel " << _channels[i] << std::endl;

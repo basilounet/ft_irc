@@ -26,7 +26,7 @@ void	Part::process(const Message& msg) {
 	std::vector<std::string> channels;
 
 	checkNbParam(msg, 1);
-	channels = split(params[0], ',');
+	channels = split(params[0], ',', msg);
 	for (std::vector<std::string>::iterator it = channels.begin(); it != channels.end(); ++it) {
 		try {
 			Channel *chan = msg.getClient()->getServer()->getChannelWithName(*it);
