@@ -64,25 +64,21 @@ void	Privmsg::splitRecipients(const std::string &toSend, const Message &msg)
 	}
 }
 
-void	Privmsg::sendToRecipient(const std::string &toSend, 
+void	Privmsg::sendToRecipient(std::string toSend, 
 		const std::string &recip, const Message& msg)
 {
 	Channel	*channel;
 	Client	*client;
 
+	toSend = msg.prefix(2) + "PRIVMSG " + recip + " :" + toSend;
 	if (recip[0] == '#' || recip[0] == '&')
 	{
-		channel = getChannelWithName(recip, msg);
+		channel = getChannelWithName(recip, msg); // throw if ERR_NOSUCHCHANNEL
 		channel->broadcastMessage(toSend, *msg.getClient());
+		return ;
 	}
-	else
-	{
-		client = getClientWithNick(recip, msg);
-		Server::sendMessage(toSend, client->getfd().fd);
-	}
-	// 301   RPL_AWAY					"<nick> :<away message>"
-	Server::sendMessage(RPL_AWAY(msg.prefix(2), msg.getNick(), toSend),
-			msg.getFd());
+	client = getClientWithNick(recip, msg); // throw if ERR_NOSUCHNICK
+	Server::sendMessage(toSend, client->getfd().fd);
 }
 
 ACommand	*Privmsg::clone(void) const {
