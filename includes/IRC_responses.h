@@ -92,8 +92,8 @@ std::string to_string(T n) {
 (std::string(prefix) + "349 " + std::string(nickRes) + " " + std::string(channel) + " :End of channel exception list" + CRLF)
 
 // 353   RPL_NAMREPLY				"( "=" / "*" / "@" ) <channel>
-# define RPL_NAMREPLY(prefix, nickRes, name, channel) \
-(std::string(prefix) + "353 " + std::string(nickRes) + " " + std::string(name) + " " + std::string(channel) + CRLF)
+# define RPL_NAMREPLY(prefix, nickRes, channel, name) \
+(std::string(prefix) + "353 " + std::string(nickRes) + " = " + std::string(channel) + " :" + std::string(name) + CRLF)
 
 // 366   RPL_ENDOFNAMES				"<channel> :End of NAMES list"
 # define RPL_ENDOFNAMES(prefix, nickRes, channel) \

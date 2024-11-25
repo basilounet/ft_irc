@@ -59,7 +59,7 @@ ACommand	*Join::clone(void) const {
 // chanstring =  %x01-07 / %x08-09 / %x0B-0C / %x0E-1F / %x21-2B
 // chanstring =/ %x2D-39 / %x3B-FF
 bool Join::isNameValid(const std::string& name) const {
-	if (name.empty() || (name[0] != '#' && name[0] != '&'))
+	if (name.empty() || (name[0] != '#' && name[0] != '&') || name.size() < 2)
 		return (false);
 	for (std::string::const_iterator it = name.begin(); it != name.end(); ++it) {
 		if (*it < 0x01 || (*it > 0x07 && *it < 0x08) || (*it > 0x09 && *it < 0x0B) || (*it > 0x0C && *it < 0x0E) || (*it
@@ -107,12 +107,15 @@ void Join::tryJoinExistingChannel(const Message& msg, size_t i) {
 	chan->addClient(msg.getClient());
 	if (chan->isInviteOnly())
 		chan->removeInvite(msg.getClient());
-	chan->broadcastMessage(msg.prefix(2) + "JOIN " + chan->getName());
+	chan->broadcastMessage(msg.prefix(2) + "JOIN :" + chan->getName());
 	if (!chan->getTopic().empty())
 		Server::sendMessage(RPL_TOPIC(msg.prefix(1), msg.getNick(), chan->getName(), chan->getTopic()), msg.getFd());
 	std::string names;
-	for (std::vector<Client*>::const_iterator it = chan->getClients().begin(); it != chan->getClients().end(); ++it)
+	for (std::vector<Client*>::const_iterator it = chan->getClients().begin(); it != chan->getClients().end(); ++it) {
+		if (chan->isChanop(*it))
+            names += "@";
 		names += (*it)->getNick() + " ";
+	}
 	Server::sendMessage(RPL_NAMREPLY(msg.prefix(1), msg.getNick(), chan->getName(), names), msg.getFd());
 	Server::sendMessage(RPL_ENDOFNAMES(msg.prefix(1), msg.getNick(), chan->getName()), msg.getFd());
 }
@@ -128,11 +131,13 @@ void Join::CreateChannel(const Message& msg, size_t i) {
 	msg.getClient()->addChannel(*chan);
 	chan->addClient(msg.getClient());
 	chan->addChanop(msg.getClient());
-	chan->broadcastMessage(msg.prefix(2) + "JOIN " + chan->getName());
-	Server::sendMessage(msg.prefix(1) + "MODE " + chan->getName() + " +nt", msg.getFd());
+	chan->broadcastMessage(msg.prefix(2) + "JOIN :" + chan->getName());
 	std::string names;
-	for (std::vector<Client*>::const_iterator it = chan->getClients().begin(); it != chan->getClients().end(); ++it)
+	for (std::vector<Client*>::const_iterator it = chan->getClients().begin(); it != chan->getClients().end(); ++it) {
+		if (chan->isChanop(*it))
+            names += "@";
 		names += (*it)->getNick() + " ";
+	}
 	Server::sendMessage(RPL_NAMREPLY(msg.prefix(1), msg.getNick(), chan->getName(), names), msg.getFd());
 	Server::sendMessage(RPL_ENDOFNAMES(msg.prefix(1), msg.getNick(), chan->getName()), msg.getFd());
 }
