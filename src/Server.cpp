@@ -173,9 +173,9 @@ void Server::handleClient(const pollfd &pollfd) {
 	ssize_t bytes_read = recv(pollfd.fd, buffer, sizeof(buffer), MSG_DONTWAIT);
 	Client &client = _clients[pollfd.fd];
 
-	if (client.getFlags() == IS_RM || bytes_read == -1)
+	if (client.getFlags() & IS_RM || bytes_read == -1)
 		removeClient(pollfd.fd);
-	if (bytes_read > 0) {
+	else if (bytes_read > 0) {
 		client.appendBuffer(buffer);
 		total_buf = client.getBuffer();
 		if (total_buf.size() > 2 && total_buf[total_buf.size() - 2] == '\r' && total_buf[total_buf.size() - 1] == '\n') {

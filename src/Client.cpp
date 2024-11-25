@@ -142,15 +142,17 @@ void	Client::setPassword(const std::string& pass)
 }
 
 void Client::parseBuffer() {
-	try {
-		std::stringstream	storage(_buffer);
-		std::string			str;
-		while (std::getline(storage, str, '\n') && !str.empty()) {
+	std::stringstream	storage(_buffer);
+	std::string			str;
+
+	while (std::getline(storage, str, '\n') && !str.empty() && (_flags & IS_RM) == 0) {
+		try {
 			Message msg(this, str);
 			msg.execCommand();
 		}
-	} catch (std::exception& e) {
-		std::cerr << C_ROUGE << "Message error :" << e.what() << C_RESET << std::endl;
+		catch (std::exception& e) {
+			std::cerr << C_ROUGE << "Message error :" << e.what() << C_RESET << std::endl;
+		}
 	}
 }
 

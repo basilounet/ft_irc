@@ -41,14 +41,13 @@ void	Nick::process(const Message& msg)
 		throw (std::invalid_argument("Invalid character in Nick"));
 	}
 	if (isNickInServer(params[0], msg)) {
-		if (msg.getClient()->getFlags() | IS_RM)
+		if (msg.getClient()->getFlags() & IS_RM)
 			throw std::invalid_argument("Nick already in use, leaving Server");
 		throw std::invalid_argument("Nick already in use");
 	}
-	if ((msg.getClient()->getFlags() & HAS_NICK) == 0)
-		msg.getClient()->setFlags(msg.getClient()->getFlags() | HAS_NICK);
+	msg.getClient()->setFlags(msg.getClient()->getFlags() | HAS_NICK);
 	if (msg.getClient()->getFlags() & HAS_REGISTERED)
-		msg.getClient()->broadcastToAllKnownUsers(msg.prefix(2) + "NICK :" + params[0] + "\r\n", true);
+		msg.getClient()->broadcastToAllKnownUsers(msg.prefix(2) + "NICK :" + params[0] + CRLF, true);
 	msg.getClient()->setNick(params[0]);
 }
 
