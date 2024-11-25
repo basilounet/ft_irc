@@ -30,7 +30,7 @@ class ACommand
 
 		static void						commandUnknown(const Message& msg);
 		static std::vector<std::string>	split(const std::string& str,
-										const char separator);
+										const char separator, const Message &msg);
 
 };
 

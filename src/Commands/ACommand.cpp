@@ -81,12 +81,13 @@ void ACommand::commandUnknown(const Message& msg) {
 }
 
 std::vector<std::string> ACommand::split(const std::string& str,
-		const char separator)
+		const char separator, const Message &msg)
 {
     std::vector<std::string>	result;
     std::string					line;
     size_t						pos0 = 0;
     size_t						pos1 = 0;
+	int							i = 0;
 
     pos0 = str.find(separator, 0);
     line = str.substr(0, pos0);
@@ -97,6 +98,15 @@ std::vector<std::string> ACommand::split(const std::string& str,
         line = str.substr(pos0 + 1, pos1 - pos0);
         pos0 = pos1;
         result.push_back(line);
+		if (++i > 50000)
+		{
+			// 407 ERR_TOOMANYTARGETS "<nick> : too many recipients. 
+			// <command> interruption"
+			Server::sendMessage(ERR_TOOMANYTARGETS
+					(msg.prefix(1), msg.getNick(), msg.getCommand()),
+					msg.getFd());
+			throw std::logic_error(msg.getCommand() + ": Too many targets");
+		}
     }
     return (result);
 }

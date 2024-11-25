@@ -47,7 +47,7 @@ void	Privmsg::process(const Message& msg)
 void	Privmsg::splitRecipients(const std::string &toSend, const Message &msg)
 {
 	const std::vector<std::string>	&recip 
-		= ACommand::split(msg.getParams()[0], ',');
+		= ACommand::split(msg.getParams()[0], ',', msg);
 
 	for (std::vector<std::string>::const_iterator it = recip.begin() ;
 			it != recip.end() ; it++)
@@ -58,8 +58,8 @@ void	Privmsg::splitRecipients(const std::string &toSend, const Message &msg)
 		}
 		catch (std::exception &e)
 		{
-			std::cerr << C_ROUGE << "PRIVMSG from fd " << msg.getFd() << ":";
-			std::cerr << e.what() << C_RESET << std::endl;
+			std::cerr << C_ROUGE << "PRIVMSG from fd " << msg.getFd() << ":" 
+				<< e.what() << C_RESET << std::endl;
 		}
 	}
 }
@@ -70,14 +70,19 @@ void	Privmsg::sendToRecipient(const std::string &toSend,
 	Channel	*channel;
 	Client	*client;
 
-	if (recip[0] == '#' || recip[0] == '+' || recip[0] == '&' || recip[0] == '!')
+	if (recip[0] == '#' || recip[0] == '&')
 	{
-		channel = ACommand::getChannelWithName(recip, msg);
+		channel = getChannelWithName(recip, msg);
 		channel->broadcastMessage(toSend, *msg.getClient());
-		return ;
 	}
-	client = getClientWithNick(recip, msg);
-	Server::sendMessage(toSend, client->getfd().fd);
+	else
+	{
+		client = getClientWithNick(recip, msg);
+		Server::sendMessage(toSend, client->getfd().fd);
+	}
+	// 301   RPL_AWAY					"<nick> :<away message>"
+	Server::sendMessage(RPL_AWAY(msg.prefix(2), msg.getNick(), toSend),
+			msg.getFd());
 }
 
 ACommand	*Privmsg::clone(void) const {
