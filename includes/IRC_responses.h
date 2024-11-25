@@ -24,13 +24,13 @@ std::string to_string(T n) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // COMMAMD REPONSES
 
-// MODE	RPL_MODE					"MODE <channel> <arg> <nick>"
-# define RPL_MODE(prefix, nickRes, channel, nick, arg) \
-(std::string(prefix) + "MODE " + std::string(nickRes) + " " + std::string(channel) + " " + std::string(arg) + " " + std::string(nick) + CRLF)
-
-// MODE RPL_CLIENT_MODE					"MODE <channel> <arg>"
-# define RPL_CLIENT_MODE(prefix, channel, arg) \
+// MODE				"MODE <channel> <arg>"
+# define MODE(prefix, channel, arg) \
 (std::string(prefix) + "MODE " + std::string(channel) + " " + std::string(arg) + CRLF)
+
+// TOPIC							"TOPIC <channel> :<topic>"
+# define TOPIC(prefix, channel, topic) \
+(std::string(prefix) + "TOPIC " + std::string(channel) + " :" + std::string(topic) + CRLF)
 
 // 001   RPL_WELCOME				"Welcome to the Internet Relay Network <nick>!<user>@<host>"
 # define RPL_WELCOME(prefix, nick) \

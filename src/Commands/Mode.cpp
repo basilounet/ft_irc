@@ -66,16 +66,16 @@ void	Mode::channelMode(Channel* chan, const Message& msg) {
 // i - toggle the invite-only channel flag
 void	Mode::channelModeI(Channel* chan, const Message& msg, bool add) {
 	if (chan->setInviteOnly(add)) {
-		// MODE RPL_CLIENT_MODE		"MODE <channel> <arg>"
-		chan->broadcastMessage(RPL_CLIENT_MODE(msg.prefix(2), msg.getParams()[0], msg.getParams()[1]));
+		// MODE MODE		"MODE <channel> <arg>"
+		chan->broadcastMessage(MODE(msg.prefix(2), msg.getParams()[0], msg.getParams()[1]));
 	}
 }
 
 // t - toggle the topic protected channel flag
 void	Mode::channelModeT(Channel* chan, const Message& msg, bool add) {
 	if (chan->setTopicProtected(add)) {
-		// MODE RPL_CLIENT_MODE		"MODE <channel> <arg>"
-		chan->broadcastMessage(RPL_CLIENT_MODE(msg.prefix(2), msg.getParams()[0], msg.getParams()[1]));
+		// MODE MODE		"MODE <channel> <arg>"
+		chan->broadcastMessage(MODE(msg.prefix(2), msg.getParams()[0], msg.getParams()[1]));
 	}
 }
 
@@ -95,8 +95,8 @@ void	Mode::channelModeK(Channel* chan, const Message& msg, bool add) {
 		chan->setKey("");
 		arg += " *";
 	}
-	// MODE RPL_CLIENT_MODE "MODE <channel> <arg>"
-	chan->broadcastMessage(RPL_CLIENT_MODE(msg.prefix(2), msg.getParams()[0], arg));
+	// MODE MODE "MODE <channel> <arg>"
+	chan->broadcastMessage(MODE(msg.prefix(2), msg.getParams()[0], arg));
 }
 
 // o - give/take channel operator privilege
@@ -109,8 +109,8 @@ void	Mode::channelModeO(Channel* chan, const Message& msg, bool add) {
 		chan->addChanop(client);
 	else
 		chan->removeChanop(client);
-	// MODE RPL_CLIENT_MODE "MODE <channel> <arg>"
-	chan->broadcastMessage(RPL_CLIENT_MODE(msg.prefix(2), msg.getParams()[0], msg.getParams()[1] + " " + msg.getParams()[2]));
+	// MODE MODE "MODE <channel> <arg>"
+	chan->broadcastMessage(MODE(msg.prefix(2), msg.getParams()[0], msg.getParams()[1] + " " + msg.getParams()[2]));
 
 	// // MODE	RPL_MODE	"MODE <channel> <arg> <nick>"
 	// chan->broadcastMessage(RPL_MODE(msg.prefix(2), msg.getNick(), chan->getName(), msg.getParams()[2], client->getNick()));
@@ -134,8 +134,8 @@ void	Mode::channelModeL(Channel* chan, const Message& msg, bool add) {
 	std::string arg = msg.getParams()[1];
 	if (limit)
 		arg += " " + msg.getParams()[2];
-	// MODE RPL_CLIENT_MODE					"MODE <channel> <arg>"
-	chan->broadcastMessage(RPL_CLIENT_MODE(msg.prefix(2), msg.getParams()[0], arg));
+	// MODE MODE					"MODE <channel> <arg>"
+	chan->broadcastMessage(MODE(msg.prefix(2), msg.getParams()[0], arg));
 }
 
 ACommand	*Mode::clone(void) const {
