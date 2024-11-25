@@ -30,7 +30,7 @@ Client* ACommand::getClientWithNick(const std::string& nick, const Message& msg)
 	if (client == NULL) {
 		// 401   ERR_NOSUCHNICK				"<nickname> :No such nick/channel"
 		Server::sendMessage(ERR_NOSUCHNICK(msg.prefix(1), msg.getNick(), nick), msg.getFd());
-		throw std::invalid_argument(nick + ":No such nick/channel");
+		throw std::invalid_argument(nick + ":No such No such nick");
 	}
 	return (client);
 }
@@ -44,7 +44,6 @@ Client* ACommand::getClientInChannel(const std::string& nick, Channel* chan, con
 	}
 	return (client);
 }
-
 Client* ACommand::getChanopInChannel(const std::string& nick, Channel* chan, const Message& msg) {
 	Client* client =getClientInChannel(nick, chan, msg);				// throw if
 	if (!chan->isChanop(client)) {
@@ -54,7 +53,6 @@ Client* ACommand::getChanopInChannel(const std::string& nick, Channel* chan, con
 	}
 	return (client);
 }
-
 Client* ACommand::getInviteInChannel(const std::string& nick, Channel* chan, const Message& msg) {
 	Client* client =getClientInChannel(nick, chan, msg);				// throw if
 	if (!chan->isInvite(client)) {
@@ -65,7 +63,7 @@ Client* ACommand::getInviteInChannel(const std::string& nick, Channel* chan, con
 	return (client);
 }
 
-Channel* ACommand::getChannelWithName(std::string &name, const Message& msg) {
+Channel* ACommand::getChannelWithName(const std::string &name, const Message& msg) {
 	Channel* chan = msg.getClient()->getServer()->getChannelWithName(name);
 	if (chan == NULL) {
 		// 403   ERR_NOSUCHCHANNEL			"<channel> :No such channel"
@@ -75,27 +73,40 @@ Channel* ACommand::getChannelWithName(std::string &name, const Message& msg) {
 	return (chan);
 }
 
+
 void ACommand::commandUnknown(const Message& msg) {
 	// 421	  ERR_UNKNOWNCOMMAND		"<command> :Unknown command"
 	Server::sendMessage(ERR_UNKNOWNCOMMAND(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
 	throw std::invalid_argument(msg.getCommand() + ":Unknown command");
 }
 
-std::vector<std::string>	ACommand::split(const std::string& str, const char separator) {
+std::vector<std::string> ACommand::split(const std::string& str,
+		const char separator, const Message &msg)
+{
     std::vector<std::string>	result;
     std::string					line;
     size_t						pos0 = 0;
     size_t						pos1 = 0;
+	int							i = 0;
 
-	pos0 = str.find(separator, 0);
-	line = str.substr(0, pos0);
-	result.push_back(line);
-	while (pos0 != std::string::npos)
-	{
-		pos1 = str.find(separator, pos0 + 1);
-		line = str.substr(pos0 + 1, pos1 - pos0);
-		pos0 = pos1;
-		result.push_back(line);
-	}
-	return (result);
+    pos0 = str.find(separator, 0);
+    line = str.substr(0, pos0);
+    result.push_back(line);
+    while (pos0 != std::string::npos)
+    {
+        pos1 = str.find(separator, pos0 + 1);
+        line = str.substr(pos0 + 1, pos1 - pos0);
+        pos0 = pos1;
+        result.push_back(line);
+		if (++i > 50000)
+		{
+			// 407 ERR_TOOMANYTARGETS "<nick> : too many recipients. 
+			// <command> interruption"
+			Server::sendMessage(ERR_TOOMANYTARGETS
+					(msg.prefix(1), msg.getNick(), msg.getCommand()),
+					msg.getFd());
+			throw std::logic_error(msg.getCommand() + ": Too many targets");
+		}
+    }
+    return (result);
 }

@@ -30,8 +30,8 @@
 // 300   RPL_NONE	
 
 // 301   RPL_AWAY					"<nick> :<away message>"
-# define RPL_AWAY(prefix, nickRes, nick, away_message) \
-(std::string(prefix) + "301 " + std::string(nickRes) + " " + std::string(nick) + " :" + std::string(away_message) + CRLF)
+# define RPL_AWAY(prefix, nick, away_message) \
+(std::string(prefix) + "301 " + std::string(nick) + " :" + std::string(away_message) + CRLF)
 
 // 322   RPL_LIST					"<channel> <# visible> :<topic>"
 # define RPL_LIST(prefix, nickRes, channel, visible, topic) \
@@ -118,8 +118,8 @@
 (std::string(prefix) + "405 " + std::string(nickRes) + " " + std::string(channel) + " :You have joined too many channels" + CRLF)
 
 // 407   ERR_TOOMANYTARGETS			"<target> :<error> recipients. <message>"
-# define ERR_TOOMANYTARGETS(prefix, nickRes, target, error, message) \
-(std::string(prefix) + "407 " + std::string(nickRes) + " " + std::string(target) + " :" + std::string(error) + "recipients. " + std::string(message) + CRLF)
+# define ERR_TOOMANYTARGETS(prefix, nickRes, command) \
+(std::string(prefix) + "407 " + std::string(nickRes) + " " + std::string(nickRes) + " : too many recipients. " + std::string(command) + " interruption" + CRLF)
 
 // 411   ERR_NORECIPIENT			":No recipient given (<command>)"
 # define ERR_NORECIPIENT(prefix, nickRes, command) \
