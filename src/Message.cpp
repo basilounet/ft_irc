@@ -214,6 +214,6 @@ void	Message::createCommand() {
 			_cmd = NULL;
 		break ;
 		default:
-			ACommand::commandUnknown(*this);
+			throw std::invalid_argument("Unknown command");
 	}
 }
