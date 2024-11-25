@@ -130,7 +130,6 @@ void	Mode::channelModeL(Channel* chan, const Message& msg, bool add) {
 		if (chan->getLimit() == 0)
 			return ;
 	}
-	std::cout << "limit = " << limit << std::endl; //TODO TEST
 	chan->setLimit(limit);
 	std::string arg = msg.getParams()[1];
 	if (limit)
