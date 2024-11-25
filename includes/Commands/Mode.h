@@ -21,12 +21,11 @@ public:
 private:
 	static void	channelMode(Channel* chan, const Message& msg);
 
-	static void sendChannelMode(Channel* chan, const Message& msg);
-	static void setChannelInviteOnly(Channel* chan, const Message &msg, bool add);
-	static void setChannelTopicProtected(Channel* chan, const Message &msg, bool add);
-	static void setChannelKey(Channel* chan, const Message &msg, bool add);
-	static void setChannelOperatorPrivilege(Channel* chan, const Message &msg, bool add);
-	static void setChannelLimit(Channel* chan, const Message &msg, bool add);
+	static void channelModeI(Channel* chan, const Message &msg, bool add);
+	static void channelModeT(Channel* chan, const Message &msg, bool add);
+	static void channelModeK(Channel* chan, const Message &msg, bool add);
+	static void channelModeO(Channel* chan, const Message &msg, bool add);
+	static void channelModeL(Channel* chan, const Message &msg, bool add);
 
 };
 #endif //MODE_H

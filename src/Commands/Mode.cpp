@@ -32,29 +32,30 @@ void	Mode::process(const Message& msg) {
 // MODE <channel> {[+|-]|i|t|k|o|l} [<limit>] [<user>]
 void	Mode::channelMode(Channel* chan, const Message& msg) {
 	if (msg.getParams().size() < 2) {
-		sendChannelMode(chan, msg);
+		// 324   RPL_CHANNELMODEIS	"<channel> <mode> <mode params>"
+		Server::sendMessage(RPL_CHANNELMODEIS(msg.prefix(1), msg.getNick(), chan->getName(), chan->getFlagString(), ""), msg.getFd());
 		return;
 	}
 	if (msg.getParams()[1] == "-i")
-		setChannelInviteOnly(chan, msg, false);
+		channelModeI(chan, msg, false);
 	else if (msg.getParams()[1] == "+i")
-		setChannelInviteOnly(chan, msg, true);
+		channelModeI(chan, msg, true);
 	else if (msg.getParams()[1] == "-t")
-		setChannelTopicProtected(chan, msg, false);
+		channelModeT(chan, msg, false);
 	else if (msg.getParams()[1] == "+t")
-		setChannelTopicProtected(chan, msg, true);
+		channelModeT(chan, msg, true);
 	else if (msg.getParams()[1] == "-k")
-		setChannelKey(chan, msg, false);
+		channelModeK(chan, msg, false);
 	else if (msg.getParams()[1] == "+k")
-		setChannelKey(chan, msg, true);
+		channelModeK(chan, msg, true);
 	else if (msg.getParams()[1] == "-o")
-		setChannelOperatorPrivilege(chan, msg, false);
+		channelModeO(chan, msg, false);
 	else if (msg.getParams()[1] == "+o")
-		setChannelOperatorPrivilege(chan, msg, true);
+		channelModeO(chan, msg, true);
 	else if (msg.getParams()[1] == "-l")
-		setChannelLimit(chan, msg, false);
+		channelModeL(chan, msg, false);
 	else if (msg.getParams()[1] == "+l")
-		setChannelLimit(chan, msg, true);
+		channelModeL(chan, msg, true);
 	else {
 		//472	ERR_UNKNOWNMODE			"<char> :is unknown mode char to me for <channel>"
 		Server::sendMessage(ERR_UNKNOWNMODE(msg.prefix(1), msg.getNick(), msg.getParams()[1], chan->getName()), msg.getFd());
@@ -62,38 +63,25 @@ void	Mode::channelMode(Channel* chan, const Message& msg) {
 	}
 }
 
-void	Mode::sendChannelMode(Channel* chan, const Message& msg) {
-	std::string flags;
-	if (chan->isInviteOnly() || chan->isTopicProtected() || chan->isKeyProtected() || chan->isLimit()) {
-		flags += "+";
-		if (chan->isTopicProtected())	flags += "t";
-		if (chan->isInviteOnly())		flags += "i";
-		if (chan->isLimit())			flags += "l";
-		if (chan->isKeyProtected())		flags += "k";
-		if (chan->isLimit())			flags += " " + to_string(chan->getLimit());
-		if (chan->isKeyProtected())		flags += " " + chan->getName();
-	}
-	// 324   RPL_CHANNELMODEIS	"<channel> <mode> <mode params>"
-	Server::sendMessage(RPL_CHANNELMODEIS(msg.prefix(1), msg.getNick(), msg.getParams()[0], flags, ""), msg.getFd());
-}
-
 // :a_!~a___@rtr.23.90.210.20.unyc.it MODE #benos +i
 // i - toggle the invite-only channel flag
-void	Mode::setChannelInviteOnly(Channel* chan, const Message& msg, bool add) {
-	chan->setInviteOnly(add);
-// MODE RPL_CLIENT_MODE					"MODE <channel> <arg>"
-	chan->broadcastMessage(RPL_CLIENT_MODE(msg.prefix(2), msg.getParams()[0], msg.getParams()[1]));
+void	Mode::channelModeI(Channel* chan, const Message& msg, bool add) {
+	if (chan->setInviteOnly(add)) {
+		// MODE RPL_CLIENT_MODE		"MODE <channel> <arg>"
+		chan->broadcastMessage(RPL_CLIENT_MODE(msg.prefix(2), msg.getParams()[0], msg.getParams()[1]));
+	}
 }
 
 // t - toggle the topic protected channel flag
-void	Mode::setChannelTopicProtected(Channel* chan, const Message& msg, bool add) {
-	chan->setTopicProtected(add);
-// MODE RPL_CLIENT_MODE					"MODE <channel> <arg>"
-	chan->broadcastMessage(RPL_CLIENT_MODE(msg.prefix(2), msg.getParams()[0], msg.getParams()[1]));
+void	Mode::channelModeT(Channel* chan, const Message& msg, bool add) {
+	if (chan->setTopicProtected(add)) {
+		// MODE RPL_CLIENT_MODE		"MODE <channel> <arg>"
+		chan->broadcastMessage(RPL_CLIENT_MODE(msg.prefix(2), msg.getParams()[0], msg.getParams()[1]));
+	}
 }
 
 // k - set/remove the channel key (password)
-void	Mode::setChannelKey(Channel* chan, const Message& msg, bool add) {
+void	Mode::channelModeK(Channel* chan, const Message& msg, bool add) {
 	if (add) {
 		if (msg.getParams().size() < 3 || msg.getParams()[2].empty())
 			return ;
@@ -114,7 +102,7 @@ void	Mode::setChannelKey(Channel* chan, const Message& msg, bool add) {
 */
 
 // o - give/take channel operator privilege
-void	Mode::setChannelOperatorPrivilege(Channel* chan, const Message& msg, bool add) {
+void	Mode::channelModeO(Channel* chan, const Message& msg, bool add) {
 	if (msg.getParams().size() < 3 || msg.getParams()[2].empty())
 		return ;
 	Client* client = getClientInChannel441(msg.getParams()[2], chan, msg); // throw if
@@ -127,7 +115,7 @@ void	Mode::setChannelOperatorPrivilege(Channel* chan, const Message& msg, bool a
 }
 
 // l - set/remove the user limit to channel
-void	Mode::setChannelLimit(Channel* chan, const Message& msg, bool add) {
+void	Mode::channelModeL(Channel* chan, const Message& msg, bool add) {
 	int limit = 0;
 	if (add) {
 		if (msg.getParams().size() >= 3)

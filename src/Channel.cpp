@@ -208,3 +208,17 @@ bool Channel::isFull() const {
 		return (true);
 	return (false);
 }
+
+std::string	Channel::getFlagString() const {
+	std::string flags;
+	if (isInviteOnly() || isTopicProtected() || isKeyProtected() || isLimit()) {
+		flags += "+";
+		if (isTopicProtected())	flags += "t";
+		if (isInviteOnly())		flags += "i";
+		if (isLimit())			flags += "l";
+		if (isKeyProtected())		flags += "k";
+		if (isLimit())			flags += " " + to_string(getLimit());
+		if (isKeyProtected())		flags += " " + getName();
+	}
+	return flags;
+}

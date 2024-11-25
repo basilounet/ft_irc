@@ -58,6 +58,8 @@ public:
 	bool		isLimit()				const;
 	bool		isFull()				const;
 
+	std::string	getFlagString()			const;
+
 private:
 	Server*						_server;
 	std::string					_name;
