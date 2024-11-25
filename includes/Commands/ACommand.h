@@ -32,7 +32,6 @@ class ACommand
 
 		static void					commandUnknown(const Message& msg);
 		std::vector<std::string>	split(const std::string& str, const char separator);
-
 };
 
 # include <Message.h>

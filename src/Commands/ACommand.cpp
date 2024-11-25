@@ -92,12 +92,11 @@ void ACommand::commandUnknown(const Message& msg) {
 	throw std::invalid_argument(msg.getCommand() + ":Unknown command");
 }
 
-
-std::vector<std::string> ACommand::split(const std::string& str, const char separator) {
-	std::vector<std::string> result;
-	std::string line;
-	size_t	pos0 = 0;
-	size_t	pos1 = 0;
+std::vector<std::string>	ACommand::split(const std::string& str, const char separator) {
+    std::vector<std::string>	result;
+    std::string					line;
+    size_t						pos0 = 0;
+    size_t						pos1 = 0;
 
 	pos0 = str.find(separator, 0);
 	line = str.substr(0, pos0);
