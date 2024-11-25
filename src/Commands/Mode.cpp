@@ -23,7 +23,6 @@ Mode& Mode::operator=(Mode const& other) {
 void	Mode::process(const Message& msg) {
 	checkNbParam(msg, 1); // throw if
 	Channel* chan = getChannelWithName(msg.getParams()[0], msg); // throw if
-	getChanopInChannel(msg.getClient()->getNick(), chan, msg);		// throw if
 	// vector flags
 	channelMode(chan, msg); // throw if
 }
@@ -33,9 +32,10 @@ void	Mode::process(const Message& msg) {
 void	Mode::channelMode(Channel* chan, const Message& msg) {
 	if (msg.getParams().size() < 2) {
 		// 324   RPL_CHANNELMODEIS	"<channel> <mode> <mode params>"
-		Server::sendMessage(RPL_CHANNELMODEIS(msg.prefix(1), msg.getNick(), chan->getName(), chan->getFlagString(), ""), msg.getFd());
+		Server::sendMessage(RPL_CHANNELMODEIS(msg.prefix(1), msg.getNick(), chan->getName(), chan->getFlagString(chan->isClient(msg.getClient())), ""), msg.getFd());
 		return;
 	}
+	getChanopInChannel(msg.getClient()->getNick(), chan, msg);		// throw if
 	if (msg.getParams()[1] == "-i")
 		channelModeI(chan, msg, false);
 	else if (msg.getParams()[1] == "+i")
@@ -63,7 +63,6 @@ void	Mode::channelMode(Channel* chan, const Message& msg) {
 	}
 }
 
-// :a_!~a___@rtr.23.90.210.20.unyc.it MODE #benos +i
 // i - toggle the invite-only channel flag
 void	Mode::channelModeI(Channel* chan, const Message& msg, bool add) {
 	if (chan->setInviteOnly(add)) {
@@ -82,53 +81,62 @@ void	Mode::channelModeT(Channel* chan, const Message& msg, bool add) {
 
 // k - set/remove the channel key (password)
 void	Mode::channelModeK(Channel* chan, const Message& msg, bool add) {
+	if (msg.getParams().size() < 2)
+		return;
+	std::string arg = msg.getParams()[1];
 	if (add) {
 		if (msg.getParams().size() < 3 || msg.getParams()[2].empty())
 			return ;
 		chan->setKey(msg.getParams()[2]);
+		arg += " " + msg.getParams()[2];
 	} else {
-		if (chan->getKey().empty())
+		if (!chan->isKeyProtected())
 			return;
 		chan->setKey("");
+		arg += " *";
 	}
-	// MODE RPL_CLIENT_MODE					"MODE <channel> <arg>"
-	chan->broadcastMessage(RPL_CLIENT_MODE(msg.prefix(2), msg.getParams()[0], msg.getParams()[1]));
+	// MODE RPL_CLIENT_MODE "MODE <channel> <arg>"
+	chan->broadcastMessage(RPL_CLIENT_MODE(msg.prefix(2), msg.getParams()[0], arg));
 }
-
-/*
-442 nop >> :efnet.deic.eu 441 a_ c_ #benos :They aren't on that channel
->> :ben!Benjamin@localhost MODE ben #benos to to
->> :a_!~a___@rtr.23.90.210.20.unyc.it MODE #benos +o b_
-*/
 
 // o - give/take channel operator privilege
 void	Mode::channelModeO(Channel* chan, const Message& msg, bool add) {
 	if (msg.getParams().size() < 3 || msg.getParams()[2].empty())
 		return ;
+	// Vectoriser clients dans methode 441
 	Client* client = getClientInChannel441(msg.getParams()[2], chan, msg); // throw if
 	if (add)
 		chan->addChanop(client);
 	else
 		chan->removeChanop(client);
-	// MODE	RPL_MODE	"MODE <channel> <arg> <nick>"
-	chan->broadcastMessage(RPL_MODE(msg.prefix(2), msg.getNick(), chan->getName(), msg.getParams()[2], client->getNick()));
+	// MODE RPL_CLIENT_MODE "MODE <channel> <arg>"
+	chan->broadcastMessage(RPL_CLIENT_MODE(msg.prefix(2), msg.getParams()[0], msg.getParams()[1] + " " + msg.getParams()[2]));
+
+	// // MODE	RPL_MODE	"MODE <channel> <arg> <nick>"
+	// chan->broadcastMessage(RPL_MODE(msg.prefix(2), msg.getNick(), chan->getName(), msg.getParams()[2], client->getNick()));
 }
 
 // l - set/remove the user limit to channel
 void	Mode::channelModeL(Channel* chan, const Message& msg, bool add) {
+	if (msg.getParams().size() < 3 || msg.getParams()[2].empty())
+		return ;
 	int limit = 0;
 	if (add) {
 		if (msg.getParams().size() >= 3)
 			limit = atoi(msg.getParams()[2].c_str());
-		// if (limit == 0) {
-		// 	//461   ERR_NEEDMOREPARAMS	"<command> :Not enough parameters"
-		// 	Server::sendMessage(ERR_NEEDMOREPARAMS(msg.prefix(1), msg.getNick(), msg.getCommand()), msg.getFd());
-		// 	throw std::invalid_argument(msg.getCommand() + ":Not enough parameters");
-		// }
+		if (limit == 0)
+			return ;
+	}else {
+		if (chan->getLimit() == 0)
+			return ;
 	}
+	std::cout << "limit = " << limit << std::endl; //TODO TEST
 	chan->setLimit(limit);
+	std::string arg = msg.getParams()[1];
+	if (limit)
+		arg += " " + msg.getParams()[2];
 	// MODE RPL_CLIENT_MODE					"MODE <channel> <arg>"
-	chan->broadcastMessage(RPL_CLIENT_MODE(msg.prefix(2), msg.getParams()[0], msg.getParams()[1] + " " + to_string(limit)));
+	chan->broadcastMessage(RPL_CLIENT_MODE(msg.prefix(2), msg.getParams()[0], arg));
 }
 
 ACommand	*Mode::clone(void) const {
