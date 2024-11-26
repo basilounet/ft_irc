@@ -145,6 +145,7 @@ bool Channel::isInvite(Client* client) const {
 bool Channel::isInviteOnly() const {
 	return (_inviteOnly);
 }
+
 bool Channel::setInviteOnly(bool state) {
 	if (state != _inviteOnly) {
 		_inviteOnly = state;
@@ -156,12 +157,15 @@ bool Channel::setInviteOnly(bool state) {
 std::string	Channel::getTopic() const {
 	return _topic;
 }
+
 void Channel::setTopic(const std::string& str) {
 	_topic = str;
 }
+
 bool Channel::isTopicProtected() const {
 	return (_topicProtected);
 }
+
 bool Channel::setTopicProtected(bool state) {
 	if (state != _topicProtected) {
 		_topicProtected = state;
@@ -195,14 +199,17 @@ bool Channel::access(const std::string &pwd) const {
 int Channel::getLimit() const {
 	return (_limit);
 }
+
 bool Channel::isLimit() const {
 	if (_limit == 0)
 		return (false);
 	return (true);
 }
+
 void Channel::setLimit(int limit) {
 	_limit = limit;
 }
+
 bool Channel::isFull() const {
 	if (static_cast<int>(_clients.size()) >= _limit)
 		return (true);

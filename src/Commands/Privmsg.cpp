@@ -47,14 +47,14 @@ void	Privmsg::process(const Message& msg)
 void	Privmsg::splitRecipients(const std::string &toSend, const Message &msg)
 {
 	const std::vector<std::string>	&recip 
-		= ACommand::split(msg.getParams()[0], ',', msg);
+		= ACommand::split(msg.getParams()[0], ',', msg); // create vector containing all recipients name
 
 	for (std::vector<std::string>::const_iterator it = recip.begin() ;
-			it != recip.end() ; it++)
+			it != recip.end() ; it++) // iterating vector to send message to each recipient
 	{
 		try
 		{
-			sendToRecipient(toSend, *it, msg);
+			sendToRecipient(toSend, *it, msg); //throw if ERR_NOSUCHNICK or ERR_NOSUCHCHANNEL
 		}
 		catch (std::exception &e)
 		{
@@ -64,25 +64,21 @@ void	Privmsg::splitRecipients(const std::string &toSend, const Message &msg)
 	}
 }
 
-void	Privmsg::sendToRecipient(const std::string &toSend, 
+void	Privmsg::sendToRecipient(std::string toSend, 
 		const std::string &recip, const Message& msg)
 {
 	Channel	*channel;
 	Client	*client;
 
-	if (recip[0] == '#' || recip[0] == '&')
+	toSend = msg.prefix(2) + "PRIVMSG " + recip + " :" + toSend; // convert string to proper format
+	if (recip[0] == '#' || recip[0] == '&') // first characters in channel name
 	{
-		channel = getChannelWithName(recip, msg);
-		channel->broadcastMessage(toSend, *msg.getClient());
+		channel = getChannelWithName(recip, msg); // throw if ERR_NOSUCHCHANNEL
+		channel->broadcastMessage(toSend, *msg.getClient()); // send to all clients in the channel
+		return ;
 	}
-	else
-	{
-		client = getClientWithNick(recip, msg);
-		Server::sendMessage(toSend, client->getfd().fd);
-	}
-	// 301   RPL_AWAY					"<nick> :<away message>"
-	Server::sendMessage(RPL_AWAY(msg.prefix(2), msg.getNick(), toSend),
-			msg.getFd());
+	client = getClientWithNick(recip, msg); // throw if ERR_NOSUCHNICK
+	Server::sendMessage(toSend, client->getfd().fd); // send to one client
 }
 
 ACommand	*Privmsg::clone(void) const {

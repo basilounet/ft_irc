@@ -6,6 +6,7 @@
 #define QUIT_H
 
 # include <ACommand.h>
+# include <set>
 
 class Quit : public ACommand 
 {
@@ -17,6 +18,10 @@ class Quit : public ACommand
 
 		void		process(const Message& msg);
 		ACommand	*clone(void) const;
+		void		addRecip(const Channel *channel);
+
+	private:
+		std::set<int>	_recip;
 };
 
 #endif //QUIT_H
