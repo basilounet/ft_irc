@@ -8,18 +8,17 @@
 # include <ACommand.h>
 
 class Privmsg : public ACommand {
-public:
-	Privmsg( void );
-	Privmsg(Privmsg const &src);
-	~Privmsg( void );
-	Privmsg &operator=(Privmsg const &other);
+	public:
+		Privmsg( void );
+		Privmsg(Privmsg const &src);
+		~Privmsg( void );
+		Privmsg &operator=(Privmsg const &other);
 
-	void		process(const Message& msg);
-	void		splitRecipients(const std::string &toSend, const Message &msg);
-	void		sendToRecipient(std::string toSend, 
-				const std::string &recip, const Message& msg);
-	ACommand	*clone(void) const;
-
+		void		process(const Message& msg);
+		void		splitRecipients(const std::string &toSend, const Message &msg);
+		static void	sendToRecipient(std::string toSend, 
+					const std::string &recip, const Message& msg, const bool sendToSender = false);
+		ACommand	*clone(void) const;
 };
 
 

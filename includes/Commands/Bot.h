@@ -8,23 +8,25 @@
 #include "ACommand.h"
 
 class Bot : public ACommand {
-public:
-	Bot();
-	Bot(Bot const& src);
-	~Bot();
-	Bot& operator=(Bot const& other);
+	public:
+		Bot();
+		Bot(Bot const& src);
+		~Bot();
+		Bot& operator=(Bot const& other);
 
-	void	process(const Message& msg);
-	ACommand	*clone(void) const;
+		void		process(const Message& msg);
+		ACommand	*clone(void) const;
 
-private:
-	std::vector<std::string>	_usersNames;
-	std::vector<Client *>		_users;
+	private:
+		std::vector<std::string>	_usersNames;
+		std::vector<Client *>		_users;
+		Channel						*_chan;
+		bool						_OpRm;
 
-	void	russianRoulette(const Message& msg);
-
+		void	russianRoulette(const Message& msg);
+		void	initParams(const Message& msg);
+		void	removeVictim(Client *victim, const Message& msg);
+		void	broadcastBoard(const Channel *chan, const Message& msg) const;
 };
-
-
 
 #endif //BOT_H

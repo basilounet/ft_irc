@@ -41,13 +41,13 @@ Channel& Channel::operator=(const Channel& src) {
 	return (*this);
 }
 
-void Channel::broadcastMessage(const std::string& msg) {
-	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+void Channel::broadcastMessage(const std::string& msg) const {
+	for (std::vector<Client*>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
 			Server::sendMessage(msg, (*it)->getfd().fd);
 }
 
-void Channel::broadcastMessage(const std::string& msg, const Client& sender, const bool shouldSendToSender) {
-	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+void Channel::broadcastMessage(const std::string& msg, const Client& sender, const bool shouldSendToSender) const {
+	for (std::vector<Client*>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
 		if ((*it)->getfd().fd != sender.getfd().fd)
 			Server::sendMessage(msg, (*it)->getfd().fd);
 	if (shouldSendToSender)
@@ -129,12 +129,14 @@ bool Channel::isClient(Client* client) const {
 			return true;
 	return false;
 }
+
 bool Channel::isChanop(Client* client) const {
 	for (std::vector<Client*>::const_iterator it = _chanops.begin(); it != _chanops.end(); ++it)
 		if ((*it) == client)
 			return true;
 	return false;
 }
+
 bool Channel::isInvite(Client* client) const {
 	for (std::vector<Client*>::const_iterator it = _invites.begin(); it != _invites.end(); ++it)
 		if ((*it) == client)
@@ -228,4 +230,28 @@ std::string	Channel::getFlagString(bool inChan) const {
 		if (inChan && isKeyProtected())	flags += " " + getKey();
 	}
 	return flags;
+}
+
+const std::map<const Client *, int>	&Channel::getGameBoard(void) const
+{
+	return _gameBoard;
+}
+
+void	Channel::addNewPlayers(void)
+{
+	for (std::vector<Client *>::const_iterator it = _clients.begin() ;
+			it != _clients.end() ; it++)
+		_gameBoard.insert(std::make_pair(*it, 0));
+}
+
+void	Channel::removePlayer(const Client *toRm)
+{
+	_gameBoard.erase(toRm);
+}
+
+void	Channel::addPoints(int toAdd)
+{
+	for (std::map<const Client *, int>::iterator it = _gameBoard.begin() ;
+			it != _gameBoard.end() ; it++)
+		it->second += toAdd;
 }

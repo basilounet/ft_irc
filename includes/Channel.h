@@ -18,8 +18,8 @@ class Channel {
 		Channel(const Channel &src);
 		Channel &operator=(const Channel &src);
 
-		void		broadcastMessage(const std::string& msg);
-		void		broadcastMessage(const std::string& msg, const Client& sender, bool shouldSendToSender = false);
+		void		broadcastMessage(const std::string& msg) const;
+		void		broadcastMessage(const std::string& msg, const Client& sender, bool shouldSendToSender = false) const;
 
 		Server*		getServer()	const;
 		std::string	getName()	const;
@@ -60,6 +60,11 @@ class Channel {
 
 		std::string	getFlagString(bool inChan = true)	const;
 
+		const std::map<const Client *, int>	&getGameBoard(void)	const;
+		void							addNewPlayers(void);
+		void							addPoints(int toAdd);
+		void							removePlayer(const Client *toRm);
+
 	private:
 		Server*						_server;
 		std::string					_name;
@@ -71,6 +76,7 @@ class Channel {
 		bool						_topicProtected;
 		std::string					_key;
 		int							_limit;
+		std::map<const Client *, int>		_gameBoard;
 };
 
 #endif //CHANNEL_H

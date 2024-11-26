@@ -66,7 +66,7 @@ void	Privmsg::splitRecipients(const std::string &toSend, const Message &msg)
 }
 
 void	Privmsg::sendToRecipient(std::string toSend, 
-		const std::string &recip, const Message& msg)
+		const std::string &recip, const Message& msg, const bool sendToSender)
 {
 	Channel	*channel;
 	Client	*client;
@@ -75,7 +75,7 @@ void	Privmsg::sendToRecipient(std::string toSend,
 	if (recip[0] == '#' || recip[0] == '&') // first characters in channel name
 	{
 		channel = getChannelWithName(recip, msg); // throw if ERR_NOSUCHCHANNEL
-		channel->broadcastMessage(toSend, *msg.getClient()); // send to all clients in the channel
+		channel->broadcastMessage(toSend, *msg.getClient(), sendToSender); // send to all clients in the channel
 		return ;
 	}
 	client = getClientWithNick(recip, msg); // throw if ERR_NOSUCHNICK
