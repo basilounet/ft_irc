@@ -16,6 +16,14 @@ public:
 
 	void		process(const Message& msg);
 	ACommand	*clone(void) const;
+
+private:
+	std::vector<std::string>	_channels;
+	std::vector<std::string>	_users;
+	std::string					_reason;
+
+	void	oneChannel(const Message& msg);
+	void	multipleChannels(const Message& msg);
 };
 
 

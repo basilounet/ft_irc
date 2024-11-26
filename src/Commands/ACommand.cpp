@@ -57,7 +57,7 @@ Client* ACommand::getClientInChannel441(const std::string& nick, Channel* chan, 
 }
 
 Client* ACommand::getChanopInChannel(const std::string& nick, Channel* chan, const Message& msg) {
-	Client* client =getClientInChannel(nick, chan, msg);				// throw if
+	Client* client = getClientInChannel(nick, chan, msg);				// throw if
 	if (!chan->isChanop(client)) {
 		// 482   ERR_CHANOPRIVSNEEDED		"<channel> :You're not channel operator"
 		Server::sendMessage(ERR_CHANOPRIVSNEEDED(msg.prefix(1), msg.getNick(), chan->getName()), msg.getFd());
@@ -66,7 +66,7 @@ Client* ACommand::getChanopInChannel(const std::string& nick, Channel* chan, con
 	return (client);
 }
 Client* ACommand::getInviteInChannel(const std::string& nick, Channel* chan, const Message& msg) {
-	Client* client =getClientInChannel(nick, chan, msg);				// throw if
+	Client* client = getClientInChannel(nick, chan, msg);				// throw if
 	if (!chan->isInvite(client)) {
 		// 482   ERR_CHANOPRIVSNEEDED		"<channel> :You're not channel operator"
 		Server::sendMessage(ERR_CHANOPRIVSNEEDED(msg.prefix(1), msg.getNick(), chan->getName()), msg.getFd());
