@@ -171,7 +171,7 @@ int Message::getFd() const {
 
 void	Message::createCommand() {
 	const char	*tmp[] = {"INVITE", "JOIN", "KICK", "MODE", "NICK",
-		"PART", "PASS", "MSG", "PRIVMSG", "TOPIC", "USER", "QUIT", "CAP", "BOT", NULL};
+		"PART", "PASS", "MSG", "PRIVMSG", "TOPIC", "USER", "QUIT", "CAP", "WHO", "BOT", NULL};
 	int i = 0;
 
 	while (tmp[i] && _command != tmp[i])
@@ -211,10 +211,11 @@ void	Message::createCommand() {
 		case 11:
 			_cmd = new Quit();
 		break ;
-		case 12:
+		case 12: ;
+		case 13:
 			_cmd = NULL;
 			break ;
-		case 13:
+		case 14:
 			_cmd = new Bot();
 		break ;
 		default:
