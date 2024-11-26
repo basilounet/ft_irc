@@ -151,6 +151,7 @@ void Server::removeClient(const int fd)
 }
 
 void Server::removeChannel(const std::string& name) {
+	std::cout << "removing channel " << name << std::endl;
 	if (_channels.find(name) != _channels.end() && _channels.find(name)->second.getClients().empty())
 		_channels.erase(name);
 }

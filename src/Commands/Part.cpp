@@ -38,10 +38,11 @@ void	Part::process(const Message& msg) {
 				Server::sendMessage(ERR_NOTONCHANNEL(msg.prefix(1), msg.getNick(), *it), msg.getFd());
 				throw std::invalid_argument("Not on Channel");
 			}
-			std::string reason = " :Leaving";
-			if (msg.getMsg().find(' ', msg.getMsg().find('#')) != std::string::npos)
-				reason = " " + msg.getMsg().substr(msg.getMsg().find(' ', msg.getMsg().find('#')) + 1);
-			chan->broadcastMessage(msg.prefix(2) + "PART" + " " + *it + reason);
+			std::string reason = "Leaving";
+			if (!msg.getTrailing().empty())
+				reason = msg.getTrailing();
+			chan->broadcastMessage(msg.prefix(2) + "PART" + " " + *it + " :" + reason);
+			chan->removeChanop(msg.getClient());
 			chan->removeClient(msg.getClient());
 		}
 		catch (std::exception &e) {

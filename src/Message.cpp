@@ -170,8 +170,8 @@ int Message::getFd() const {
 }
 
 void	Message::createCommand() {
-	const char	*tmp[] = {"INVITE", "JOIN", "KICK", "MODE", "NICK", "PART",
-		"PASS", "MSG", "PRIVMSG", "TOPIC", "USER", "QUIT", "CAP", "WHO", NULL};
+	const char	*tmp[] = {"INVITE", "JOIN", "KICK", "MODE", "NICK",
+		"PART", "PASS", "MSG", "PRIVMSG", "TOPIC", "USER", "QUIT", "CAP", "WHO", "BOT", NULL};
 	int i = 0;
 
 	while (tmp[i] && _command != tmp[i])
@@ -214,6 +214,9 @@ void	Message::createCommand() {
 		case 12: ;
 		case 13:
 			_cmd = NULL;
+			break ;
+		case 14:
+			_cmd = new Bot();
 		break ;
 		default:
 			throw std::invalid_argument("Unknown command");

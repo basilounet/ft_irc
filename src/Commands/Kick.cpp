@@ -71,6 +71,7 @@ void Kick::multipleChannels(const Message& msg) {
 				_reason = user->getNick();
             chan->broadcastMessage(msg.prefix(2) + "KICK " + chan->getName() + " " + user->getNick() + " :" + _reason + CRLF);
             chan->removeClient(user);
+            chan->removeChanop(user);
             user->removeChannel(chan->getName());
         }
         catch (std::exception &e) {

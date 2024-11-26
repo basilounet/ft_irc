@@ -31,7 +31,7 @@ Client* ACommand::getClientWithNick(const std::string& nick, const Message& msg)
 	if (client == NULL) {
 		// 401   ERR_NOSUCHNICK				"<nickname> :No such nick/channel"
 		Server::sendMessage(ERR_NOSUCHNICK(msg.prefix(1), msg.getNick(), nick), msg.getFd());
-		throw std::invalid_argument(nick + ": No such nick");
+		throw std::invalid_argument(nick + ":No such nick");
 	}
 	return (client);
 }
@@ -65,6 +65,7 @@ Client* ACommand::getChanopInChannel(const std::string& nick, Channel* chan, con
 	}
 	return (client);
 }
+
 Client* ACommand::getInviteInChannel(const std::string& nick, Channel* chan, const Message& msg) {
 	Client* client = getClientInChannel(nick, chan, msg);				// throw if
 	if (!chan->isInvite(client)) {
