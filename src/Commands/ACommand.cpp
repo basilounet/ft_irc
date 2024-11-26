@@ -31,7 +31,7 @@ Client* ACommand::getClientWithNick(const std::string& nick, const Message& msg)
 	if (client == NULL) {
 		// 401   ERR_NOSUCHNICK				"<nickname> :No such nick/channel"
 		Server::sendMessage(ERR_NOSUCHNICK(msg.prefix(1), msg.getNick(), nick), msg.getFd());
-		throw std::invalid_argument(nick + ":No such No such nick");
+		throw std::invalid_argument(nick + ": No such nick");
 	}
 	return (client);
 }
