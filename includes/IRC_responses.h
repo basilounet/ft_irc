@@ -24,13 +24,18 @@ std::string to_string(T n) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // COMMAMD REPONSES
 
-// MODE	RPL_MODE					"MODE <channel> <arg> <nick>"
-# define RPL_MODE(prefix, nickRes, channel, nick, arg) \
-(std::string(prefix) + "MODE " + std::string(nickRes) + " " + std::string(channel) + " " + std::string(arg) + " " + std::string(nick) + CRLF)
-
-// MODE RPL_CLIENT_MODE					"MODE <channel> <arg>"
-# define RPL_CLIENT_MODE(prefix, channel, arg) \
+// MODE				"MODE <channel> <arg>"
+# define MODE(prefix, channel, arg) \
 (std::string(prefix) + "MODE " + std::string(channel) + " " + std::string(arg) + CRLF)
+
+// INVITE			"INVITE <nick_invited> :<channel>"
+# define INVITE(prefix, nick_invited, channel) \
+(std::string(prefix) + "INVITE " + std::string(nick_invited) + " :" + std::string(channel) + CRLF)
+
+// TOPIC			"TOPIC <channel> :<topic>"
+# define TOPIC(prefix, channel, topic) \
+(std::string(prefix) + "TOPIC " + std::string(channel) + " :" + std::string(topic) + CRLF)
+
 
 // 001   RPL_WELCOME				"Welcome to the Internet Relay Network <nick>!<user>@<host>"
 # define RPL_WELCOME(prefix, nick) \
@@ -69,11 +74,11 @@ std::string to_string(T n) {
 
 // 332   RPL_TOPIC					"<channel> :<topic>"
 # define RPL_TOPIC(prefix, nickRes, channel, topic) \
-(std::string(prefix) + "332 " + std::string(nickRes) + " " + std::string(channel) + " " + std::string(topic) + CRLF)
+(std::string(prefix) + "332 " + std::string(nickRes) + " " + std::string(channel) + " :" + std::string(topic) + CRLF)
 
 // 341   RPL_INVITING				"<channel> <nick>"
 # define RPL_INVITING(prefix, nickRes, channel, nick) \
-(std::string(prefix) + "341 " + std::string(nickRes) + " " + std::string(channel) + " " + std::string(nick) + CRLF)
+(std::string(prefix) + "341 " + std::string(nickRes) + " " + std::string(nick) + " " + std::string(channel) + CRLF)
 
 // 346   RPL_INVITELIST				"<channel> <invitemask>"
 # define RPL_INVITELIST(prefix, nickRes, channel, invitemask) \

@@ -5,7 +5,7 @@ Channel::Channel() :
 		_server(NULL),
 		_name("default"),
 		_inviteOnly(false),
-		_topicProtected(false),
+		_topicProtected(true),
 		_limit(0) {
 }
 
@@ -13,7 +13,7 @@ Channel::Channel(const std::string& name, Server* server) :
 		_server(server),
 		_name(name),
 		_inviteOnly(false),
-		_topicProtected(false),
+		_topicProtected(true),
 		_limit(0) {
 }
 
@@ -216,16 +216,16 @@ bool Channel::isFull() const {
 	return (false);
 }
 
-std::string	Channel::getFlagString() const {
+std::string	Channel::getFlagString(bool inChan) const {
 	std::string flags;
 	if (isInviteOnly() || isTopicProtected() || isKeyProtected() || isLimit()) {
 		flags += "+";
 		if (isTopicProtected())	flags += "t";
 		if (isInviteOnly())		flags += "i";
 		if (isLimit())			flags += "l";
-		if (isKeyProtected())		flags += "k";
-		if (isLimit())			flags += " " + to_string(getLimit());
-		if (isKeyProtected())		flags += " " + getName();
+		if (isKeyProtected())	flags += "k";
+		if (inChan && isLimit())		flags += " " + to_string(getLimit());
+		if (inChan && isKeyProtected())	flags += " " + getKey();
 	}
 	return flags;
 }

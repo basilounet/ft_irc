@@ -8,17 +8,21 @@
 # include <ACommand.h>
 
 class Invite : public ACommand {
-public:
-	Invite();
-	Invite(Invite const &src);
-	~Invite();
-	Invite &operator=(Invite const &other);
 
-	void		process(const Message& msg);
+	public:
 
-	void		invite(const Message &msg);
+		Invite();
+		Invite(Invite const &src);
+		~Invite();
+		Invite &operator=(Invite const &other);
 
-	ACommand	*clone() const;
+		void		process(const Message& msg);
+
+		ACommand	*clone() const;
+
+	private:
+
+		static void	invite(Channel *chan, Client *client, const Message &msg);
 
 };
 
