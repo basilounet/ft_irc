@@ -21,6 +21,7 @@ class ACommand;
 # include <User.h>
 # include <Topic.h>
 # include <Quit.h>
+# include <Bot.h>
 // # include <Channel.h>
 // # include <Client.h>
 class Message {

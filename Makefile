@@ -16,7 +16,8 @@ SRC =	main.cpp \
 		Commands/Privmsg.cpp \
 		Commands/Quit.cpp \
 		Commands/Topic.cpp \
-		Commands/User.cpp
+		Commands/User.cpp \
+		Commands/Bot.cpp
 
 
 ##========== NAMES ==========##
