@@ -41,7 +41,8 @@ void	Privmsg::process(const Message& msg)
 		}
 		toSend = msg.getParams()[1];
 	}
-	splitRecipients(toSend, msg);
+	if (toSend.substr(0, 7) != "SHA-256") // ignore if message begins by "SHA-256", file transfer message which has always wrong recipient
+		splitRecipients(toSend, msg);
 }
 
 void	Privmsg::splitRecipients(const std::string &toSend, const Message &msg)
