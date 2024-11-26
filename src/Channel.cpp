@@ -136,7 +136,7 @@ bool Channel::isChanop(Client* client) const {
 	return false;
 }
 bool Channel::isInvite(Client* client) const {
-	for (std::vector<Client*>::const_iterator it = _chanops.begin(); it != _chanops.end(); ++it)
+	for (std::vector<Client*>::const_iterator it = _invites.begin(); it != _invites.end(); ++it)
 		if ((*it) == client)
 			return true;
 	return false;
