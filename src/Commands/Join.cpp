@@ -73,8 +73,8 @@ void Join::quitAllChannels(const Message& msg) {
 
 	for (std::map<std::string, Channel*>::iterator it = channels.begin(); it != channels.end(); ++it) {
 		try {
-			Message msg_part(msg.getClient(), "PART " + it->first + CRLF);
-			msg_part.execCommand();
+			Message msgPart(msg.getClient(), "PART " + it->first + CRLF);
+			msgPart.execCommand();
 		}
 		catch (std::exception &e) {
 			std::cout << C_ROSE << "Error part: " + it->first << e.what() << C_RESET << std::endl;
@@ -97,7 +97,7 @@ void Join::tryJoinExistingChannel(const Message& msg, size_t i) {
 		Server::sendMessage(ERR_INVITEONLYCHAN(msg.prefix(2), msg.getNick(), _channels[i]), msg.getFd());
 		throw std::runtime_error("Channel is invite only");
 	}
-	if (!chan->getKey().empty() && i >= _pswds.size() && !chan->access(_pswds[i]))
+	if (!chan->getKey().empty() && (i >= _pswds.size() || !chan->access(_pswds[i])))
 	{
 		Server::sendMessage(ERR_BADCHANNELKEY(msg.prefix(2), msg.getNick(), _channels[i]), msg.getFd());
 		throw std::runtime_error("Bad channel key");
@@ -131,12 +131,6 @@ void Join::CreateChannel(const Message& msg, size_t i) {
 	chan->addClient(msg.getClient());
 	chan->addChanop(msg.getClient());
 	chan->broadcastMessage(msg.prefix(2) + "JOIN :" + chan->getName());
-	std::string names;
-	for (std::vector<Client*>::const_iterator it = chan->getClients().begin(); it != chan->getClients().end(); ++it) {
-		if (chan->isChanop(*it))
-            names += "@";
-		names += (*it)->getNick() + " ";
-	}
-	Server::sendMessage(RPL_NAMREPLY(msg.prefix(1), msg.getNick(), chan->getName(), names), msg.getFd());
+	Server::sendMessage(RPL_NAMREPLY(msg.prefix(1), msg.getNick(), chan->getName(), "@" + msg.getNick()), msg.getFd());
 	Server::sendMessage(RPL_ENDOFNAMES(msg.prefix(1), msg.getNick(), chan->getName()), msg.getFd());
 }

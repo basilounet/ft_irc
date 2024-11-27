@@ -29,15 +29,8 @@ void	Part::process(const Message& msg) {
 	channels = split(params[0], ',', msg);
 	for (std::vector<std::string>::iterator it = channels.begin(); it != channels.end(); ++it) {
 		try {
-			Channel *chan = msg.getClient()->getServer()->getChannelWithName(*it);
-			if (chan == NULL) {
-				Server::sendMessage(ERR_NOSUCHCHANNEL(msg.prefix(1), msg.getNick(), *it), msg.getFd());
-				throw std::invalid_argument("Channel not found");
-			}
-			if (!chan->isClient(msg.getClient())) {
-				Server::sendMessage(ERR_NOTONCHANNEL(msg.prefix(1), msg.getNick(), *it), msg.getFd());
-				throw std::invalid_argument("Not on Channel");
-			}
+			Channel *chan = getChannelWithName(*it, msg);
+			getClientInChannel(msg.getNick(), chan, msg);
 			std::string reason = "Leaving";
 			if (!msg.getTrailing().empty())
 				reason = msg.getTrailing();
