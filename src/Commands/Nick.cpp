@@ -34,16 +34,15 @@ void	Nick::process(const Message& msg)
 	}
 	if (params[0].size() > 9)
 		params[0] = params[0].substr(0, 9); // Command takes only the nine first characters
-	if (params[0] == msg.getClient()->getNick())
-		return;
 	if (params[0].size() == 1 || Nick::hasInvalidCharacter(params[0])) {
 		Server::sendMessage(ERR_ERRONEUSNICKNAME(msg.prefix(1),msg.getNick(), params[0]), msg.getClient()->getfd().fd);
 		throw (std::invalid_argument("Invalid character in Nick"));
 	}
-	if (isNickInServer(params[0], msg)) { // ERR_NICKCOLLISION or ERR_NICKNAMEINUSE
+	if (isNickInServer(params[0], msg)) // ERR_NICKCOLLISION or ERR_NICKNAMEINUSE
 		throw std::invalid_argument("Nick already in use");
-	}
-	msg.getClient()->setFlags(msg.getClient()->getFlags() | HAS_NICK);
+    msg.getClient()->setFlags(msg.getClient()->getFlags() | HAS_NICK);
+	if (params[0] == msg.getClient()->getNick())
+		return;
 	if (msg.getClient()->getFlags() & HAS_REGISTERED)
 		msg.getClient()->broadcastToAllKnownUsers(msg.prefix(2) + "NICK :" + params[0] + CRLF, true); // message sent only if client already registered
 	msg.getClient()->setNick(params[0]);

@@ -145,7 +145,6 @@ define last_changes
 		diff temp_$(TIMESTAMP_FILE) $(TIMESTAMP_FILE) > diff.txt || true; \
 		while IFS= read -r l; do \
 			if echo "$$l" | grep -q '^[0-9]'; then \
-				echo; \
 				echo "$(ORANGE)Difference in:" $$(cat temp_$(TIMESTAMP_FILE) | tail -n +$$(($$(echo "$$l" | grep -o '^[0-9]*') + 1)) | grep "^++||" | head -n 1 | cut -c 6-) \
 					"file at line" $$(($$(echo "$$l" | grep -o '^[0-9]*') - $$(if cat temp_$(TIMESTAMP_FILE) | head -n $$(echo "$$l" | grep -o '^[0-9]*') | grep -q "^++||"; then \
 						echo found | cat temp_$(TIMESTAMP_FILE) | grep -n "$$(cat temp_$(TIMESTAMP_FILE) | head -n $$(echo "$$l" | grep -o '^[0-9]*') | grep '^++||' | tail -n 1)" | grep -o '^[0-9]*'; \

@@ -34,7 +34,7 @@ void	User::process(const Message& msg)
 	if ((clientFlags & HAS_NICK) == 0)
 		throw (std::domain_error
 				("The registration must be done in that order: PASS, NICK, USER"));
-	if (nbParams < 2 || (nbParams < 3 && realName.empty())) // if there is no trailing command needs third param
+	if (nbParams <= 2 || (nbParams <= 3 && realName.empty())) // if there is no trailing command needs third param
 		needMoreParams(msg); // throw if ERR_NEEDMOREPARAMS
 	if (realName.empty())
 		realName = msg.getParams()[2];
