@@ -25,7 +25,7 @@ class Bot : public ACommand {
 
 		void	russianRoulette(const Message& msg);
 		void	initParams(const Message& msg);
-		void	removeVictim(Client *victim, const Message& msg);
+		bool	removeVictim(Client *victim, const Message& msg);
 		void	broadcastBoard(const Channel *chan, const Message& msg) const;
 };
 

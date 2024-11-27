@@ -47,7 +47,8 @@ HIS PRESTIGIOUS CHANNEL", _chan->getName(), msg, true);
 			_users[index]->getNick() + 
 			" IS NOT WORTHY OF STAYING IN THIS GLORIOUS CHANNEL",
 			_chan->getName(), msg, true);
-	removeVictim(_users[index], msg);
+	if (removeVictim(_users[index], msg))
+		return ;
 	if (_OpRm)
 	{
 		Privmsg::sendToRecipient("THE ALMIGHTY IRC BOT HAS REMOVED AN OPERATOR \
@@ -65,8 +66,10 @@ _chan->getName(), msg, true);
 	broadcastBoard(_chan, msg);
 }
 
-void	Bot::removeVictim(Client *victim, const Message& msg)
+bool	Bot::removeVictim(Client *victim, const Message& msg)
 {
+	bool	ChanRm;
+
 	_OpRm = false;
 	if (_chan->isChanop(victim))
 	{
@@ -82,8 +85,9 @@ void	Bot::removeVictim(Client *victim, const Message& msg)
 			victim->getNick() + " :lost to Russian Roulette" + CRLF);
 	victim->removeChannel(_chan->getName());
 	_chan->removeChanop(victim);
-	_chan->removeClient(victim);
 	_chan->removePlayer(victim);
+	ChanRm = _chan->removeClient(victim);
+	return ChanRm;
 }
 
 void	Bot::initParams(const Message& msg)

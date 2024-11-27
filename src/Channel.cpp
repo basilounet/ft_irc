@@ -81,6 +81,7 @@ bool Channel::addClient(Client* client) {
 	_clients.push_back(client);
 	return true;
 }
+
 bool Channel::addChanop(Client* client) {
 	std::vector<Client*>::iterator it = std::find(_chanops.begin(), _chanops.end(), client);
 	if (it != _chanops.end())
@@ -88,6 +89,7 @@ bool Channel::addChanop(Client* client) {
 	_chanops.push_back(client);
 	return true;
 }
+
 bool Channel::addInvite(Client* client) {
 	std::vector<Client*>::iterator it = std::find(_invites.begin(), _invites.end(), client);
 	if (it != _invites.end())
@@ -98,14 +100,18 @@ bool Channel::addInvite(Client* client) {
 
 bool Channel::removeClient(Client* client) {
 	std::vector<Client*>::iterator it = std::find(_clients.begin(), _clients.end(), client);
+
 	if (it != _clients.end()) {
 		_clients.erase(it);
 		if (_clients.empty())
+		{
 			_server->removeChannel(_name);
-		return true;
+			return true;
+		}
 	}
 	return false;
 }
+
 bool Channel::removeChanop(Client* client) {
 	std::vector<Client*>::iterator it = std::find(_chanops.begin(), _chanops.end(), client);
 	if (it != _chanops.end()) {
@@ -114,6 +120,7 @@ bool Channel::removeChanop(Client* client) {
 	}
 	return false;
 }
+
 bool Channel::removeInvite(Client* client) {
 	std::vector<Client*>::iterator it = std::find(_invites.begin(), _invites.end(), client);
 	if (it != _invites.end()) {
