@@ -244,11 +244,16 @@ const std::map<const Client *, int>	&Channel::getGameBoard(void) const
 	return _gameBoard;
 }
 
+t_player	&getPlayer(const Client *client)
+{
+	return _gameBoard[client];
+}
+
 void	Channel::addNewPlayers(void)
 {
 	for (std::vector<Client *>::const_iterator it = _clients.begin() ;
 			it != _clients.end() ; it++)
-		_gameBoard.insert(std::make_pair(*it, 0));
+		_gameBoard.insert(std::make_pair(*it, {0, 0}));
 }
 
 void	Channel::removePlayer(const Client *toRm)

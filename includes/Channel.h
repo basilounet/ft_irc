@@ -60,23 +60,24 @@ class Channel {
 
 		std::string	getFlagString(bool inChan = true)	const;
 
-		const std::map<const Client *, int>	&getGameBoard(void)	const;
-		void							addNewPlayers(void);
-		void							addPoints(int toAdd);
-		void							removePlayer(const Client *toRm);
+		const std::map<const Client *, t_player>	&getGameBoard(void)	const;
+		t_player									&getPlayer(const Client *client);
+		void										addNewPlayers(void);
+		void										addPoints(int toAdd);
+		void										removePlayer(const Client *toRm);
 
 	private:
-		Server*						_server;
-		std::string					_name;
-		std::vector<Client*>		_clients;
-		std::vector<Client*>		_chanops;
-		std::vector<Client*>		_invites;
-		bool						_inviteOnly;
-		std::string					_topic;
-		bool						_topicProtected;
-		std::string					_key;
-		int							_limit;
-		std::map<const Client *, int>		_gameBoard;
+		Server*								_server;
+		std::string							_name;
+		std::vector<Client*>				_clients;
+		std::vector<Client*>				_chanops;
+		std::vector<Client*>				_invites;
+		bool								_inviteOnly;
+		std::string							_topic;
+		bool								_topicProtected;
+		std::string							_key;
+		int									_limit;
+		std::map<const Client *, t_player>	_gameBoard;
 };
 
 #endif //CHANNEL_H
