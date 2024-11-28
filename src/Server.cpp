@@ -100,7 +100,7 @@ void Server::sendMessage(std::string message, const int fd) {
 	if (message.size() > 512)
 		message = message.substr(0, 510) + "\r\n";
 	send(fd, message.c_str(), message.size(), MSG_DONTWAIT | MSG_NOSIGNAL);
-	std::cout << C_LIME " >> " << C_RESET << message.substr(0,message.size()-2) << std::endl;
+	std::cout << C_OR << "fd " << fd << ":" << C_LIME " >> " << C_RESET << message.substr(0,message.size()-2) << std::endl;
 }
 
 void Server::broadcast(const std::vector<Client*>& clients, const std::string& msg, const Client& sender,
@@ -179,7 +179,6 @@ void Server::handleClient(const pollfd &pollfd) {
 		client.appendBuffer(buffer);
 		total_buf = client.getBuffer();
 		if (total_buf.size() > 2 && total_buf[total_buf.size() - 2] == '\r' && total_buf[total_buf.size() - 1] == '\n') {
-			std::cout << C_ROSE << " << " << C_RESET << client.getBuffer().substr(0, client.getBuffer().size() - 2) << std::endl;
 			client.parseBuffer();
 			client.setBuffer("");
 		}

@@ -147,6 +147,7 @@ void Client::parseBuffer() {
 
 	while (std::getline(storage, str, '\n') && !str.empty() && (_flags & IS_RM) == 0)
 	{
+		std::cout << C_OR << "fd " << _fd.fd << ":" << C_ROSE << " << " << C_RESET << str << std::endl;
 		try {
 			Message msg(this, str);
 			msg.execCommand();
