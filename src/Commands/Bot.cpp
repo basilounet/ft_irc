@@ -48,7 +48,8 @@ HIS PRESTIGIOUS CHANNEL", _chan->getName(), _msg, true);
 	size_t index = rand() % _users.size();
 	if (_chan->getPlayer(_users[index]).immunity)
 	{
-		Privmsg::sendToRecipient(""
+		Privmsg::sendToRecipient("TODAY THE ALMIGHTY IRC BOT CHOOSE TO BE MERCIFUL. " + _users
+		return ;
 	}
 	Privmsg::sendToRecipient(
 			"IN HIS INFINITE WISDOM, THE ALMIGHTY IRC BOT HAS DECIDED: " +
@@ -174,7 +175,9 @@ bool	Bot::HasNotEnoughPoints(int price)
 
 void	Bot::inv()
 {
-	checkPoints(2);
+	if (HasNotEnoughPoints(2))
+		return ;
+	Privmsg::sendToRecipient("CONSIDER YOURSELF LUCKY, THE ALMIGHTY IRC BOT HAS GRANTED YOU IMMUNITY TO THE NEXT TIME HE WILL VANISH SOMEONE", _msg.getNick(), _msg);
 	_chan->getPlayer(_msg.getClient()).immunity = true;
 }
 

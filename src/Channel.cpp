@@ -1,6 +1,5 @@
 #include "Channel.h"
 
-
 Channel::Channel() :
 		_server(NULL),
 		_name("default"),
@@ -253,7 +252,7 @@ void	Channel::addNewPlayers(void)
 {
 	for (std::vector<Client *>::const_iterator it = _clients.begin() ;
 			it != _clients.end() ; it++)
-		_gameBoard.insert(std::make_pair(*it, {0, 0}));
+		_gameBoard.insert(std::make_pair(*it, {0, 0, 0}));
 }
 
 void	Channel::removePlayer(const Client *toRm)
