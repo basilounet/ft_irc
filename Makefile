@@ -2,8 +2,6 @@
 
 SRC =	main.cpp \
 		Server.cpp \
-		Player.cpp \
-		Commands/Bot.cpp \
 		Channel.cpp \
 		Client.cpp \
 		Message.cpp \
@@ -19,6 +17,8 @@ SRC =	main.cpp \
 		Commands/Quit.cpp \
 		Commands/Topic.cpp \
 		Commands/User.cpp \
+		Commands/Bot.cpp \
+		Player.cpp
 
 
 ##========== NAMES ==========##

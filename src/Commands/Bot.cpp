@@ -59,20 +59,14 @@ HIS PRESTIGIOUS CHANNEL", _chan->getName(), *_msg, true);
 			_chan->getName(), *_msg, true);
 	if (removeVictim(_users[index]))
 		return ;
+	std::string msg = "YOU ARE LUCKY TO BE LEFT ALIVE BY ALMIGHTY \
+IRC BOT, HE GRANTS YOU 1 POINT, THANK HIM FOR THE CENTURIES TO COME !!";
 	if (_OpRm)
-	{
-		Privmsg::sendToRecipient("THE ALMIGHTY IRC BOT HAS REMOVED AN OPERATOR \
-AND GRANTS 2 POINTS TO UNWORTHY REMAINING PLAYERS", 
-_chan->getName(), *_msg, true);
-		_chan->addPoints(2);
-	}
-	else
-	{
-		Privmsg::sendToRecipient("YOU ARE LUCKY TO BE LEFT ALIVE BY ALMIGHTY \
-IRC BOT, HE GRANTS YOU 1 POINT, THANK HIM FOR THE CENTURIES TO COME !!",
-_chan->getName(), *_msg, true);
-		_chan->addPoints(1);
-	}
+		msg = "THE ALMIGHTY IRC BOT HAS REMOVED AN OPERATOR \
+AND GRANTS 2 POINTS TO UNWORTHY REMAINING PLAYERS";
+	Privmsg::sendToRecipient(msg, _chan->getName(), *_msg, true);
+	_chan->addPoints(1 + _OpRm);
+	_chan->removeNbImmunity(1);
 	broadcastBoard();
 }
 

@@ -65,6 +65,7 @@ class Channel {
 		Player									&getPlayer(const Client *client);
 		void									addNewPlayers(void);
 		void									addPoints(int toAdd);
+		void									removeNbImmunity(int toRemove);
 		void									removePlayer(const Client *toRm);
 
 	private:
