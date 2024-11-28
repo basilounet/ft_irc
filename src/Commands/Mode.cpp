@@ -115,15 +115,14 @@ void	Mode::channelModeO(Channel* chan, const Message& msg, bool add) {
 
 // l - set/remove the user limit to channel
 void	Mode::channelModeL(Channel* chan, const Message& msg, bool add) {
-	if (msg.getParams().size() < 3 || msg.getParams()[2].empty())
-		return ;
 	int limit = 0;
 	if (add) {
-		if (msg.getParams().size() >= 3)
-			limit = atoi(msg.getParams()[2].c_str());
+		if (msg.getParams().size() < 3)
+			return ;
+		limit = atoi(msg.getParams()[2].c_str());
 		if (limit == 0)
 			return ;
-	}else {
+	}else{
 		if (chan->getLimit() == 0)
 			return ;
 	}

@@ -53,7 +53,7 @@ void Client::quitAllChannels() {
 			msg.execCommand();
 		}
 		catch (std::exception &e) {
-			std::cout << C_ROSE << "Error join 0: " << e.what() << C_RESET << std::endl;
+			std::cout << C_ROUGE << "Error join 0: " << e.what() << C_RESET << std::endl;
 		}
 		it->second->removeClient(this);
 	}

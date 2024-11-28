@@ -110,7 +110,7 @@ void	Bot::initParams(const Message& msg)
 				_users.push_back(user);
 			}
 			catch (std::exception &e) {
-				std::cout << C_ROSE << "Error russianRoulette unknown player: " 
+				std::cout << C_ROUGE << "Error russianRoulette unknown player: "
 					<< e.what() << C_RESET << std::endl;
 			}
 		}

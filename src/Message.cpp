@@ -67,7 +67,6 @@ void Message::parseMsg() {
 		throw std::invalid_argument("Invalid parse pre arguments (no end)");
 	str = _msg.substr(index0, index1 - index0);
 	parseParams(str);
-	std::cout << std::endl;
 }
 
 void Message::execCommand() {
@@ -86,7 +85,6 @@ void Message::parsePrefix(const std::string& str) {
 	if (str.empty())
 		throw std::invalid_argument("Invalid parse pre prefix (empty)");
 	_serverName = str;
-	std::cout << C_OR << _serverName << C_RESET << " ";
 }
 
 // command    =  1*letter / 3digit
@@ -94,7 +92,6 @@ void Message::parseCommand(const std::string& str) {
 	if (str.empty())
 		throw std::invalid_argument("Invalid parse pre command (empty)");
 	_command = str;
-	std::cout << C_LIME << _command << C_RESET << " ";
 }
 
 // params	= *14( SPACE middle ) [ SPACE ":" trailing ]
@@ -110,19 +107,15 @@ void Message::parseParams(const std::string& str) {
 		if (index0 == std::string::npos)
 			break ;
 		index1 = str.find(' ', index0);
-		//std::cout << C_OR << "[" << str << "]" << C_RESET;
 		if (str.at(index0) == ':') {
 			_trailing = str.substr(index0 + 1);
-			std::cout << C_ROSE << ":[" << _trailing << "]" << C_RESET;
 			break ;
 		}
 		if (index1 == std::string::npos) {
 			_params.push_back(str.substr(index0));
-			std::cout << C_ROSE << _params.back() << C_RESET << " ";
 			break ;
 		}
 		_params.push_back(str.substr(index0, index1 - index0));
-		std::cout << C_ROSE << _params.back() << C_RESET << ",";
 		if (++nb >= 14)
 			throw std::invalid_argument("Invalid parse params (too many arguments)");
 	}

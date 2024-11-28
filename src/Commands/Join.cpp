@@ -46,7 +46,7 @@ void	Join::process(const Message& msg) {
 				CreateChannel(msg, i);
 		}
 		catch (std::exception &e) {
-			std::cout << C_ROSE << "Error join: " << e.what() << C_RESET << std::endl;
+			std::cout << C_ROUGE << "Error join: " << e.what() << C_RESET << std::endl;
 		}
 	}
 }
@@ -77,7 +77,7 @@ void Join::quitAllChannels(const Message& msg) {
 			msgPart.execCommand();
 		}
 		catch (std::exception &e) {
-			std::cout << C_ROSE << "Error part: " + it->first << e.what() << C_RESET << std::endl;
+			std::cout << C_ROUGE << "Error part: " + it->first << e.what() << C_RESET << std::endl;
 		}
 	}
 }

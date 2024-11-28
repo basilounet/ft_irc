@@ -56,7 +56,7 @@ void Kick::oneChannel(const Message& msg) {
             chan->removeChanop(user);
 		}
 		catch (std::exception &e) {
-			std::cout << C_ROSE << "Error KICK: " << e.what() << C_RESET << std::endl;
+			std::cout << C_ROUGE << "Error KICK: " << e.what() << C_RESET << std::endl;
 		}
 	}
 }
@@ -78,7 +78,7 @@ void Kick::multipleChannels(const Message& msg) {
             chan->removeChanop(user);
         }
         catch (std::exception &e) {
-            std::cout << C_ROSE << "Error KICK: " << e.what() << C_RESET << std::endl;
+            std::cout << C_ROUGE << "Error KICK: " << e.what() << C_RESET << std::endl;
         }
     }
 }

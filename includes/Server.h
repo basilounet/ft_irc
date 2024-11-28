@@ -40,7 +40,7 @@ class Server {
 		void runServer();
 
 		static void	sendMessage(std::string message, int fd);
-		static void	broadcast(const std::vector<Client*>& clients, 
+		static void	broadcast(const std::vector<Client*>& clients,
 					const std::string& msg, const Client& sender, 
 					const bool shouldSendToSender = false);
 		void		broadcast(const std::string& msg, const Client& sender,

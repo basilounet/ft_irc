@@ -39,7 +39,7 @@ void	Part::process(const Message& msg) {
 			chan->removeClient(msg.getClient());
 		}
 		catch (std::exception &e) {
-			std::cout << C_ROSE << "Error part: " << e.what() << C_RESET << std::endl;
+			std::cout << C_ROUGE << "Error part: " << e.what() << C_RESET << std::endl;
 		}
 	}
 }
