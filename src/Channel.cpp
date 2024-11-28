@@ -238,31 +238,21 @@ std::string	Channel::getFlagString(bool inChan) const {
 	return flags;
 }
 
-const std::map<const Client *, int>	&Channel::getGameBoard(void) const
-{
-	return _gameBoard;
-}
+const std::map<const Client *, Player>	&Channel::getGameBoard(void)	const		{ return (_gameBoard); }
+Player									&Channel::getPlayer(const Client *client)	{ return _gameBoard[client]; }
 
-t_player	&getPlayer(const Client *client)
-{
-	return _gameBoard[client];
-}
-
-void	Channel::addNewPlayers(void)
-{
+void	Channel::addNewPlayers(void) {
 	for (std::vector<Client *>::const_iterator it = _clients.begin() ;
 			it != _clients.end() ; it++)
-		_gameBoard.insert(std::make_pair(*it, {0, 0, 0}));
+		_gameBoard[*it] = Player();
 }
 
-void	Channel::removePlayer(const Client *toRm)
-{
+void	Channel::removePlayer(const Client *toRm) {
 	_gameBoard.erase(toRm);
 }
 
-void	Channel::addPoints(int toAdd)
-{
-	for (std::map<const Client *, int>::iterator it = _gameBoard.begin() ;
+void	Channel::addPoints(int toAdd) {
+	for (std::map<const Client *, Player>::iterator it = _gameBoard.begin() ;
 			it != _gameBoard.end() ; it++)
-		it->second += toAdd;
+		it->second.addPoints(toAdd);
 }

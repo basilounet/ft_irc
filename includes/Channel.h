@@ -8,6 +8,7 @@ class Channel;
 # include <Server.h>
 # include <Client.h>
 # include <algorithm>
+# include <Player.h>
 
 class Channel {
 
@@ -60,11 +61,11 @@ class Channel {
 
 		std::string	getFlagString(bool inChan = true)	const;
 
-		const std::map<const Client *, t_player>	&getGameBoard(void)	const;
-		t_player									&getPlayer(const Client *client);
-		void										addNewPlayers(void);
-		void										addPoints(int toAdd);
-		void										removePlayer(const Client *toRm);
+		const std::map<const Client *, Player>	&getGameBoard(void)					const;
+		Player									&getPlayer(const Client *client);
+		void									addNewPlayers(void);
+		void									addPoints(int toAdd);
+		void									removePlayer(const Client *toRm);
 
 	private:
 		Server*								_server;
@@ -77,7 +78,7 @@ class Channel {
 		bool								_topicProtected;
 		std::string							_key;
 		int									_limit;
-		std::map<const Client *, t_player>	_gameBoard;
+		std::map<const Client *, Player>	_gameBoard;
 };
 
 #endif //CHANNEL_H
