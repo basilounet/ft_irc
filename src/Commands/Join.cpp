@@ -29,9 +29,22 @@ Join& Join::operator=(Join const& other) {
 
 void	Join::process(const Message& msg) {
 	checkNbParam(msg, 1);
-	if (msg.getParams()[0] == "0")
-	{
+	if (msg.getParams()[0] == "0") {
 		quitAllChannels(msg);
+		return ;
+	}
+	if (msg.getParams()[0] == "all" || msg.getParams()[0] == "ALL") {
+		checkNbParam(msg, 2);
+		std::map<int, Client> allClients = msg.getClient()->getServer()->getClients();
+		for (std::map<int, Client>::iterator it = allClients.begin(); it != allClients.end(); ++it) {
+			try {
+				Message msgJoin(&(it->second), "JOIN " + msg.getParams()[1] + CRLF);
+				msgJoin.execCommand();
+			}
+			catch (std::exception& e) {
+				std::cerr << C_ROUGE << "JOIN all error :" << e.what() << C_RESET << std::endl;
+			}
+		}
 		return ;
 	}
 	_channels = split(msg.getParams()[0], ',', msg);
