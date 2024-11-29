@@ -5,7 +5,8 @@ Channel::Channel() :
 		_name("default"),
 		_inviteOnly(false),
 		_topicProtected(true),
-		_limit(0) {
+		_limit(0),
+		_lastPlayer(__nullptr) {
 }
 
 Channel::Channel(const std::string& name, Server* server) :
@@ -13,7 +14,8 @@ Channel::Channel(const std::string& name, Server* server) :
 		_name(name),
 		_inviteOnly(false),
 		_topicProtected(true),
-		_limit(0) {
+		_limit(0),
+		_lastPlayer(__nullptr) {
 }
 
 Channel::~Channel() {
@@ -35,7 +37,7 @@ Channel& Channel::operator=(const Channel& src) {
 		_topicProtected = src._topicProtected;
 		_key = src._key;
 		_limit = src._limit;
-
+		_lastPlayer = src._lastPlayer;
 	}
 	return (*this);
 }
@@ -224,6 +226,15 @@ bool Channel::isFull() const {
 	return (false);
 }
 
+void		Channel::setLastPlayer(Client* client) {
+	_lastPlayer = client;
+}
+
+Client*		Channel::getLastPlayer( void )	const {
+    return (_lastPlayer);
+}
+
+
 std::string	Channel::getFlagString(bool inChan) const {
 	std::string flags;
 	if (isInviteOnly() || isTopicProtected() || isKeyProtected() || isLimit()) {
@@ -253,12 +264,14 @@ void	Channel::removePlayer(const Client *toRm) {
 
 void	Channel::addPoints(int toAdd) {
 	for (std::map<const Client *, Player>::iterator it = _gameBoard.begin() ;
-			it != _gameBoard.end() ; it++)
+			it != _gameBoard.end() ; ++it)
 		it->second.gainPoints(toAdd);
 }
 
 void	Channel::removeNbImmunity(int toRemove) {
 	for (std::map<const Client *, Player>::iterator it = _gameBoard.begin() ;
-			it != _gameBoard.end() ; it++)
+			it != _gameBoard.end() ; ++it) {
 		it->second.addImmunity(-toRemove);
+		it->second.addLTU(-1);
+	}
 }

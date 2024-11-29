@@ -7,8 +7,8 @@
 Player::Player() :
 		_points(0),
 		_gain(0),
-		_turnOfImmunityLeft(0),
-		_isLTU(false) {
+		_turnOfImmunityLeft(1),
+		_turnOfLTULeft(0) {
 }
 
 
@@ -24,7 +24,7 @@ Player& Player::operator=(const Player& src) {
 		_points = src._points;
 		_gain = src._gain;
 		_turnOfImmunityLeft = src._turnOfImmunityLeft;
-		_isLTU = src._isLTU;
+		_turnOfLTULeft = src._turnOfLTULeft;
 	}
 	return (*this);
 }
@@ -32,8 +32,13 @@ Player& Player::operator=(const Player& src) {
 
 void		Player::setPoints(int points) 		{ _points = points; }
 int			Player::getPoints( void )	const	{ return (_points); }
-void		Player::addPoints(int toAdd)		{ _points += toAdd; }
 void		Player::gainPoints(int toAdd)		{ _points += toAdd + _gain; }
+
+void		Player::addPoints(int toAdd) {
+ 	_points += toAdd;
+	if (_points < 0)
+		_points = 0;
+}
 
 void		Player::setGain(int gain)			{ _gain = gain; }
 int			Player::getGain( void )		const	{ return (_gain); }
@@ -45,10 +50,16 @@ bool		Player::hasImmunity( void ) const	{ return (_turnOfImmunityLeft >= 1); }
 
 void		Player::addImmunity(int toAdd) {
  	_turnOfImmunityLeft += toAdd;
-	if (_turnOfImmunityLeft <= 0) {
+	if (_turnOfImmunityLeft < 0)
 		_turnOfImmunityLeft = 0;
-		_isLTU = false;
-	}
 }
 
-bool	Player::isLTU( void ) const	{ return (_isLTU); }
+void	Player::setLTU(int nbOfTurns)		{ _turnOfLTULeft = nbOfTurns; }
+int		Player::getLTU( void )		const	{ return (_turnOfLTULeft); }
+bool	Player::hasLTU( void )		const	{ return (_turnOfLTULeft >= 1); }
+
+void	Player::addLTU(int nbOfTurns) {
+ 	_turnOfLTULeft += nbOfTurns;
+	if (_turnOfLTULeft < 0)
+		_turnOfLTULeft = 0;
+}

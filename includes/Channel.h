@@ -59,6 +59,9 @@ class Channel {
 		bool		isLimit()				const;
 		bool		isFull()				const;
 
+		void		setLastPlayer(Client* client);
+		Client*		getLastPlayer( void )	const;
+
 		std::string	getFlagString(bool inChan = true)	const;
 
 		const std::map<const Client *, Player>	&getGameBoard(void)					const;
@@ -67,6 +70,7 @@ class Channel {
 		void									removeNbImmunity(int toRemove);
 		void									removePlayer(const Client *toRm);
 		void									addPlayer(const Client *toAdd);
+
 
 	private:
 		Server*								_server;
@@ -80,6 +84,7 @@ class Channel {
 		std::string							_key;
 		int									_limit;
 		std::map<const Client *, Player>	_gameBoard;
+		Client*								_lastPlayer;
 };
 
 #endif //CHANNEL_H

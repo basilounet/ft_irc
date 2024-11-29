@@ -27,7 +27,6 @@ class Bot : public ACommand {
 		bool						_OpRm;
 
 		void	russianRoulette();
-		void	initParams();
 		bool	removeVictim(Client *victim);
 		void	showBoard(const std::string& at) const;
 		void	displayShop(void) const;

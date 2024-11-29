@@ -28,13 +28,16 @@ public:
 	void		addImmunity(int toAdd);
 	bool		hasImmunity( void )	const;
 
-	bool        isLTU( void )	const;
+	void		setLTU(int nbOfTurns);
+	int			getLTU( void )		const;
+	void		addLTU(int nbOfTurns);
+	bool		hasLTU( void )		const;
 
 private:
 	int		_points;
 	int		_gain;
 	int		_turnOfImmunityLeft;
-	bool	_isLTU;
+	int		_turnOfLTULeft;
 };
 
 

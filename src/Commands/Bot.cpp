@@ -45,12 +45,18 @@ void	Bot::process(const Message &msg) {
 }
 
 /**
- * /BOT "rr"|"russianRoulette" #_channel [<user> *("," <user>)]
+ * /BOT "rr"|"russianRoulette" #_channel
  */
 void	Bot::russianRoulette(void) {
 	checkNbParam(*_msg, 2);
-	initParams();
-//	_chan->addNewPlayers();
+    _chan = getChannelWithName(_msg->getParams()[1], *_msg);
+    if (_chan->getLastPlayer() == _msg->getClient()) {
+        Privmsg::sendToRecipient("YOU FOOL !!! YOU CAN'T PLAY TWICE IN A ROW !!!", _msg->getNick(), *_msg);
+        return ;
+    }
+    _chan->setLastPlayer(_msg->getClient());
+	_users = _chan->getClients();
+	_chan->removeNbImmunity(1);
 	Privmsg::sendToRecipient("WARNING !!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!",
 			_chan->getName(), *_msg, true);
 	Privmsg::sendToRecipient("THE GREATEST GAME HAS BEGUN. BE AFRAID YOU \
@@ -59,9 +65,21 @@ HIS PRESTIGIOUS CHANNEL", _chan->getName(), *_msg, true);
 	showBoard(_chan->getName());
 	size_t index = rand() % _users.size();
 	if (_chan->getPlayer(_users[index]).hasImmunity()) {
+		_chan->getPlayer(_users[index]).setImmunity(0);
 		Privmsg::sendToRecipient("TODAY THE ALMIGHTY IRC BOT CHOOSE TO BE MERCIFUL. " +
 				_users[index]->getNick() + " HAS BEEN GRANTED IMMUNITY FOR THIS ROUND",
 				_chan->getName(), *_msg, true);
+		if (_chan->getPlayer(_users[index]).hasLTU()) {
+			_chan->getPlayer(_users[index]).setLTU(0);
+			Privmsg::sendToRecipient("ALTHOUGH, " + _msg->getNick() + " IS REATTACKING", _chan->getName(), *_msg, true);
+			try {
+				Message msg(_msg->getClient(), "BOT rr " + _chan->getName());
+				msg.execCommand();
+			}
+			catch (std::exception &e) {
+				std::cout << C_ROSE << "Error BOT: " << e.what() << C_RESET << std::endl;
+			}
+	    }
 		return ;
 	}
 	Privmsg::sendToRecipient(
@@ -78,7 +96,6 @@ IRC BOT, HE GRANTS YOU 1 POINT, THANK HIM FOR THE CENTURIES TO COME !!";
 AND GRANTS 2 POINTS TO UNWORTHY REMAINING PLAYERS";
 	Privmsg::sendToRecipient(msg, _chan->getName(), *_msg, true);
 	_chan->addPoints(1 + _OpRm);
-	_chan->removeNbImmunity(1);
 	showBoard(_chan->getName());
 }
 
@@ -86,6 +103,7 @@ bool	Bot::removeVictim(Client *victim)
 {
 	bool	ChanRm = false;
 
+	_chan->getPlayer(victim).setImmunity(0);
 	_OpRm = false;
 	if (_chan->isChanop(victim))
 	{
@@ -104,29 +122,6 @@ bool	Bot::removeVictim(Client *victim)
 //	_chan->removePlayer(victim);
 //	ChanRm = _chan->removeClient(victim);
 	return ChanRm;
-}
-
-void	Bot::initParams(void)
-{
-	const std::string chanName = _msg->getParams()[1];
-
-	_chan = getChannelWithName(chanName, *_msg);
-	getClientInChannel(_msg->getNick(), _chan, *_msg); //throw if ERR_NOTONCHANNEL
-	if (_msg->getParams().size() >= 3) {
-		_usersNames = split(_msg->getParams()[2], ',', *_msg);
-		for (size_t i = 0; i < _usersNames.size(); ++i) {
-			try {
-				Client* user = getClientInChannel441(_usersNames[i], _chan, *_msg);
-				_users.push_back(user);
-			}
-			catch (std::exception &e) {
-				std::cout << C_ROSE << "Error russianRoulette unknown player: " 
-					<< e.what() << C_RESET << std::endl;
-			}
-		}
-	}
-	else
-		_users = _chan->getClients();
 }
 
 void	Bot::showBoard(const std::string& at) const
@@ -159,12 +154,12 @@ void	Bot::displayShop(void) const
 GRANT YOU SPECIAL APTITUDES IN EXCHANGE OF YOUR POINTS:", _msg->getNick(), *_msg);
 	Privmsg::sendToRecipient("", _msg->getNick(), *_msg);
 	Privmsg::sendToRecipient("ROBBERY OF WEALTHIEST: row       - 1 POINT", _msg->getNick(), *_msg);
-	Privmsg::sendToRecipient("IMMUNITY TO NEXT VANISHING: inv  - 2 POINTS", _msg->getNick(), *_msg);
+	Privmsg::sendToRecipient("+1 ROUND OF IMMUNITY FROM VANISHING: inv  - 2 POINTS", _msg->getNick(), *_msg);
 	if (!chan)
 		Privmsg::sendToRecipient("TRANSCENDANCE OF THE MORTAL: ttm - 10 POINTS (Increasing)", _msg->getNick(), *_msg);
 	else
 		Privmsg::sendToRecipient("TRANSCENDANCE OF THE MORTAL: ttm - " + to_string(5 + 5 * (1 << chan->getPlayer(_msg->getClient()).getGain())) + " POINTS", _msg->getNick(), *_msg);
-	Privmsg::sendToRecipient("LUCK OF THE UNGRATFUL: ltu       - 20 POINTS", _msg->getNick(), *_msg);
+	Privmsg::sendToRecipient("LUCK OF THE UNGRATFUL: ltu       - 5 POINTS", _msg->getNick(), *_msg);
 }
 
 void	Bot::leaderBoard() {
@@ -178,10 +173,10 @@ void	Bot::stats() {
     _chan = getChannelWithName(_msg->getParams()[1], *_msg);
     getClientInChannel(_msg->getNick(), _chan, *_msg);
 	Player& player = _chan->getPlayer(_msg->getClient());
-	Privmsg::sendToRecipient("STATS OF THE GLORIOUS " + _msg->getNick(), _msg->getNick(), *_msg);
+	Privmsg::sendToRecipient("STATS OF THE GLORIOUS " + _msg->getNick() + " ON " + _chan->getName(), _msg->getNick(), *_msg);
 	Privmsg::sendToRecipient("Points : " + to_string(player.getPoints()), _msg->getNick(), *_msg);
 	Privmsg::sendToRecipient("Bonus point per vanishing : " + to_string(player.getGain()), _msg->getNick(), *_msg);
-	Privmsg::sendToRecipient("Turns of invulnerability : " + to_string(player.getImmunity()) + " (" + to_string(player.isLTU()) + ")", _msg->getNick(), *_msg);
+	Privmsg::sendToRecipient("Turns of invulnerability : " + to_string(player.getImmunity()) + " (" + to_string(player.getLTU()) + ")", _msg->getNick(), *_msg);
 }
 
 
@@ -209,40 +204,71 @@ bool	Bot::HasNotEnoughPoints(int price)
 }
 
 void	Bot::roberryOfTheWealth() {
-	if (HasNotEnoughPoints(2))
+	if (HasNotEnoughPoints(1))
         return ;
-	Player* wealthy = const_cast<Player*>(&_chan->getGameBoard().begin()->second);
+	Player player = _chan->getPlayer(_msg->getClient());
+	Player* wealthiest = const_cast<Player*>(&_chan->getGameBoard().begin()->second);
 	for (std::map<const Client *, Player>::const_iterator it = _chan->getGameBoard().begin(); it != _chan->getGameBoard().end() ; ++it) {
-        if (it->second.getPoints() > wealthy->getPoints() && wealthy == &_chan->getPlayer(_msg->getClient()))
-            wealthy = const_cast<Player*>(&(it->second));
+        if (it->second.getPoints() > wealthiest->getPoints() && wealthiest == &player)
+            wealthiest = const_cast<Player*>(&(it->second));
     }
-    if (wealthy == &_chan->getPlayer(_msg->getClient()))
+	if (&player == wealthiest) {
+        Privmsg::sendToRecipient("YOU FOOL !!! YOU ARE ALREADY THE WEALTHIEST !!!", _msg->getNick(), *_msg);
         return ;
-    _chan->getPlayer(_msg->getClient()).addPoints(-1);
-	int	removed = wealthy->getPoints() > 2 ? 2 : wealthy->getPoints();
-	wealthy->addPoints(-removed);
+    }
+	int	removed = wealthiest->getPoints() > 2 ? 2 : wealthiest->getPoints();
+    player.addPoints(-1);
+	wealthiest->addPoints(-removed);
 	Privmsg::sendToRecipient("YOU HAVE SUCCESSFULLY STOLE THE WEALTHIEST", _msg->getNick(), *_msg);
 	if (std::rand() % 3 == 0) {
 	    Privmsg::sendToRecipient("AND KEPT THE " + to_string(removed) + " POINTS", _msg->getNick(), *_msg);
-		_chan->getPlayer(_msg->getClient()).addPoints(removed);
+		player.addPoints(removed);
 	}
 }
 
+/*
+    * /BOT buy "inv" #_channel [nbOfTurns]
+*/
 void	Bot::immunityToVanishing()
 {
-	if (HasNotEnoughPoints(2))
+	int nbOfTurns = 1;
+	if (_msg->getParams().size() >= 4)
+		nbOfTurns = std::abs(std::atoi(_msg->getParams()[3].c_str()));
+	if (HasNotEnoughPoints(2 * nbOfTurns))
 		return ;
+	Player &player = _chan->getPlayer(_msg->getClient());
 	Privmsg::sendToRecipient("CONSIDER YOURSELF LUCKY, THE ALMIGHTY IRC BOT HAS GRANTED YOU IMMUNITY TO THE NEXT TIME HE WILL VANISH SOMEONE", _msg->getNick(), *_msg);
-	if (!_chan->getPlayer(_msg->getClient()).hasImmunity())
-        _chan->getPlayer(_msg->getClient());
+	player.addPoints(-2 * nbOfTurns);
+	player.addImmunity(nbOfTurns);
 }
 
+/*
+    * /BOT buy "ttm" #_channel [nbOfTurns]
+*/
 void	Bot::TranscendanceOfTheMortal() {
-
+	Player &player = _chan->getPlayer(_msg->getClient());
+	int price = 5 + 5 * (1 << player.getGain());
+	if (HasNotEnoughPoints(price))
+		return ;
+	Privmsg::sendToRecipient("YOU HAVE LEARNED FROM THE MISTAKES OF THE OTHERS. GOOD", _msg->getNick(), *_msg);
+	player.addPoints(-price);
+	player.addGain(1);
 }
 
+/*
+    * /BOT buy "ltu" #_channel [nbOfTurns]
+*/
 void	Bot::LuckOfTheUngratful() {
-
+ 	int nbOfTurns = 1;
+	if (_msg->getParams().size() >= 4)
+		nbOfTurns = std::abs(std::atoi(_msg->getParams()[3].c_str()));
+	if (HasNotEnoughPoints(5 * nbOfTurns))
+		return ;
+    Player &player = _chan->getPlayer(_msg->getClient());
+	Privmsg::sendToRecipient("YOU HAVE BEEN GRANTED THE LUCK OF THE UNGRATFUL FOR 5 MORE ROUNDS", _msg->getNick(), *_msg);
+	Privmsg::sendToRecipient("BEWARE, IT WILL ONLY WORK IF YOU HAVE INVULNERABILITY", _msg->getNick(), *_msg);
+	player.addPoints(-5 * nbOfTurns);
+	player.addLTU(5 * nbOfTurns);
 }
 
 ACommand	*Bot::clone(void) const {
