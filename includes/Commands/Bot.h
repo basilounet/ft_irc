@@ -5,7 +5,8 @@
 #ifndef BOT_H
 #define BOT_H
 
-#include "ACommand.h"
+# include "ACommand.h"
+# include <cmath>
 
 class Bot : public ACommand {
 	public:
@@ -18,15 +19,26 @@ class Bot : public ACommand {
 		ACommand	*clone(void) const;
 
 	private:
+		const Message				*_msg;
+		Channel						*_chan;
+//		Client						*_victim;
 		std::vector<std::string>	_usersNames;
 		std::vector<Client *>		_users;
-		Channel						*_chan;
 		bool						_OpRm;
 
-		void	russianRoulette(const Message& msg);
-		void	initParams(const Message& msg);
-		bool	removeVictim(Client *victim, const Message& msg);
-		void	broadcastBoard(const Channel *chan, const Message& msg) const;
+		void	russianRoulette();
+		bool	removeVictim(Client *victim);
+		void	showBoard(const std::string& at) const;
+		void	displayShop(void) const;
+		bool	HasNotEnoughPoints(int price);
+		void	leaderBoard();
+		void	stats();
+		void	buy();
+
+		void	roberryOfTheWealth();
+		void	immunityToVanishing();
+		void	TranscendanceOfTheMortal();
+		void	LuckOfTheUngratful();
 };
 
 #endif //BOT_H

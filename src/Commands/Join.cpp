@@ -35,14 +35,16 @@ void	Join::process(const Message& msg) {
 	}
 	if (msg.getParams()[0] == "all" || msg.getParams()[0] == "ALL") {
 		checkNbParam(msg, 2);
-		std::map<int, Client> allClients = msg.getClient()->getServer()->getClients();
+//		if (msg.getParams()[1] == "all" || msg.getParams()[1] == "ALL")
+//                  return;
+		std::map<int, Client>& allClients = msg.getClient()->getServer()->getClients();
 		for (std::map<int, Client>::iterator it = allClients.begin(); it != allClients.end(); ++it) {
 			try {
 				Message msgJoin(&(it->second), "JOIN " + msg.getParams()[1] + CRLF);
 				msgJoin.execCommand();
 			}
 			catch (std::exception& e) {
-				std::cerr << C_ROUGE << "JOIN all error :" << e.what() << C_RESET << std::endl;
+				std::cerr << C_ROUGE << "JOIN all error : " << e.what() << C_RESET << std::endl;
 			}
 		}
 		return ;
@@ -117,6 +119,7 @@ void Join::tryJoinExistingChannel(const Message& msg, size_t i) {
 	}
 	msg.getClient()->addChannel(*chan);
 	chan->addClient(msg.getClient());
+	chan->addPlayer(msg.getClient());
 	if (chan->isInviteOnly())
 		chan->removeInvite(msg.getClient());
 	chan->broadcastMessage(msg.prefix(2) + "JOIN :" + chan->getName());
@@ -143,6 +146,7 @@ void Join::CreateChannel(const Message& msg, size_t i) {
 	msg.getClient()->addChannel(*chan);
 	chan->addClient(msg.getClient());
 	chan->addChanop(msg.getClient());
+	chan->addPlayer(msg.getClient());
 	chan->broadcastMessage(msg.prefix(2) + "JOIN :" + chan->getName());
 	Server::sendMessage(RPL_NAMREPLY(msg.prefix(1), msg.getNick(), chan->getName(), "@" + msg.getNick()), msg.getFd());
 	Server::sendMessage(RPL_ENDOFNAMES(msg.prefix(1), msg.getNick(), chan->getName()), msg.getFd());

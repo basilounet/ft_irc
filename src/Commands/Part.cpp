@@ -35,7 +35,9 @@ void	Part::process(const Message& msg) {
 			if (!msg.getTrailing().empty())
 				reason = msg.getTrailing();
 			chan->broadcastMessage(msg.prefix(2) + "PART" + " " + *it + " :" + reason);
+			msg.getClient()->removeChannel(chan->getName());
 			chan->removeChanop(msg.getClient());
+			chan->removePlayer(msg.getClient());
 			chan->removeClient(msg.getClient());
 		}
 		catch (std::exception &e) {

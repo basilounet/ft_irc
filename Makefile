@@ -17,7 +17,8 @@ SRC =	main.cpp \
 		Commands/Quit.cpp \
 		Commands/Topic.cpp \
 		Commands/User.cpp \
-		Commands/Bot.cpp
+		Commands/Bot.cpp \
+		Player.cpp
 
 
 ##========== NAMES ==========##
@@ -130,14 +131,14 @@ endif
 define last_changes
 	@if [ ! -f "$(TIMESTAMP_FILE)" ]; then \
 	echo -n > $(TIMESTAMP_FILE); \
-	for f in ./src/*/* ./includes/*/* ./Makefile; do \
-		cat "$$f" >> $(TIMESTAMP_FILE); \
+	for f in ./src/* ./src/*/* ./includes/* ./includes/*/* ./Makefile; do \
+		cat "$$f" >> $(TIMESTAMP_FILE) 2>/dev/null; \
 		echo "$(ORANGE)\n++|| $$f" >> $(TIMESTAMP_FILE); \
 	done \
 	fi
 	@echo -n > temp_$(TIMESTAMP_FILE)
-	@for f in ./src/*/* ./includes/*/* ./Makefile; do \
-		cat "$$f" >> temp_$(TIMESTAMP_FILE); \
+	@for f in ./src/* ./src/*/* ./includes/* ./includes/*/* ./Makefile; do \
+		cat "$$f" >> temp_$(TIMESTAMP_FILE) 2>/dev/null; \
 		echo "$(ORANGE)\n++|| $$f" >> temp_$(TIMESTAMP_FILE); \
 	done
 	@if ! cmp -s temp_$(TIMESTAMP_FILE) $(TIMESTAMP_FILE); then \

@@ -1,12 +1,12 @@
 #include "Channel.h"
 
-
 Channel::Channel() :
 		_server(NULL),
 		_name("default"),
 		_inviteOnly(false),
 		_topicProtected(true),
-		_limit(0) {
+		_limit(0),
+		_lastPlayer(__nullptr) {
 }
 
 Channel::Channel(const std::string& name, Server* server) :
@@ -14,7 +14,8 @@ Channel::Channel(const std::string& name, Server* server) :
 		_name(name),
 		_inviteOnly(false),
 		_topicProtected(true),
-		_limit(0) {
+		_limit(0),
+		_lastPlayer(__nullptr) {
 }
 
 Channel::~Channel() {
@@ -36,7 +37,7 @@ Channel& Channel::operator=(const Channel& src) {
 		_topicProtected = src._topicProtected;
 		_key = src._key;
 		_limit = src._limit;
-
+		_lastPlayer = src._lastPlayer;
 	}
 	return (*this);
 }
@@ -225,6 +226,15 @@ bool Channel::isFull() const {
 	return (false);
 }
 
+void		Channel::setLastPlayer(Client* client) {
+	_lastPlayer = client;
+}
+
+Client*		Channel::getLastPlayer( void )	const {
+    return (_lastPlayer);
+}
+
+
 std::string	Channel::getFlagString(bool inChan) const {
 	std::string flags;
 	if (isInviteOnly() || isTopicProtected() || isKeyProtected() || isLimit()) {
@@ -239,26 +249,29 @@ std::string	Channel::getFlagString(bool inChan) const {
 	return flags;
 }
 
-const std::map<const Client *, int>	&Channel::getGameBoard(void) const
-{
-	return _gameBoard;
+const std::map<const Client *, Player>	&Channel::getGameBoard(void)	const		{ return (_gameBoard); }
+Player									&Channel::getPlayer(const Client *client)	{ return _gameBoard[client]; }
+
+void	Channel::addPlayer(const Client *toAdd) {
+	if (_gameBoard.find(toAdd) == _gameBoard.end())
+		_gameBoard[toAdd] = Player();
 }
 
-void	Channel::addNewPlayers(void)
-{
-	for (std::vector<Client *>::const_iterator it = _clients.begin() ;
-			it != _clients.end() ; it++)
-		_gameBoard.insert(std::make_pair(*it, 0));
+void	Channel::removePlayer(const Client *toRm) {
+	if (_gameBoard.find(toRm) != _gameBoard.end())
+		_gameBoard.erase(toRm);
 }
 
-void	Channel::removePlayer(const Client *toRm)
-{
-	_gameBoard.erase(toRm);
+void	Channel::addPoints(int toAdd) {
+	for (std::map<const Client *, Player>::iterator it = _gameBoard.begin() ;
+			it != _gameBoard.end() ; ++it)
+		it->second.gainPoints(toAdd);
 }
 
-void	Channel::addPoints(int toAdd)
-{
-	for (std::map<const Client *, int>::iterator it = _gameBoard.begin() ;
-			it != _gameBoard.end() ; it++)
-		it->second += toAdd;
+void	Channel::removeNbImmunity(int toRemove) {
+	for (std::map<const Client *, Player>::iterator it = _gameBoard.begin() ;
+			it != _gameBoard.end() ; ++it) {
+		it->second.addImmunity(-toRemove);
+		it->second.addLTU(-1);
+	}
 }
