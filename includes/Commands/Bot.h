@@ -29,9 +29,11 @@ class Bot : public ACommand {
 		void	russianRoulette();
 		void	initParams();
 		bool	removeVictim(Client *victim);
-		void	broadcastBoard() const;
+		void	showBoard(const std::string& at) const;
 		void	displayShop(void) const;
 		bool	HasNotEnoughPoints(int price);
+		void	leaderBoard();
+		void	stats();
 		void	buy();
 
 		void	roberryOfTheWealth();

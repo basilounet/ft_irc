@@ -241,20 +241,20 @@ std::string	Channel::getFlagString(bool inChan) const {
 const std::map<const Client *, Player>	&Channel::getGameBoard(void)	const		{ return (_gameBoard); }
 Player									&Channel::getPlayer(const Client *client)	{ return _gameBoard[client]; }
 
-void	Channel::addNewPlayers(void) {
-	for (std::vector<Client *>::const_iterator it = _clients.begin() ;
-			it != _clients.end() ; it++)
-		_gameBoard[*it] = Player();
+void	Channel::addPlayer(const Client *toAdd) {
+	if (_gameBoard.find(toAdd) == _gameBoard.end())
+		_gameBoard[toAdd] = Player();
 }
 
 void	Channel::removePlayer(const Client *toRm) {
-	_gameBoard.erase(toRm);
+	if (_gameBoard.find(toRm) != _gameBoard.end())
+		_gameBoard.erase(toRm);
 }
 
 void	Channel::addPoints(int toAdd) {
 	for (std::map<const Client *, Player>::iterator it = _gameBoard.begin() ;
 			it != _gameBoard.end() ; it++)
-		it->second.addPoints(toAdd);
+		it->second.gainPoints(toAdd);
 }
 
 void	Channel::removeNbImmunity(int toRemove) {

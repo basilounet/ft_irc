@@ -6,8 +6,9 @@
 
 Player::Player() :
 		_points(0),
-		_gain(1),
-		_turnOfImmunityLeft(0) {
+		_gain(0),
+		_turnOfImmunityLeft(0),
+		_isLTU(false) {
 }
 
 
@@ -31,7 +32,8 @@ Player& Player::operator=(const Player& src) {
 
 void		Player::setPoints(int points) 		{ _points = points; }
 int			Player::getPoints( void )	const	{ return (_points); }
-void		Player::addPoints(int toAdd)		{ _points += toAdd + _gain; }
+void		Player::addPoints(int toAdd)		{ _points += toAdd; }
+void		Player::gainPoints(int toAdd)		{ _points += toAdd + _gain; }
 
 void		Player::setGain(int gain)			{ _gain = gain; }
 int			Player::getGain( void )		const	{ return (_gain); }
@@ -48,3 +50,5 @@ void		Player::addImmunity(int toAdd) {
 		_isLTU = false;
 	}
 }
+
+bool	Player::isLTU( void ) const	{ return (_isLTU); }

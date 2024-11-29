@@ -53,6 +53,7 @@ void Kick::oneChannel(const Message& msg) {
 			user->removeChannel(chan->getName());
 			if (chan->removeClient(user))
 				return ;
+        	chan->removePlayer(msg.getClient());
             chan->removeChanop(user);
 		}
 		catch (std::exception &e) {
@@ -75,6 +76,7 @@ void Kick::multipleChannels(const Message& msg) {
             user->removeChannel(chan->getName());
             if (chan->removeClient(user))
 				continue ;
+        	chan->removePlayer(msg.getClient());
             chan->removeChanop(user);
         }
         catch (std::exception &e) {

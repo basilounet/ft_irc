@@ -17,6 +17,7 @@ public:
 	void		setPoints(int points);
 	int			getPoints( void )	const;
 	void		addPoints(int toAdd);
+	void		gainPoints(int toAdd);
 
 	void		setGain(int gain);
 	int			getGain( void )		const;
@@ -26,6 +27,8 @@ public:
 	int			getImmunity( void )	const;
 	void		addImmunity(int toAdd);
 	bool		hasImmunity( void )	const;
+
+	bool        isLTU( void )	const;
 
 private:
 	int		_points;

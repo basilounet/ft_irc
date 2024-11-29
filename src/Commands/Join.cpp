@@ -104,6 +104,7 @@ void Join::tryJoinExistingChannel(const Message& msg, size_t i) {
 	}
 	msg.getClient()->addChannel(*chan);
 	chan->addClient(msg.getClient());
+	chan->addPlayer(msg.getClient());
 	if (chan->isInviteOnly())
 		chan->removeInvite(msg.getClient());
 	chan->broadcastMessage(msg.prefix(2) + "JOIN :" + chan->getName());
@@ -130,6 +131,7 @@ void Join::CreateChannel(const Message& msg, size_t i) {
 	msg.getClient()->addChannel(*chan);
 	chan->addClient(msg.getClient());
 	chan->addChanop(msg.getClient());
+	chan->addPlayer(msg.getClient());
 	chan->broadcastMessage(msg.prefix(2) + "JOIN :" + chan->getName());
 	std::string names;
 	for (std::vector<Client*>::const_iterator it = chan->getClients().begin(); it != chan->getClients().end(); ++it) {

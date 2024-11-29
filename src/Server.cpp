@@ -163,7 +163,7 @@ void Server::acceptClient() {
 		std::cerr << C_ROUGE << "Error: accept failed" << C_RESET << std::endl;
 		return ;
 	}
-	_clients[fd] = Client(fd, "default", "default nick", this);
+	_clients[fd] = Client(fd, "default", "defaultNick", this);
 	_fds.push_back((pollfd){fd, POLL_IN, 0});
 	std::cout << C_VERT << "Client connected with fd " << fd << C_RESET << std::endl;
 }
