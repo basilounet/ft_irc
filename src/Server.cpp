@@ -100,7 +100,7 @@ void Server::sendMessage(std::string message, const int fd) {
 	if (message.size() > 512)
 		message = message.substr(0, 510) + "\r\n";
 	send(fd, message.c_str(), message.size(), MSG_DONTWAIT | MSG_NOSIGNAL);
-	std::cout << C_OR << fd << ":" << C_LIME " >> " << C_RESET << message.substr(0,message.size()-2) << std::endl;
+	std::cout << C_OR << fd << C_ROSE << " << " << C_RESET << message << std::endl;
 }
 
 void Server::broadcast(const std::vector<Client*>& clients, const std::string& msg, const Client& sender,
