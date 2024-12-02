@@ -100,13 +100,13 @@ void	Man::displayMan(const Message& msg, t_cmd cmdId)
 			Server::sendMessage(RPL_INFO(msg.prefix(2), "Privmsg:"), msg.getFd());
 			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_PRIVMSG), msg.getFd());
 			break ;
-		case USER:
-			Server::sendMessage(RPL_INFO(msg.prefix(2), "User:"), msg.getFd());
-			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_USER), msg.getFd());
-			break ;
 		case QUIT:
 			Server::sendMessage(RPL_INFO(msg.prefix(2), "Quit:"), msg.getFd());
 			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_QUIT), msg.getFd());
+			break ;
+		case USER:
+			Server::sendMessage(RPL_INFO(msg.prefix(2), "User:"), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_USER), msg.getFd());
 			break ;
 		default:
 			std::cout << C_ROUGE << "Man: " << "no entry for command"
