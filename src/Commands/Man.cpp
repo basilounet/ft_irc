@@ -29,6 +29,7 @@ void	Man::process(const Message& msg) {
 	{
 		//371	RPL_INFO					":<string>"
 		Server::sendMessage(RPL_INFO(msg.prefix(2), "Manual entries:"), msg.getFd());
+		Server::sendMessage(RPL_INFO(msg.prefix(2), "Bot"), msg.getFd());
 		Server::sendMessage(RPL_INFO(msg.prefix(2), "Invite"), msg.getFd());
 		Server::sendMessage(RPL_INFO(msg.prefix(2), "Join"), msg.getFd());
 		Server::sendMessage(RPL_INFO(msg.prefix(2), "Kick"), msg.getFd());
@@ -38,6 +39,7 @@ void	Man::process(const Message& msg) {
 		Server::sendMessage(RPL_INFO(msg.prefix(2), "Pass"), msg.getFd());
 		Server::sendMessage(RPL_INFO(msg.prefix(2), "Privmsg"), msg.getFd());
 		Server::sendMessage(RPL_INFO(msg.prefix(2), "Quit"), msg.getFd());
+		Server::sendMessage(RPL_INFO(msg.prefix(2), "Topic"), msg.getFd());
 		Server::sendMessage(RPL_INFO(msg.prefix(2), "User"), msg.getFd());
 	}
 	for (std::vector<std::string>::iterator it = params.begin() ;
@@ -68,6 +70,10 @@ void	Man::displayMan(const Message& msg, t_cmd cmdId)
 {
 	switch (cmdId)
 	{
+		case BOT:
+			Server::sendMessage(RPL_INFO(msg.prefix(2), "Bot:"), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_BOT), msg.getFd());
+			break ;
 		case INVITE:
 			Server::sendMessage(RPL_INFO(msg.prefix(2), "Invite:"), msg.getFd());
 			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_INVITE), msg.getFd());
@@ -103,6 +109,10 @@ void	Man::displayMan(const Message& msg, t_cmd cmdId)
 		case QUIT:
 			Server::sendMessage(RPL_INFO(msg.prefix(2), "Quit:"), msg.getFd());
 			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_QUIT), msg.getFd());
+			break ;
+		case TOPIC:
+			Server::sendMessage(RPL_INFO(msg.prefix(2), "Topic:"), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_TOPIC), msg.getFd());
 			break ;
 		case USER:
 			Server::sendMessage(RPL_INFO(msg.prefix(2), "User:"), msg.getFd());
