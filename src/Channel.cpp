@@ -272,6 +272,6 @@ void	Channel::removeNbImmunity(int toRemove) {
 	for (std::map<const Client *, Player>::iterator it = _gameBoard.begin() ;
 			it != _gameBoard.end() ; ++it) {
 		it->second.addImmunity(-toRemove);
-		it->second.addLTU(-1);
+		it->second.addLTU(-toRemove);
 	}
 }

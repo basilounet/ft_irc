@@ -54,9 +54,9 @@ void	Bot::russianRoulette(void) {
         Privmsg::sendToRecipient("YOU FOOL !!! YOU CAN'T PLAY TWICE IN A ROW !!!", _msg->getNick(), *_msg);
         return ;
     }
-    _chan->setLastPlayer(_msg->getClient());
+    if (_chan->getPlayer(_msg->getClient()).getLTUShot() != true)
+	    _chan->setLastPlayer(_msg->getClient());
 	_users = _chan->getClients();
-	_chan->removeNbImmunity(1);
 	Privmsg::sendToRecipient("WARNING !!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!",
 			_chan->getName(), *_msg, true);
 	Privmsg::sendToRecipient("THE GREATEST GAME HAS BEGUN. BE AFRAID YOU \
@@ -71,17 +71,23 @@ HIS PRESTIGIOUS CHANNEL", _chan->getName(), *_msg, true);
 				_chan->getName(), *_msg, true);
 		if (_chan->getPlayer(_users[index]).hasLTU()) {
 			_chan->getPlayer(_users[index]).setLTU(0);
-			Privmsg::sendToRecipient("ALTHOUGH, " + _msg->getNick() + " IS REATTACKING", _chan->getName(), *_msg, true);
+			_chan->getPlayer(_users[index]).setLTUShot(true);
+			Privmsg::sendToRecipient("ALTHOUGH, " + _users[index]->getNick() + " IS REATTACKING", _chan->getName(), *_msg, true);
+			_chan->setLastPlayer(__nullptr);
+			_chan->removeNbImmunity(1);
 			try {
-				Message msg(_msg->getClient(), "BOT rr " + _chan->getName());
+				Message msg(_users[index], "BOT rr " + _chan->getName() + CRLF);
 				msg.execCommand();
 			}
 			catch (std::exception &e) {
 				std::cout << C_ROSE << "Error BOT: " << e.what() << C_RESET << std::endl;
 			}
+			return ;
 	    }
+		_chan->removeNbImmunity(1);
 		return ;
 	}
+	_chan->removeNbImmunity(1);
 	Privmsg::sendToRecipient(
 			"IN HIS INFINITE WISDOM, THE ALMIGHTY IRC BOT HAS DECIDED: " +
 			_users[index]->getNick() + 
@@ -102,6 +108,7 @@ AND GRANTS 2 POINTS TO UNWORTHY REMAINING PLAYERS";
 bool	Bot::removeVictim(Client *victim)
 {
 	bool	ChanRm = false;
+	Player& player = _chan->getPlayer(_msg->getClient());
 
 	_chan->getPlayer(victim).setImmunity(0);
 	_OpRm = false;
@@ -115,12 +122,20 @@ bool	Bot::removeVictim(Client *victim)
 					+ _chan->getName() + " +o " + _msg->getNick() + CRLF);
 		}
 	}
-//	_chan->broadcastMessage(_msg->prefix(2) + "KICK " + _chan->getName() + " " +
-//			victim->getNick() + " :lost to Russian Roulette" + CRLF);
-//	victim->removeChannel(_chan->getName());
-//	_chan->removeChanop(victim);
-//	_chan->removePlayer(victim);
-//	ChanRm = _chan->removeClient(victim);
+	if (player.getLTUShot() == true)
+	{
+		Privmsg::sendToRecipient("NOT ONLY HAVE YOU DIED BY THE HAND OF " +  _msg->getNick() + " BUT YOU HAVE ALSO LOST YOUR POINTS", _chan->getName(), *_msg, true);
+		player.setLTUShot(false);
+		if (victim != _msg->getClient())
+			player.addPoints(_chan->getPlayer(victim).getPoints());
+		_chan->getPlayer(victim).setPoints(0);
+	}
+	_chan->broadcastMessage(_msg->prefix(2) + "KICK " + _chan->getName() + " " +
+			victim->getNick() + " :lost to Russian Roulette" + CRLF);
+	victim->removeChannel(_chan->getName());
+	_chan->removeChanop(victim);
+	_chan->removePlayer(victim);
+	ChanRm = _chan->removeClient(victim);
 	return ChanRm;
 }
 
@@ -173,7 +188,7 @@ void	Bot::stats() {
     _chan = getChannelWithName(_msg->getParams()[1], *_msg);
     getClientInChannel(_msg->getNick(), _chan, *_msg);
 	Player& player = _chan->getPlayer(_msg->getClient());
-	Privmsg::sendToRecipient("STATS OF THE GLORIOUS " + _msg->getNick() + " ON " + _chan->getName(), _msg->getNick(), *_msg);
+	Privmsg::sendToRecipient("STATS OF THE GLORIOUS " + _msg->getNick() + " on " + _chan->getName(), _msg->getNick(), *_msg);
 	Privmsg::sendToRecipient("Points : " + to_string(player.getPoints()), _msg->getNick(), *_msg);
 	Privmsg::sendToRecipient("Bonus point per vanishing : " + to_string(player.getGain()), _msg->getNick(), *_msg);
 	Privmsg::sendToRecipient("Turns of invulnerability : " + to_string(player.getImmunity()) + " (" + to_string(player.getLTU()) + ")", _msg->getNick(), *_msg);
@@ -265,7 +280,7 @@ void	Bot::LuckOfTheUngratful() {
 	if (HasNotEnoughPoints(5 * nbOfTurns))
 		return ;
     Player &player = _chan->getPlayer(_msg->getClient());
-	Privmsg::sendToRecipient("YOU HAVE BEEN GRANTED THE LUCK OF THE UNGRATFUL FOR 5 MORE ROUNDS", _msg->getNick(), *_msg);
+	Privmsg::sendToRecipient("YOU HAVE BEEN GRANTED THE LUCK OF THE UNGRATFUL FOR " + to_string(nbOfTurns * 5) + " MORE ROUNDS", _msg->getNick(), *_msg);
 	Privmsg::sendToRecipient("BEWARE, IT WILL ONLY WORK IF YOU HAVE INVULNERABILITY", _msg->getNick(), *_msg);
 	player.addPoints(-5 * nbOfTurns);
 	player.addLTU(5 * nbOfTurns);

@@ -33,11 +33,15 @@ public:
 	void		addLTU(int nbOfTurns);
 	bool		hasLTU( void )		const;
 
+	void		setLTUShot(bool state);
+	bool		getLTUShot( void );
+
 private:
 	int		_points;
 	int		_gain;
 	int		_turnOfImmunityLeft;
 	int		_turnOfLTULeft;
+	bool	_isLTUShot;
 };
 
 

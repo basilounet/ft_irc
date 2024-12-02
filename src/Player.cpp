@@ -5,10 +5,11 @@
 #include "Player.h"
 
 Player::Player() :
-		_points(0),
+		_points(100),
 		_gain(0),
 		_turnOfImmunityLeft(1),
-		_turnOfLTULeft(0) {
+		_turnOfLTULeft(0),
+		_isLTUShot(false) {
 }
 
 
@@ -25,6 +26,7 @@ Player& Player::operator=(const Player& src) {
 		_gain = src._gain;
 		_turnOfImmunityLeft = src._turnOfImmunityLeft;
 		_turnOfLTULeft = src._turnOfLTULeft;
+		_isLTUShot = src._isLTUShot;
 	}
 	return (*this);
 }
@@ -63,3 +65,6 @@ void	Player::addLTU(int nbOfTurns) {
 	if (_turnOfLTULeft < 0)
 		_turnOfLTULeft = 0;
 }
+
+void		Player::setLTUShot(bool state) { _isLTUShot = state; }
+bool		Player::getLTUShot( void ) { return (_isLTUShot); }
