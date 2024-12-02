@@ -22,45 +22,46 @@ class ACommand;
 # include <Topic.h>
 # include <Quit.h>
 # include <Bot.h>
+# include <Man.h>
 // # include <Channel.h>
 // # include <Client.h>
+
 class Message {
 
-public:
-	Message();
-	Message(Client* client, const std::string &msg );
-	~Message();
-	Message(const Message& src);
-	Message &operator=(const Message& src);
+	public:
+		Message();
+		Message(Client* client, const std::string &msg );
+		~Message();
+		Message(const Message& src);
+		Message &operator=(const Message& src);
 
-	Client*						getClient()		const ;
-	std::string					getMsg()		const ;
-	std::string					prefix(int type) const ;
-	std::string					getNick() const ;
-	std::string					getServerName() const ;
-	std::string					getCommand()	const ;
-	std::vector<std::string>	getParams()		const ;
-	std::string					getTrailing()	const ;
-	int							getFd()			const ;
+		Client*						getClient()		const ;
+		std::string					getMsg()		const ;
+		std::string					prefix(int type) const ;
+		std::string					getNick() const ;
+		std::string					getServerName() const ;
+		std::string					getCommand()	const ;
+		std::vector<std::string>	getParams()		const ;
+		std::string					getTrailing()	const ;
+		int							getFd()			const ;
 
-	void						execCommand();
+		void						execCommand();
 
-private:
-	ACommand*					_cmd;
-	Client*						_client;
-	std::string					_msg;
-	std::string					_serverName;
-	std::string					_command;
-	std::vector<std::string>	_params;
-	std::string					_trailing;
+	private:
+		ACommand*					_cmd;
+		Client*						_client;
+		std::string					_msg;
+		std::string					_serverName;
+		std::string					_command;
+		std::vector<std::string>	_params;
+		std::string					_trailing;
 
 
-	void		parsePrefix(const std::string& str);
-	void		parseCommand(const std::string& str);
-	void		parseParams(const std::string& str);
-	void		parseMsg();
-	void		createCommand();
+		void		parsePrefix(const std::string& str);
+		void		parseCommand(const std::string& str);
+		void		parseParams(const std::string& str);
+		void		parseMsg();
+		void		createCommand();
 };
-
 
 #endif //MESSAGE_H

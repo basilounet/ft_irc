@@ -5,7 +5,8 @@ Message::Message() {
 }
 
 Message::Message(Client* client, const std::string &msg) 
-	: _cmd(NULL), _client(client), _msg(msg) {
+	: _cmd(NULL), _client(client), _msg(msg) 
+{
 	if (client == NULL)
 		throw std::invalid_argument("client is NULL");
 	if (msg.empty())
@@ -163,55 +164,52 @@ int Message::getFd() const {
 }
 
 void	Message::createCommand() {
-	const char	*tmp[] = {"INVITE", "JOIN", "KICK", "MODE", "NICK",
-		"PART", "PASS", "MSG", "PRIVMSG", "TOPIC", "USER", "QUIT", "CAP", "WHO", "BOT", NULL};
-	int i = 0;
+	t_cmd cmdId = ACommand::findCmd(_command); //throw if unknown command
 
-	while (tmp[i] && _command != tmp[i])
-		i++;
-	switch (i) {
-		case 0:
-			_cmd = new Invite();
-		break ;
-		case 1:
-			_cmd = new Join();
-		break ;
-		case 2:
-			_cmd = new Kick();
-		break ;
-		case 3:
-			_cmd = new Mode();
-		break ;
-		case 4:
-			_cmd = new Nick();
-		break ;
-		case 5:
-			_cmd = new Part();
-		break ;
-		case 6:
-			_cmd = new Pass();
-		break ;
-		case 7: ;
-		case 8:
-			_cmd = new Privmsg();
-		break ;
-		case 9:
-			_cmd = new Topic();
-		break ;
-		case 10:
-			_cmd = new User();
-		break ;
-		case 11:
-			_cmd = new Quit();
-		break ;
-		case 12: ;
-		case 13:
-			_cmd = NULL;
-			break ;
-		case 14:
+	switch (cmdId) {
+		case UNKNOWN:
+		case BOT:
 			_cmd = new Bot();
 		break ;
-		default:
-			throw std::invalid_argument("Unknown command");
+		case INVITE:
+			_cmd = new Invite();
+		break ;
+		case JOIN:
+			_cmd = new Join();
+		break ;
+		case KICK:
+			_cmd = new Kick();
+		break ;
+		case MAN:
+			_cmd = new Man();
+		break ;
+		case MODE:
+			_cmd = new Mode();
+		break ;
+		case MSG:
+			_cmd = new Privmsg();
+		break ;
+		case NICK: 
+			_cmd = new Nick();
+		break ;
+		case PART:
+			_cmd = new Part();
+		break ;
+		case PASS:
+			_cmd = new Pass();
+		break ;
+		case PRIVMSG:
+			_cmd = new Privmsg();
+		break ;
+		case QUIT:
+			_cmd = new Quit();
+		break ;
+		case TOPIC:
+			_cmd = new Topic();
+		break ;
+		case USER:
+			_cmd = new User();
+		break ;
+		default: ;
 	}
 }

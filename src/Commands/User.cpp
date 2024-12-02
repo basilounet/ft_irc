@@ -58,12 +58,12 @@ void	User::tryRegistration(Client &client, const Message &msg)
 
 	if (!server_passwd.empty() && server_passwd != client.getPassword()) // Password check
 	{
-		client.setFlags(0);
+		client.reset();
 		throw std::logic_error("Bad password, retry registration process");
 	}
 	if (Nick::isNickInServer(client.getNick(), msg)) //check if nick given to another client during registration process
 	{
-		client.setFlags(0);
+		client.reset();
 		throw std::invalid_argument
 			("Nick already in use, retry registration process");
 	}

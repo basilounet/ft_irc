@@ -137,6 +137,15 @@ void	Client::setPassword(const std::string& pass)
 	_password = pass;
 }
 
+void	Client::reset()
+{
+	_flags = 0;
+	_password = "";
+	_nick = "defaultNick";
+	_user = "";
+	_realName = "default";
+}
+
 void Client::parseBuffer() {
 	std::stringstream	storage(_buffer);
 	std::string			str;

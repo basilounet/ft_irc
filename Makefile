@@ -18,6 +18,7 @@ SRC =	main.cpp \
 		Commands/Topic.cpp \
 		Commands/User.cpp \
 		Commands/Bot.cpp \
+		Commands/Man.cpp \
 		Player.cpp
 
 

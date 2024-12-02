@@ -112,6 +112,13 @@ std::string to_string(T n) {
 # define RPL_ENDOFBANLIST(prefix, nickRes, channel) \
 (std::string(prefix) + "368 " + std::string(nickRes) + " " + std::string(channel) + " :End of channel ban list" + CRLF)
 
+//371	RPL_INFO					":<string>"
+# define RPL_INFO(prefix, str) \
+(std::string(prefix) + "371 " + ": " + std::string(str) + CRLF)
+
+//374	RPL_ENDOFINFO				":End of INFO list"
+# define RPL_ENDOFINFO(prefix) \
+(std::string(prefix) + "374 " + ":End of INFO list" + CRLF)
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ERROR REPLIES

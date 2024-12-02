@@ -1,6 +1,10 @@
 #include <ACommand.h>
 #include "Message.h"
 
+const char *ACommand::_cmdNames[] = {"BOT", "CAP", "INVITE", "JOIN", "KICK", 
+	"MAN", "MODE", "MSG", "NICK", "PART", "PASS", "PRIVMSG", "QUIT", "TOPIC", 
+	"USER", "WHO", NULL};
+
 ACommand::ACommand() {
 }
 
@@ -124,4 +128,15 @@ std::vector<std::string> ACommand::split(const std::string& str,
 		}
     }
     return (result);
+}
+
+t_cmd	ACommand::findCmd(const std::string &str)
+{
+	int i = 0;
+
+	while (_cmdNames[i] && str != _cmdNames[i])
+		i++;
+	if (!_cmdNames[i])
+		throw std::invalid_argument("Unknown command");
+	return static_cast<t_cmd>(i + 1);
 }
