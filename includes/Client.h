@@ -45,6 +45,7 @@ class Client {
 		void									setBuffer(const std::string& buf);
 		void									setFlags(short flags);
 		void									setPassword(const std::string& pass);
+		void									reset(void);
 
 		void									appendBuffer(const std::string& buf);
 		void									parseBuffer(); // split messages
