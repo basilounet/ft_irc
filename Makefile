@@ -98,6 +98,9 @@ endif
 
 all : $(NAME)
 
+bonus :
+	@$(MAKE) all NAME=ircserv_bonus --no-print-directory
+
 $(NAME) : $(OBJS)
 	@$(CXX) -o $(NAME) $(CFLAGS) $(OBJS) $(LDFLAGS)
 	@$(last_changes)
@@ -109,6 +112,7 @@ clean :
 
 fclean : clean
 	@rm -rf $(NAME)
+	@rm -rf $(NAME)_bonus
 	@echo "$(CYAN)Files cleaned$(BASE_COLOR)"
 
 re : fclean all
@@ -232,4 +236,4 @@ define animation_1
 	@echo -n "$(BASE_COLOR)"
 endef
 
-.PHONY : all clean fclean re
+.PHONY : all bonus clean fclean re

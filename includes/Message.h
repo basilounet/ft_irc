@@ -41,6 +41,7 @@ class Message {
 		std::string					getNick() const ;
 		std::string					getServerName() const ;
 		std::string					getCommand()	const ;
+		static std::string			capitalize(std::string str);
 		std::vector<std::string>	getParams()		const ;
 		std::string					getTrailing()	const ;
 		int							getFd()			const ;

@@ -6,8 +6,12 @@
 *.vscode/
 *test/
 *.idea
+
 #*.gitignore
+
 ircserv
+ircserv_bonus
+
 *build.timestamp
 out
 diff.txt

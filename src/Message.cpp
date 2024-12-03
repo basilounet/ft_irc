@@ -92,7 +92,16 @@ void Message::parsePrefix(const std::string& str) {
 void Message::parseCommand(const std::string& str) {
 	if (str.empty())
 		throw std::invalid_argument("Invalid parse pre command (empty)");
-	_command = str;
+	_command = capitalize(str);
+}
+
+std::string Message::capitalize(std::string str) {
+	if (str.empty())
+		return str;
+	for (unsigned long i = 0; i < str.size(); i++)
+		if (std::islower(str[i]))
+			str[i] = static_cast<char>(std::toupper(str[i]));
+	return str;
 }
 
 // params	= *14( SPACE middle ) [ SPACE ":" trailing ]

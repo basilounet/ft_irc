@@ -34,7 +34,7 @@ void	Quit::process(const Message& msg) {
 	for (std::set<int>::const_iterator it = _recip.begin() ;
 			it != _recip.end() ; it++)
 		Server::sendMessage(msg.prefix(2) + "QUIT :" + toSend, *it);
-	msg.getClient()->setFlags(IS_RM);
+	msg.getClient()->setFlags(HAS_REGISTERED | IS_RM);
 }
 
 void	Quit::addRecip(const Channel *channel)
