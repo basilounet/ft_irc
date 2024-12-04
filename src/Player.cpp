@@ -5,7 +5,7 @@
 #include "Player.h"
 
 Player::Player() :
-		_points(100),
+		_points(0),
 		_gain(0),
 		_turnOfImmunityLeft(1),
 		_turnOfLTULeft(0),

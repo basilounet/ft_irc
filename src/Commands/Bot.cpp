@@ -69,6 +69,7 @@ HIS PRESTIGIOUS CHANNEL", _chan->getName(), *_msg, true);
 		Privmsg::sendToRecipient("TODAY THE ALMIGHTY IRC BOT CHOOSE TO BE MERCIFUL. " +
 				_users[index]->getNick() + " HAS BEEN GRANTED IMMUNITY FOR THIS ROUND",
 				_chan->getName(), *_msg, true);
+		_chan->addPoints(1);
 		if (_chan->getPlayer(_users[index]).hasLTU()) {
 			_chan->getPlayer(_users[index]).setLTU(0);
 			_chan->getPlayer(_users[index]).setLTUShot(true);

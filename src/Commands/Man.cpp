@@ -28,19 +28,19 @@ void	Man::process(const Message& msg) {
 	if (params.empty())
 	{
 		//371	RPL_INFO					":<string>"
-		Server::sendMessage(RPL_INFO(msg.prefix(2), "Manual entries:"), msg.getFd());
-		Server::sendMessage(RPL_INFO(msg.prefix(2), "Bot"), msg.getFd());
-		Server::sendMessage(RPL_INFO(msg.prefix(2), "Invite"), msg.getFd());
-		Server::sendMessage(RPL_INFO(msg.prefix(2), "Join"), msg.getFd());
-		Server::sendMessage(RPL_INFO(msg.prefix(2), "Kick"), msg.getFd());
-		Server::sendMessage(RPL_INFO(msg.prefix(2), "Mode"), msg.getFd());
-		Server::sendMessage(RPL_INFO(msg.prefix(2), "Nick"), msg.getFd());
-		Server::sendMessage(RPL_INFO(msg.prefix(2), "Part"), msg.getFd());
-		Server::sendMessage(RPL_INFO(msg.prefix(2), "Pass"), msg.getFd());
-		Server::sendMessage(RPL_INFO(msg.prefix(2), "Privmsg"), msg.getFd());
-		Server::sendMessage(RPL_INFO(msg.prefix(2), "Quit"), msg.getFd());
-		Server::sendMessage(RPL_INFO(msg.prefix(2), "Topic"), msg.getFd());
-		Server::sendMessage(RPL_INFO(msg.prefix(2), "User"), msg.getFd());
+		Server::sendMessage(RPL_INFO(msg.prefix(1), "Manual entries:"), msg.getFd());
+		Server::sendMessage(RPL_INFO(msg.prefix(1), "Bot"), msg.getFd());
+		Server::sendMessage(RPL_INFO(msg.prefix(1), "Invite"), msg.getFd());
+		Server::sendMessage(RPL_INFO(msg.prefix(1), "Join"), msg.getFd());
+		Server::sendMessage(RPL_INFO(msg.prefix(1), "Kick"), msg.getFd());
+		Server::sendMessage(RPL_INFO(msg.prefix(1), "Mode"), msg.getFd());
+		Server::sendMessage(RPL_INFO(msg.prefix(1), "Nick"), msg.getFd());
+		Server::sendMessage(RPL_INFO(msg.prefix(1), "Part"), msg.getFd());
+		Server::sendMessage(RPL_INFO(msg.prefix(1), "Pass"), msg.getFd());
+		Server::sendMessage(RPL_INFO(msg.prefix(1), "Privmsg"), msg.getFd());
+		Server::sendMessage(RPL_INFO(msg.prefix(1), "Quit"), msg.getFd());
+		Server::sendMessage(RPL_INFO(msg.prefix(1), "Topic"), msg.getFd());
+		Server::sendMessage(RPL_INFO(msg.prefix(1), "User"), msg.getFd());
 	}
 	for (std::vector<std::string>::iterator it = params.begin() ;
 			it != params.end() ; it++)
@@ -71,52 +71,52 @@ void	Man::displayMan(const Message& msg, t_cmd cmdId)
 	switch (cmdId)
 	{
 		case BOT:
-			Server::sendMessage(RPL_INFO(msg.prefix(2), "Bot:"), msg.getFd());
-			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_BOT), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), "Bot:"), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), MAN_BOT), msg.getFd());
 			break ;
 		case INVITE:
-			Server::sendMessage(RPL_INFO(msg.prefix(2), "Invite:"), msg.getFd());
-			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_INVITE), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), "Invite:"), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), MAN_INVITE), msg.getFd());
 			break ;
 		case JOIN:
-			Server::sendMessage(RPL_INFO(msg.prefix(2), "Join:"), msg.getFd());
-			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_JOIN), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), "Join:"), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), MAN_JOIN), msg.getFd());
 			break ;
 		case KICK:
-			Server::sendMessage(RPL_INFO(msg.prefix(2), "Kick:"), msg.getFd());
-			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_KICK), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), "Kick:"), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), MAN_KICK), msg.getFd());
 			break ;
 		case MODE:
-			Server::sendMessage(RPL_INFO(msg.prefix(2), "Mode:"), msg.getFd());
-			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_MODE), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), "Mode:"), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), MAN_MODE), msg.getFd());
 			break ;
 		case NICK:
-			Server::sendMessage(RPL_INFO(msg.prefix(2), "Nick:"), msg.getFd());
-			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_NICK), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), "Nick:"), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), MAN_NICK), msg.getFd());
 			break ;
 		case PART:
-			Server::sendMessage(RPL_INFO(msg.prefix(2), "Part:"), msg.getFd());
-			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_PART), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), "Part:"), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), MAN_PART), msg.getFd());
 			break ;
 		case PASS:
-			Server::sendMessage(RPL_INFO(msg.prefix(2), "Pass:"), msg.getFd());
-			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_PASS), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), "Pass:"), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), MAN_PASS), msg.getFd());
 			break ;
 		case PRIVMSG:
-			Server::sendMessage(RPL_INFO(msg.prefix(2), "Privmsg:"), msg.getFd());
-			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_PRIVMSG), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), "Privmsg:"), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), MAN_PRIVMSG), msg.getFd());
 			break ;
 		case QUIT:
-			Server::sendMessage(RPL_INFO(msg.prefix(2), "Quit:"), msg.getFd());
-			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_QUIT), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), "Quit:"), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), MAN_QUIT), msg.getFd());
 			break ;
 		case TOPIC:
-			Server::sendMessage(RPL_INFO(msg.prefix(2), "Topic:"), msg.getFd());
-			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_TOPIC), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), "Topic:"), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), MAN_TOPIC), msg.getFd());
 			break ;
 		case USER:
-			Server::sendMessage(RPL_INFO(msg.prefix(2), "User:"), msg.getFd());
-			Server::sendMessage(RPL_INFO(msg.prefix(2), MAN_USER), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), "User:"), msg.getFd());
+			Server::sendMessage(RPL_INFO(msg.prefix(1), MAN_USER), msg.getFd());
 			break ;
 		default:
 			std::cout << C_ROUGE << "Man: " << "no entry for command"
